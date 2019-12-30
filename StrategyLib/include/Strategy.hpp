@@ -15,12 +15,6 @@ class Strategy
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) = 0;
 		virtual Decision initialDecision(void) = 0;
-
-		void addMatchResult(Strategy * partnerStrategy, unsigned payoff);
-
-	private:
-		std::vector<unsigned> payoff;
-		std::vector<Strategy *> partners;
 };
 
 #endif
