@@ -31,7 +31,6 @@ TestCase("strategy implementation", "[Strategy]")
 	TestStrategy strategy;
 	check( strategy.name == "" );
 	check( strategy.description == "" );
-	check( strategy.payoff.size() == 0u );
 	check( strategy.initialDecision() == Decision::cooperate );
 	check(
 		strategy.makeDecision(
