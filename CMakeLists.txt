@@ -22,3 +22,5 @@ message("\n")
 
 add_subdirectory(UtilsLib)
 add_subdirectory(UtilsLibTest)
+add_subdirectory(StrategyLib)
+add_subdirectory(StrategyLibTest)
