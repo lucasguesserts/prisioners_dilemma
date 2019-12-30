@@ -1,12 +1,43 @@
 #include <Test.hpp>
+#include <Decision.hpp>
 #include <Strategy.hpp>
 
-TestCase("strategy constructor", "[Strategy]")
+TestCase("decision", "[Decision]")
 {
-	Strategy strategy;
+	check( Decision::cooperate == Decision::cooperate);
+	check( Decision::defect == Decision::defect);
+	check( Decision::cooperate != Decision::defect);
+	checkFalse( Decision::cooperate == Decision::defect);
+	return;
+}
+
+class TestStrategy: public Strategy
+{
+	public:
+		Decision makeDecision(
+			[[maybe_unused]] std::vector<Decision> thisDecision,
+			[[maybe_unused]] std::vector<Decision> partnerDecision
+		){
+			return Decision::cooperate;
+		}
+		Decision initialDecision(void)
+		{
+			return Decision::cooperate;
+		}
+};
+
+TestCase("strategy implementation", "[Strategy]")
+{
+	TestStrategy strategy;
 	check( strategy.name == "" );
 	check( strategy.description == "" );
-	check( strategy.numberOfMatches == 0 );
-	check( strategy.accumulatedPayoff == 0u );
+	check( strategy.payoff.size() == 0u );
+	check( strategy.initialDecision() == Decision::cooperate );
+	check(
+		strategy.makeDecision(
+			std::vector<Decision>{Decision::cooperate},
+			std::vector<Decision>{Decision::defect})
+		== Decision::cooperate
+	);
 	return;
 }
