@@ -21,4 +21,19 @@ class AlwaysCooperate: public Strategy
 		}
 } alwaysCooperate;
 
+class AlwaysDefect: public Strategy
+{
+	public:
+		const std::string name = "Always Defect";
+		const std::string shortName = "AllD";
+		const std::string description = "Always defect.";
+
+		Decision makeDecision(
+			[[maybe_unused]] std::vector<Decision> thisDecision,
+			[[maybe_unused]] std::vector<Decision> partnerDecision) final
+		{
+			return Decision::defect;
+		}
+} alwaysDefect;
+
 #endif

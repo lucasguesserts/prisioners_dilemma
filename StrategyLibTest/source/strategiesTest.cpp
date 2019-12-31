@@ -15,3 +15,14 @@ TestCase("Always cooperate", "[Strategies]")
 	check( alwaysCooperate.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
 	return;
 }
+
+TestCase("Always defect", "[Strategies]")
+{
+	check( alwaysDefect.name      == "Always Defect" );
+	check( alwaysDefect.shortName == "AllD" );
+
+	check( alwaysDefect.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+	check( alwaysDefect.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+	check( alwaysDefect.makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	return;
+}
