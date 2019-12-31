@@ -1,13 +1,16 @@
 project(StrategyLibTest)
 
-include_directories(${CMAKE_SOURCE_DIR}/UtilsLib/include)
-include_directories(${CMAKE_SOURCE_DIR}/StrategyLib/include)
-include_directories(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include)
+set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib ${PROJECT_NAME})
+set(LINK_DEPENDENCIES StrategyLib)
+
+foreach(INCLUDE_DEPENDENCY in ${INCLUDE_DEPENDENCIES})
+	include_directories(${CMAKE_SOURCE_DIR}/${INCLUDE_DEPENDENCY}/include)
+endforeach(INCLUDE_DEPENDENCY)
 
 file(GLOB ${PROJECT_NAME}_sources ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/source/*.cpp)
 
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
 
-target_link_libraries(${PROJECT_NAME} StrategyLib)
+target_link_libraries(${PROJECT_NAME} ${LINK_DEPENDENCIES})
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
