@@ -19,7 +19,7 @@ class AlwaysCooperate: public Strategy
 		{
 			return Decision::cooperate;
 		}
-} alwaysCooperate;
+} allC;
 
 class AlwaysDefect: public Strategy
 {
@@ -34,6 +34,6 @@ class AlwaysDefect: public Strategy
 		{
 			return Decision::defect;
 		}
-} alwaysDefect;
+} allD;
 
 #endif

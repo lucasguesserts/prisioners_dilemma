@@ -7,22 +7,22 @@ std::vector<Decision> startDefecting = {Decision::defect};
 
 TestCase("Always cooperate", "[Strategies]")
 {
-	check( alwaysCooperate.name      == "Always Cooperate" );
-	check( alwaysCooperate.shortName == "AllC" );
+	check( allC.name      == "Always Cooperate" );
+	check( allC.shortName == "AllC" );
 
-	check( alwaysCooperate.makeDecision(emptyDecisions,   emptyDecisions) == Decision::cooperate );
-	check( alwaysCooperate.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
-	check( alwaysCooperate.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
+	check( allC.makeDecision(emptyDecisions,   emptyDecisions) == Decision::cooperate );
+	check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
+	check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
 	return;
 }
 
 TestCase("Always defect", "[Strategies]")
 {
-	check( alwaysDefect.name      == "Always Defect" );
-	check( alwaysDefect.shortName == "AllD" );
+	check( allD.name      == "Always Defect" );
+	check( allD.shortName == "AllD" );
 
-	check( alwaysDefect.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
-	check( alwaysDefect.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-	check( alwaysDefect.makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	check( allD.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+	check( allD.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+	check( allD.makeDecision(startDefecting,   startCooperating) == Decision::defect );
 	return;
 }
