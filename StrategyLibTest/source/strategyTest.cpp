@@ -20,18 +20,14 @@ class TestStrategy: public Strategy
 		){
 			return Decision::cooperate;
 		}
-		Decision initialDecision(void)
-		{
-			return Decision::cooperate;
-		}
 };
 
 TestCase("strategy implementation", "[Strategy]")
 {
 	TestStrategy strategy;
 	check( strategy.name == "" );
+	check( strategy.shortName == "" );
 	check( strategy.description == "" );
-	check( strategy.initialDecision() == Decision::cooperate );
 	check(
 		strategy.makeDecision(
 			std::vector<Decision>{Decision::cooperate},

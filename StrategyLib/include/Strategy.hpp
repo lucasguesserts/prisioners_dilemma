@@ -9,12 +9,12 @@ class Strategy
 {
 	public:
 		const std::string name = "";
+		const std::string shortName = "";
 		const std::string description = "";
 	
 		virtual Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) = 0;
-		virtual Decision initialDecision(void) = 0;
 };
 
 #endif
