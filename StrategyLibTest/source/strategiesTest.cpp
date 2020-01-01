@@ -5,6 +5,19 @@ std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting = {Decision::defect};
 
+TestCase("Polimorphism", "[Strategy]")
+{
+	Strategy * strategy = &allD;
+	check( strategy->name        == "Always Defect" );
+	check( strategy->shortName   == "AllD" );
+	check( strategy->description == "Always defect." );
+
+	check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+	check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+	check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	return;
+}
+
 TestCase("Always cooperate", "[Strategies]")
 {
 	check( allC.name        == "Always Cooperate" );
@@ -29,15 +42,25 @@ TestCase("Always defect", "[Strategies]")
 	return;
 }
 
-TestCase("Polimorphism", "[Strategy]")
+TestCase("Tit for tat", "[Strategies]")
 {
-	Strategy * strategy = &allD;
-	check( strategy->name        == "Always Defect" );
-	check( strategy->shortName   == "AllD" );
-	check( strategy->description == "Always defect." );
-
-	check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
-	check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-	check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	section("metadata")
+	{
+		check( tft.name        == "Tit for Tat" );
+		check( tft.shortName   == "TFT" );
+		check( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
+	}
+	section("Basic decisions")
+	{
+		check( tft.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
+		check( tft.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+		check( tft.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
+	}
+	section("Complex decisions")
+	{
+		std::vector<Decision> tftPartner   = {Decision::defect   , Decision::cooperate, Decision::cooperate};
+		std::vector<Decision> tftDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate};
+		check( tft.makeDecision(tftDecisions, tftPartner ) == Decision::cooperate );
+	}
 	return;
 }

@@ -32,7 +32,21 @@ class AlwaysDefect: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class TitForTat: public Strategy
+{
+	public:
+		TitForTat(void)
+			: Strategy(
+					"Tit for Tat",
+					"TFT",
+					"Start cooperating. Copy opponent's last move afterwards."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
+extern TitForTat       tft ;
 
 #endif
