@@ -26,3 +26,17 @@ TestCase("Always defect", "[Strategies]")
 	check( allD.makeDecision(startDefecting,   startCooperating) == Decision::defect );
 	return;
 }
+
+// TODO: fix this error
+// POLIMORPHISM FAILING!
+//TestCase("Polimorphism", "[Strategy]")
+//{
+//	Strategy * strategy = &allD;
+//	check( strategy->name      == "Always Defect" );
+//	check( strategy->shortName == "AllD" );
+//
+//	check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+//	check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+//	check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+//	return;
+//}
