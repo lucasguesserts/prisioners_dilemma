@@ -18,6 +18,8 @@ class Match
 	
 	private:
 		void reserveMemory(void);
+		void computeDecisionsAndPayoff(void);
+		void saveMatch(void);
 };
 
 #endif

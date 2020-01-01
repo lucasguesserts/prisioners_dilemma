@@ -19,5 +19,23 @@ TestCase("Simple Match", "[Match]")
 		check( match.leftPayoff  == leftPayoff  );
 		check( match.rightPayoff == rightPayoff );
 	}
+	section("left save match")
+	{
+		std::vector<std::vector<Decision>> decisions = {std::vector<Decision>(Match::numberOfTurns, Decision::cooperate)};
+		std::vector<std::vector<Payoff>>   payoff    = {std::vector<Payoff>  (Match::numberOfTurns, Payoff::suckers)    };
+		std::vector<Strategy*>             partners  = {&allD                                                           };
+		check( alwaysCooperate.decisions == decisions );
+		check( alwaysCooperate.payoff    == payoff    );
+		check( alwaysCooperate.partners  == partners  );
+	}
+	section("right save match")
+	{
+		std::vector<std::vector<Decision>> decisions = {std::vector<Decision>(Match::numberOfTurns, Decision::defect)     };
+		std::vector<std::vector<Payoff>>   payoff    = {std::vector<Payoff>  (Match::numberOfTurns, Payoff::temptation)   };
+		std::vector<Strategy*>             partners  = {&allC                                                             };
+		check( alwaysDefect.decisions == decisions );
+		check( alwaysDefect.payoff    == payoff    );
+		check( alwaysDefect.partners  == partners  );
+	}
 	return;
 }

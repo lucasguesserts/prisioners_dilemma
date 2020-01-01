@@ -5,6 +5,22 @@ Match::Match(Player& left, Player& right)
 	  rightPlayer(right)
 {
 	this->reserveMemory();
+	this->computeDecisionsAndPayoff();
+	this->saveMatch();
+	return;
+}
+
+void Match::reserveMemory(void)
+{
+	this->leftDecisions.reserve(Match::numberOfTurns);
+	this->rightDecisions.reserve(Match::numberOfTurns);
+	this->leftPayoff.reserve(Match::numberOfTurns);
+	this->rightPayoff.reserve(Match::numberOfTurns);
+	return;
+}
+
+void Match::computeDecisionsAndPayoff(void)
+{
 	for(unsigned turn=0 ; turn<Match::numberOfTurns ; ++turn)
 	{
 		// Compute and store decisions
@@ -17,11 +33,9 @@ Match::Match(Player& left, Player& right)
 	return;
 }
 
-void Match::reserveMemory(void)
+void Match::saveMatch(void)
 {
-	this->leftDecisions.reserve(Match::numberOfTurns);
-	this->rightDecisions.reserve(Match::numberOfTurns);
-	this->leftPayoff.reserve(Match::numberOfTurns);
-	this->rightPayoff.reserve(Match::numberOfTurns);
+	leftPlayer.saveMatch( leftDecisions,  leftPayoff,  rightPlayer.strategy);
+	rightPlayer.saveMatch(rightDecisions, rightPayoff, leftPlayer.strategy );
 	return;
 }
