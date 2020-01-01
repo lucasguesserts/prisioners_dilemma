@@ -1,15 +1,6 @@
 #include <Test.hpp>
 #include <Payoff.hpp>
 
-//TestCase("Payoff computer", "[PayoffComputer]")
-//{
-//	check( PayoffComputer::compute(Decision::cooperate, Decision::cooperate) == std::make_tuple(Payoff::reward    , Payoff::reward    ) );
-//	check( PayoffComputer::compute(Decision::cooperate, Decision::defect   ) == std::make_tuple(Payoff::suckers   , Payoff::temptation) );
-//	check( PayoffComputer::compute(Decision::defect   , Decision::cooperate) == std::make_tuple(Payoff::temptation, Payoff::suckers   ) );
-//	check( PayoffComputer::compute(Decision::defect   , Decision::defect   ) == std::make_tuple(Payoff::punishment, Payoff::punishment) );
-//	return;
-//}
-
 TestCase("Payoff left", "[PayoffComputer]")
 {
 	check( PayoffComputer::left(Decision::cooperate, Decision::cooperate) == Payoff::reward     );

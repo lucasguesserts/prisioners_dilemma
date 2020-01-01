@@ -7,10 +7,12 @@
 // | A/B       | cooperate | defect |
 // | cooperate |    R/R    |   S/T  |
 // | defect    |    T/S    |   P/P  |
+//
 // R: reward     payoff
 // T: temptation payoff
 // S: sucker's   payoff
 // P: punishment payoff
+
 enum class Payoff : unsigned {
 	reward     = 1,
 	temptation = 0,
@@ -26,6 +28,5 @@ class PayoffComputer
 	private:
 		static std::tuple<Payoff, Payoff> compute(Decision leftDecision, Decision rightDecision);
 };
-
 
 #endif
