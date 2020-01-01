@@ -1,7 +1,7 @@
 project(PlayerLib)
 
-set(INCLUDE_DEPENDENCIES StrategyLib ${PROJECT_NAME})
-set(LINK_DEPENDENCIES StrategyLib)
+set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib ${PROJECT_NAME})
+set(LINK_DEPENDENCIES UtilsLib StrategyLib)
 
 foreach(INCLUDE_DEPENDENCY in ${INCLUDE_DEPENDENCIES})
 	include_directories(${CMAKE_SOURCE_DIR}/${INCLUDE_DEPENDENCY}/include)
