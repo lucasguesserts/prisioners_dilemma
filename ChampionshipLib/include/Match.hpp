@@ -15,6 +15,9 @@ class Match
 		Player &leftPlayer, &rightPlayer;
 		std::vector<Decision> leftDecisions, rightDecisions;
 		std::vector<Payoff>   leftPayoff,    rightPayoff;
+	
+	private:
+		void reserveMemory(void);
 };
 
 #endif
