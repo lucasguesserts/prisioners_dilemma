@@ -9,31 +9,30 @@
 class AlwaysCooperate: public Strategy
 {
 	public:
-		const std::string name = "Always Cooperate";
-		const std::string shortName = "AllC";
-		const std::string description = "Always cooperate.";
-
+		AlwaysCooperate(void)
+			: Strategy(
+					"Always Cooperate",
+					"AllC",
+					"Always cooperate."){}
 		Decision makeDecision(
-			[[maybe_unused]] std::vector<Decision> thisDecision,
-			[[maybe_unused]] std::vector<Decision> partnerDecision) final
-		{
-			return Decision::cooperate;
-		}
-} allC;
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
 
 class AlwaysDefect: public Strategy
 {
 	public:
-		const std::string name = "Always Defect";
-		const std::string shortName = "AllD";
-		const std::string description = "Always defect.";
-
+		AlwaysDefect(void)
+			: Strategy(
+					"Always Defect",
+					"AllD",
+					"Always defect."){}
 		Decision makeDecision(
-			[[maybe_unused]] std::vector<Decision> thisDecision,
-			[[maybe_unused]] std::vector<Decision> partnerDecision) final
-		{
-			return Decision::defect;
-		}
-} allD;
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
+extern AlwaysCooperate allC;
+extern AlwaysDefect    allD;
 
 #endif
