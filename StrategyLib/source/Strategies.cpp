@@ -1,10 +1,12 @@
 #include <Strategies.hpp>
 #include <random>
+#include <algorithm>
 
 AlwaysCooperate allC;
 AlwaysDefect    allD;
 TitForTat       tft;
 RandomStrategy  randS;
+GrimTrigger     grim;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -43,4 +45,17 @@ Decision RandomStrategy::makeDecision(
 	static std::default_random_engine randomGenerator;
 	static std::uniform_int_distribution<unsigned> uniformDistribution(0, 1);
 	return static_cast<Decision>( uniformDistribution(randomGenerator) );
+}
+
+Decision GrimTrigger::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if ( std::any_of(partnerDecision.begin(), partnerDecision.end(), [](Decision d){return d==Decision::defect;}) )
+		decision = Decision::defect;
+	else
+		decision = Decision::cooperate;
+	return decision;
 }

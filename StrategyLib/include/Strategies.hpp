@@ -58,9 +58,23 @@ class RandomStrategy: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class GrimTrigger: public Strategy
+{
+	public:
+		GrimTrigger(void)
+			: Strategy(
+					"Grim Trigger",
+					"Grim",
+					"Cooperates until the partner defects. Thereafter it defects."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
 extern RandomStrategy  randS;
+extern GrimTrigger     grim;
 
 #endif

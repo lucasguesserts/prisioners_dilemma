@@ -74,3 +74,25 @@ TestCase("Random", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Grim Trigger", "[Strategies]")
+{
+	section("metadata")
+	{
+		check( grim.name        == "Grim Trigger" );
+		check( grim.shortName   == "Grim"         );
+	}
+	section("Basic decisions")
+	{
+		check( grim.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
+		check( grim.makeDecision(startCooperating, startDefecting  ) == Decision::defect    );
+		check( grim.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
+	}
+	section("Complex decisions")
+	{
+		std::vector<Decision> partnerOfGrimDecisions   = {Decision::defect   , Decision::cooperate, Decision::cooperate};
+		std::vector<Decision> grimDecisions            = {Decision::cooperate, Decision::defect   , Decision::defect   };
+		check( grim.makeDecision(grimDecisions, partnerOfGrimDecisions ) == Decision::defect );
+	}
+	return;
+}
