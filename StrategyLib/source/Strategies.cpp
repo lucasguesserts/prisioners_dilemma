@@ -9,6 +9,7 @@ TitForTat       tft;
 RandomStrategy  randS;
 GrimTrigger     grim;
 Pavlov          pvl;
+TitForTwoTats   tftt;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -77,6 +78,24 @@ Decision Pavlov::makeDecision(
 			decision = thisDecision.back();
 		else
 			decision = !thisDecision.back();
+	}
+	return decision;
+}
+
+Decision TitForTwoTats::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (partnerDecision.size()<2)
+		decision = Decision::cooperate;
+	else
+	{
+		if ( (*(partnerDecision.crbegin())==Decision::defect) && (*(partnerDecision.crbegin()+1)==Decision::defect) )
+			decision = Decision::defect;
+		else
+			decision = Decision::cooperate;
 	}
 	return decision;
 }

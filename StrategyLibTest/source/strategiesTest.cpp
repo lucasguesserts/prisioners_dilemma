@@ -137,3 +137,38 @@ TestCase("Pavlov", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Tit for two tats", "[Strategies]")
+{
+	std::vector<Decision> tfttDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( tftt.name ==      "Tit for Two Tats" );
+		check( tftt.shortName == "TFTT"    );
+	}
+	section("initial decisions")
+	{
+		check( tftt.makeDecision({}, {}) == Decision::cooperate );
+		check( tftt.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
+		check( tftt.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::cooperate );
+	}
+	section("cooperating 1")
+	{
+		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect};
+		partnerDecisions = {Decision::defect, Decision::defect , Decision::cooperate};
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("cooperating 2")
+	{
+		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect, Decision::cooperate};
+		partnerDecisions = {Decision::defect, Decision::defect , Decision::cooperate, Decision::defect};
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("defecting")
+	{
+		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate , Decision::defect, Decision::defect};
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::defect );
+	}
+	return;
+}

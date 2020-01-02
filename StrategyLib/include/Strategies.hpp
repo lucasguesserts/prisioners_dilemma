@@ -84,11 +84,25 @@ class Pavlov: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class TitForTwoTats: public Strategy
+{
+	public:
+		TitForTwoTats(void)
+			: Strategy(
+					"Tit for Two Tats",
+					"TFTT",
+					"Start cooperating. defects when the partner defects twice in a row."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
 extern RandomStrategy  randS;
 extern GrimTrigger     grim;
 extern Pavlov          pvl;
+extern TitForTwoTats   tftt;
 
 #endif
