@@ -71,10 +71,24 @@ class GrimTrigger: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class Pavlov: public Strategy
+{
+	public:
+		Pavlov(void)
+			: Strategy(
+					"Pavlov",
+					"PVL",
+					"Start cooperating. Repeat decision if a reward or temptation is received. Change last decision otherwise (if sucker's or punishment is received)."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
 extern RandomStrategy  randS;
 extern GrimTrigger     grim;
+extern Pavlov          pvl;
 
 #endif

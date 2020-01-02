@@ -96,3 +96,44 @@ TestCase("Grim Trigger", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Pavlov", "[Strategies]")
+{
+	std::vector<Decision> pavlovDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( pvl.name ==      "Pavlov" );
+		check( pvl.shortName == "PVL"    );
+	}
+	section("initial decision")
+	{
+		pavlovDecisions  = {};
+		partnerDecisions = {};
+		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("reward received")
+	{
+		pavlovDecisions  = {Decision::cooperate};
+		partnerDecisions = {Decision::cooperate};
+		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("suckers received")
+	{
+		pavlovDecisions  = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::defect    );
+	}
+	section("punishment received")
+	{
+		pavlovDecisions  = {Decision::cooperate, Decision::cooperate, Decision::defect};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect};
+		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("temptation received")
+	{
+		pavlovDecisions  = {Decision::cooperate, Decision::cooperate, Decision::defect, Decision::cooperate, Decision::defect   };
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect, Decision::defect   , Decision::cooperate};
+		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::defect    );
+	}
+	return;
+}

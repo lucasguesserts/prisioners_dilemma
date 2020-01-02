@@ -1,4 +1,5 @@
 #include <Strategies.hpp>
+#include <Payoff.hpp>
 #include <random>
 #include <algorithm>
 
@@ -7,6 +8,7 @@ AlwaysDefect    allD;
 TitForTat       tft;
 RandomStrategy  randS;
 GrimTrigger     grim;
+Pavlov          pvl;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -57,5 +59,24 @@ Decision GrimTrigger::makeDecision(
 		decision = Decision::defect;
 	else
 		decision = Decision::cooperate;
+	return decision;
+}
+
+Decision Pavlov::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.empty())
+		decision = Decision::cooperate;
+	else
+	{
+		Payoff lastPayoff = PayoffComputer::left(thisDecision.back(), partnerDecision.back());
+		if( (lastPayoff==Payoff::reward) || (lastPayoff==Payoff::temptation ) )
+			decision = thisDecision.back();
+		else
+			decision = !thisDecision.back();
+	}
 	return decision;
 }
