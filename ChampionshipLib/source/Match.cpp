@@ -35,7 +35,14 @@ void Match::computeDecisionsAndPayoff(void)
 
 void Match::saveMatch(void)
 {
-	leftPlayer.saveMatch( leftDecisions,  leftPayoff,  rightPlayer.strategy);
-	rightPlayer.saveMatch(rightDecisions, rightPayoff, leftPlayer.strategy );
+	if (&leftPlayer == &rightPlayer)
+	{
+		 leftPlayer.saveMatch( leftDecisions,  leftPayoff,  rightPlayer.strategy);
+	}
+	else
+	{
+		 leftPlayer.saveMatch( leftDecisions,  leftPayoff,  rightPlayer.strategy);
+		rightPlayer.saveMatch(rightDecisions, rightPayoff, leftPlayer.strategy );
+	}
 	return;
 }

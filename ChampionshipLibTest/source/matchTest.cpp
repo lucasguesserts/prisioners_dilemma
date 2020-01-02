@@ -39,3 +39,19 @@ TestCase("Simple Match", "[Match]")
 	}
 	return;
 }
+
+TestCase("Payer againd itself", "[Match]")
+{
+	Player alwaysCooperate(allC);
+	Match match(alwaysCooperate, alwaysCooperate);
+	section("save match")
+	{
+		std::vector<std::vector<Decision>> decisions = {std::vector<Decision>(Match::numberOfTurns, Decision::cooperate)};
+		std::vector<std::vector<Payoff>>   payoff    = {std::vector<Payoff>  (Match::numberOfTurns, Payoff::reward)     };
+		std::vector<Strategy*>             partners  = {&allC                                                           };
+		check( alwaysCooperate.decisions == decisions );
+		check( alwaysCooperate.payoff    == payoff    );
+		check( alwaysCooperate.partners  == partners  );
+	}
+	return;
+}
