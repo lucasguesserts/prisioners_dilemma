@@ -9,3 +9,12 @@ TestCase("decision", "[Decision]")
 	checkFalse( Decision::cooperate == Decision::defect);
 	return;
 }
+
+TestCase("Opposite decision", "[Decision]")
+{
+	check( (!Decision::cooperate) == Decision::defect    );
+	check( (!Decision::defect)    == Decision::cooperate );
+	check( (!Decision::cooperate) != Decision::cooperate );
+	check( (!Decision::defect)    != Decision::defect    );
+	return;
+}
