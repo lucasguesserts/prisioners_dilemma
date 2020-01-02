@@ -271,10 +271,42 @@ TestCase("Soft majority", "[Strategies]")
 		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate, Decision::defect   };
 		check( sm.makeDecision(smDecisions, partnerDecisions) == Decision::cooperate );
 	}
-	section("more defect than cooperate")
+	section("majority defection")
 	{
 		smDecisions      = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
 		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
 		check( sm.makeDecision(smDecisions, partnerDecisions) == Decision::defect );
+	}
+}
+
+TestCase("Hard majority", "[Strategies]")
+{
+	std::vector<Decision> hmDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( hm.name == "Hard Majority" );
+		check( hm.shortName == "HM" );
+	}
+	section("Initial move")
+	{
+		check( hm.makeDecision({}, {}) == Decision::defect );
+	}
+	section("majority cooperation")
+	{
+		hmDecisions      = {Decision::defect   , Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		check( hm.makeDecision(hmDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("equals cooperate and defect")
+	{
+		hmDecisions      = {Decision::defect   , Decision::cooperate, Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate, Decision::defect   };
+		check( hm.makeDecision(hmDecisions, partnerDecisions) == Decision::defect );
+	}
+	section("majority defection")
+	{
+		hmDecisions      = {Decision::defect   , Decision::cooperate, Decision::defect};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect};
+		check( hm.makeDecision(hmDecisions, partnerDecisions) == Decision::defect );
 	}
 }

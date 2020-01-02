@@ -128,6 +128,19 @@ class SoftMajority: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class HardMajority: public Strategy
+{
+	public:
+		HardMajority(void)
+			: Strategy(
+					"Hard Majority",
+					"HM",
+					"Defects as long as the number of cooperations of the partner is not greater than the number of defections."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
@@ -137,5 +150,6 @@ extern Pavlov          pvl;
 extern TitForTwoTats   tftt;
 extern GradualS        gradualS;
 extern SoftMajority    sm;
+extern HardMajority    hm;
 
 #endif

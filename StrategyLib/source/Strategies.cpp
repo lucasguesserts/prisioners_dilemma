@@ -12,6 +12,7 @@ Pavlov          pvl;
 TitForTwoTats   tftt;
 GradualS        gradualS;
 SoftMajority    sm;
+HardMajority    hm;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -156,4 +157,14 @@ Decision SoftMajority::makeDecision(
 	unsigned numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	unsigned numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
 	return (numberOfDefects > numberOfCooperates) ? Decision::defect : Decision::cooperate;
+}
+
+Decision HardMajority::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	unsigned numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
+	unsigned numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
+	return (numberOfCooperates > numberOfDefects) ? Decision::cooperate : Decision::defect;
 }
