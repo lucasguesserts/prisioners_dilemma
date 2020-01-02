@@ -3,6 +3,8 @@
 
 // Based on http://www.prisoners-dilemma.com/strategies.html
 
+#include <vector>
+#include <tuple>
 #include <Strategy.hpp>
 #include <Decision.hpp>
 
@@ -97,6 +99,22 @@ class TitForTwoTats: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class GradualS: public Strategy
+{
+	public:
+		GradualS(void)
+			: Strategy(
+					"Gradual Strategy",
+					"GradualS",
+					"Start cooperating. When the partner defects, it defects as many times as the partner has defected and then cooperates twice."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+		// Auxiliar
+		static std::vector<std::tuple<unsigned,unsigned>> findTriggles(std::vector<Decision> partnerDecision);
+		static bool timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
@@ -104,5 +122,6 @@ extern RandomStrategy  randS;
 extern GrimTrigger     grim;
 extern Pavlov          pvl;
 extern TitForTwoTats   tftt;
+extern GradualS        gradualS;
 
 #endif

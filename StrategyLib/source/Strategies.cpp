@@ -10,6 +10,7 @@ RandomStrategy  randS;
 GrimTrigger     grim;
 Pavlov          pvl;
 TitForTwoTats   tftt;
+GradualS        gradualS;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -98,4 +99,50 @@ Decision TitForTwoTats::makeDecision(
 			decision = Decision::cooperate;
 	}
 	return decision;
+}
+
+Decision GradualS::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	auto triggles = GradualS::findTriggles(partnerDecision);
+	if (GradualS::timeToDefect(thisDecision.size(), triggles))
+		decision = Decision::defect;
+	else // time to cooperate incorporated in 'findTrigges' algorithm.
+		decision = Decision::cooperate;
+	return decision;
+}
+
+std::vector<std::tuple<unsigned,unsigned>> GradualS::findTriggles(
+	std::vector<Decision> partnerDecision)
+{
+	std::vector<std::tuple<unsigned,unsigned>> triggles;
+	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
+	{
+		if (partnerDecision.at(turn) == Decision::defect)
+		{
+			unsigned numberOfDefects = static_cast<unsigned>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+turn+1, Decision::defect));
+			triggles.push_back({turn, numberOfDefects});
+			turn += numberOfDefects + 2;
+		}
+	}
+	return triggles;
+}
+
+bool GradualS::timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
+{
+	bool defect = false;
+	for (auto& triggle: triggles)
+	{
+		auto triggleTurn = std::get<0>(triggle);
+		auto numberOfDefects = std::get<1>(triggle);
+		if ( (turn > triggleTurn) && (turn <= triggleTurn + numberOfDefects) )
+		{
+			defect = true;
+			break;
+		}
+	}
+	return defect;
 }

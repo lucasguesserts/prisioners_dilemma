@@ -148,27 +148,101 @@ TestCase("Tit for two tats", "[Strategies]")
 	}
 	section("initial decisions")
 	{
-		check( tftt.makeDecision({}, {}) == Decision::cooperate );
+		check( tftt.makeDecision({}, {})                                       == Decision::cooperate );
 		check( tftt.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
 		check( tftt.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::cooperate );
 	}
 	section("cooperating 1")
 	{
-		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect};
-		partnerDecisions = {Decision::defect, Decision::defect , Decision::cooperate};
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate};
 		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
 	}
 	section("cooperating 2")
 	{
-		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect, Decision::cooperate};
-		partnerDecisions = {Decision::defect, Decision::defect , Decision::cooperate, Decision::defect};
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate, Decision::defect   };
 		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
 	}
 	section("defecting")
 	{
-		tfttDecisions = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate , Decision::defect, Decision::defect};
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
 		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::defect );
+	}
+	return;
+}
+
+TestCase("Gradual", "[Strategies]")
+{
+	section("metadata")
+	{
+		check( gradualS.name ==      "Gradual Strategy" );
+		check( gradualS.shortName == "GradualS"    );
+	}
+	section("initial decisions")
+	{
+		check( gradualS.makeDecision({}, {})                                       == Decision::cooperate );
+		check( gradualS.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
+		check( gradualS.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::defect );
+	}
+	section("gradually defecting")
+	{
+		std::vector<Decision> gradualSDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate
+		};
+		auto triggles = GradualS::findTriggles(partnerDecisions);
+		section("find trigges")
+		{
+			check( triggles == std::vector<std::tuple<unsigned,unsigned>>{{1u,1u}, {6u,3u}} );
+		}
+		section("time to defect")
+		{
+			check     ( GradualS::timeToDefect(2 , triggles) );
+			check     ( GradualS::timeToDefect(7 , triggles) );
+			check     ( GradualS::timeToDefect(8 , triggles) );
+			check     ( GradualS::timeToDefect(9 , triggles) );
+			checkFalse( GradualS::timeToDefect(0 , triggles) );
+			checkFalse( GradualS::timeToDefect(1 , triggles) );
+			checkFalse( GradualS::timeToDefect(3 , triggles) );
+			checkFalse( GradualS::timeToDefect(4 , triggles) );
+			checkFalse( GradualS::timeToDefect(5 , triggles) );
+			checkFalse( GradualS::timeToDefect(6 , triggles) );
+			checkFalse( GradualS::timeToDefect(10, triggles) );
+			checkFalse( GradualS::timeToDefect(11, triggles) );
+		}
+		std::vector<Decision> gradualSCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<gradualSDecisions.size() ; ++turn)
+		{
+			check( gradualS.makeDecision(gradualSCummulativeDecisions, partnerCummulativeDecisions) == gradualSDecisions.at(turn) );
+			gradualSCummulativeDecisions.push_back(gradualSDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
 	}
 	return;
 }
