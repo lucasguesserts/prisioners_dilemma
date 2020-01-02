@@ -1,6 +1,16 @@
 #include <Test.hpp>
 #include <Payoff.hpp>
 
+TestCase("Payoff order", "[Payoff]")
+{
+	check( Payoff::suckers    >  Payoff::punishment );
+	check( Payoff::punishment >  Payoff::reward );
+	check( Payoff::reward     >  Payoff::temptation );
+
+	check( 2*static_cast<int>(Payoff::reward)   >= static_cast<int>(Payoff::temptation) + static_cast<int>(Payoff::punishment) );
+	return;
+}
+
 TestCase("Payoff left", "[PayoffComputer]")
 {
 	check( PayoffComputer::left(Decision::cooperate, Decision::cooperate) == Payoff::reward     );
