@@ -64,3 +64,13 @@ TestCase("Tit for tat", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Random", "[Strategies]")
+{
+	for(auto i=0 ; i<20 ; ++i)
+	{
+		auto decision = randS.makeDecision(emptyDecisions, emptyDecisions);
+		check( ((decision==Decision::cooperate) || (decision==Decision::defect)) );
+	}
+	return;
+}

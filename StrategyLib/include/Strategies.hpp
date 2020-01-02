@@ -45,8 +45,22 @@ class TitForTat: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class RandomStrategy: public Strategy
+{
+	public:
+		RandomStrategy(void)
+			: Strategy(
+					"Random Strategy",
+					"RANDS",
+					"Makes a random decision."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
+extern RandomStrategy  randS;
 
 #endif
