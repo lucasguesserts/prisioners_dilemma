@@ -246,3 +246,35 @@ TestCase("Gradual", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Soft majority", "[Strategies]")
+{
+	std::vector<Decision> smDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( sm.name == "Soft Majority" );
+		check( sm.shortName == "SM" );
+	}
+	section("Initial move")
+	{
+		check( sm.makeDecision({}, {}) == Decision::cooperate );
+	}
+	section("majority cooperation")
+	{
+		smDecisions      = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		check( sm.makeDecision(smDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("equals cooperate and defect")
+	{
+		smDecisions      = {Decision::cooperate, Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate, Decision::defect   };
+		check( sm.makeDecision(smDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("more defect than cooperate")
+	{
+		smDecisions      = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
+		check( sm.makeDecision(smDecisions, partnerDecisions) == Decision::defect );
+	}
+}

@@ -115,6 +115,19 @@ class GradualS: public Strategy
 		static bool timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
 };
 
+class SoftMajority: public Strategy
+{
+	public:
+		SoftMajority(void)
+			: Strategy(
+					"Soft Majority",
+					"SM",
+					"Cooperates as long as the number of defections of the partner is not greater than the number of cooperations."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
@@ -123,5 +136,6 @@ extern GrimTrigger     grim;
 extern Pavlov          pvl;
 extern TitForTwoTats   tftt;
 extern GradualS        gradualS;
+extern SoftMajority    sm;
 
 #endif
