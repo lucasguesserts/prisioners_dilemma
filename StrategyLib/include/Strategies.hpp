@@ -141,6 +141,18 @@ class HardMajority: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class NaiveProber: public Strategy
+{
+	public:
+		NaiveProber(double probabilityOfDefecting = 0.10);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double probabilityOfDefecting;
+		bool randomlyDefect(void);
+};
+
 extern AlwaysCooperate allC;
 extern AlwaysDefect    allD;
 extern TitForTat       tft ;
@@ -151,5 +163,6 @@ extern TitForTwoTats   tftt;
 extern GradualS        gradualS;
 extern SoftMajority    sm;
 extern HardMajority    hm;
+extern NaiveProber     np;
 
 #endif

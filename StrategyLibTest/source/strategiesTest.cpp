@@ -310,3 +310,32 @@ TestCase("Hard majority", "[Strategies]")
 		check( hm.makeDecision(hmDecisions, partnerDecisions) == Decision::defect );
 	}
 }
+
+TestCase("Naive prober", "[Strategies]")
+{
+	std::vector<Decision> npDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( np.name ==      "Naive Prober" );
+		check( np.shortName == "NP"           );
+	}
+	section("initial decisions")
+	{
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision({},{});});
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision({},{});});
+	}
+	section("tit for tat cooperate")
+	{
+		npDecisions      = {Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate};
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
+	}
+	section("tit for tat defect")
+	{
+		npDecisions      = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( np.makeDecision(npDecisions, partnerDecisions) == Decision::defect );
+	}
+	return;
+}

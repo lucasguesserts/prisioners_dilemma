@@ -2,6 +2,7 @@
 #include <Payoff.hpp>
 #include <random>
 #include <algorithm>
+#include <stdexcept>
 
 AlwaysCooperate allC;
 AlwaysDefect    allD;
@@ -13,6 +14,7 @@ TitForTwoTats   tftt;
 GradualS        gradualS;
 SoftMajority    sm;
 HardMajority    hm;
+NaiveProber     np;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -167,4 +169,40 @@ Decision HardMajority::makeDecision(
 	unsigned numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	unsigned numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
 	return (numberOfCooperates > numberOfDefects) ? Decision::cooperate : Decision::defect;
+}
+
+NaiveProber::NaiveProber(double probabilityOfDefecting)
+	: Strategy(
+			"Naive Prober",
+			"NP",
+			"Like Tit for Tat, but ocasionally defects with a small probability.")
+{
+	if ((probabilityOfDefecting < 0.0) || (1.0 < probabilityOfDefecting))
+		throw std::domain_error("Probability of defecting in Naive Prober has to be between 0.0 and 1.0.");
+	this->probabilityOfDefecting = probabilityOfDefecting;
+}
+
+Decision NaiveProber::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (this->randomlyDefect())
+		decision = Decision::defect;
+	else
+	{
+		if (partnerDecision.size()==0)
+			decision = Decision::cooperate;
+		else
+			decision = partnerDecision.back();
+	}
+	return decision;
+}
+
+bool NaiveProber::randomlyDefect(void)
+{
+	static std::default_random_engine generator;
+	static std::uniform_real_distribution<double> distribution(0.0,1.0);
+	return distribution(generator) < this->probabilityOfDefecting;
 }
