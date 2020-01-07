@@ -3,42 +3,57 @@
 
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
-std::vector<Decision> startDefecting = {Decision::defect};
+std::vector<Decision> startDefecting   = {Decision::defect};
 
 TestCase("Polimorphism", "[Strategy]")
 {
 	Strategy * strategy = &allD;
-	check( strategy->name        == "Always Defect" );
-	check( strategy->shortName   == "AllD" );
-	check( strategy->description == "Always defect." );
-
-	check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
-	check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-	check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	section("metadata")
+	{
+		check( strategy->name        == "Always Defect" );
+		check( strategy->shortName   == "AllD" );
+		check( strategy->description == "Always defect." );
+	}
+	section("test decisions")
+	{
+		check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+		check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+		check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	}
 	return;
 }
 
 TestCase("Always cooperate", "[Strategies]")
 {
-	check( allC.name        == "Always Cooperate" );
-	check( allC.shortName   == "AllC" );
-	check( allC.description == "Always cooperate." );
-
-	check( allC.makeDecision(emptyDecisions,   emptyDecisions) == Decision::cooperate );
-	check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
-	check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
+	section("metadata")
+	{
+		check( allC.name        == "Always Cooperate" );
+		check( allC.shortName   == "AllC" );
+		check( allC.description == "Always cooperate." );
+	}
+	section("test decisions")
+	{
+		check( allC.makeDecision(emptyDecisions,   emptyDecisions) == Decision::cooperate );
+		check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
+		check( allC.makeDecision(startCooperating, startDefecting) == Decision::cooperate );
+	}
 	return;
 }
 
 TestCase("Always defect", "[Strategies]")
 {
-	check( allD.name        == "Always Defect" );
-	check( allD.shortName   == "AllD" );
-	check( allD.description == "Always defect." );
-
-	check( allD.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
-	check( allD.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-	check( allD.makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	section("metadata")
+	{
+		check( allD.name        == "Always Defect" );
+		check( allD.shortName   == "AllD" );
+		check( allD.description == "Always defect." );
+	}
+	section("test decisions")
+	{
+		check( allD.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+		check( allD.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+		check( allD.makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	}
 	return;
 }
 
@@ -72,6 +87,9 @@ TestCase("Random", "[Strategies]")
 		auto decision = randS.makeDecision(emptyDecisions, emptyDecisions);
 		check( ((decision==Decision::cooperate) || (decision==Decision::defect)) );
 	}
+	auto randomDecision = []{return randS.makeDecision(emptyDecisions, emptyDecisions);};
+	checkDiscreteProbability(Decision::cooperate, 0.50, randomDecision);
+	checkDiscreteProbability(Decision::defect   , 0.50, randomDecision);
 	return;
 }
 
