@@ -1,4 +1,5 @@
 #include <vector>
+#include <random>
 
 #include <Test.hpp>
 
@@ -19,6 +20,7 @@ TestCase("catch test", "[basic]")
 		checkFalse( a==b );
 		requireFalse( a==b );
 	}
+	return;
 }
 
 TestCase("catch floating point test", "[basic]")
@@ -29,6 +31,7 @@ TestCase("catch floating point test", "[basic]")
 	require( a==b );
 	b = 3.141592;
 	require( a==Approx(b) );
+	return;
 }
 
 TestCase("cpp_11_foreach", "[basic]")
@@ -44,4 +47,15 @@ TestCase("cpp_11_foreach", "[basic]")
 		check( rawValues[counter]==v );
 		++counter; 
 	}
+	return;
+}
+
+TestCase("check with a probability", "[basic]")
+{
+	std::default_random_engine randomGenerator;
+	std::uniform_int_distribution<unsigned> uniformDistribution(0, 9);
+	auto randFunc = [&randomGenerator, &uniformDistribution](){return uniformDistribution(randomGenerator);};
+	checkDiscreteProbability(4u, 0.1, randFunc);
+	checkDiscreteProbability(8u, 0.1, randFunc);
+	return;
 }
