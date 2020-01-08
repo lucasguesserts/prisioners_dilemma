@@ -419,3 +419,92 @@ TestCase("Soft Grudger", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Prober", "[Strategies]")
+{
+	require( pb.name      == "Prober" );
+	require( pb.shortName == "PB"     );
+	section("initial decisions")
+	{
+		check( pb.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::defect    );
+		check( pb.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
+		check( pb.makeDecision(twoCooperations , twoCooperations ) == Decision::cooperate );
+	}
+	section("defection behavior")
+	{
+		std::vector<Decision> pbDecisions{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
+		{
+			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
+			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
+	}
+	section("tit for tat behavior 1")
+	{
+		std::vector<Decision> pbDecisions{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+		};
+		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
+		{
+			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
+			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
+	}
+	section("tit for tat behavior 2")
+	{
+		std::vector<Decision> pbDecisions{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+		};
+		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
+		{
+			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
+			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
+	}
+	return;
+}

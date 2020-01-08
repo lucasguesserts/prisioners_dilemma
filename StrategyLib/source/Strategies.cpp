@@ -17,6 +17,7 @@ HardMajority     hm;
 NaiveProber      np;
 RemorsefulProber rp;
 SoftGrudger      sg;
+Prober           pb;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -316,4 +317,36 @@ bool SoftGrudger::timeToDefect(unsigned turn, std::vector<unsigned> triggles)
 		}
 	}
 	return defect;
+}
+
+Decision Prober::makeDecision(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	unsigned turn = thisDecision.size();
+	if (turn<=2)
+		decision = Prober::initialDecision(turn); // Start with D,C,C
+	else
+	{
+		if (Prober::defectionBehavior(partnerDecision))
+			decision = Decision::defect; // defection behavior
+		else
+			decision = partnerDecision.back(); // tit for tat behavior
+	}
+	return decision;
+}
+
+Decision Prober::initialDecision(unsigned turn)
+{
+	static std::vector<Decision> initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
+	return initialDecisions.at(turn);
+}
+
+bool Prober::defectionBehavior(std::vector<Decision> partnerDecision)
+{
+	auto secondDecision = *(partnerDecision.cbegin() + 1);
+	auto thirdDecision  = *(partnerDecision.cbegin() + 2);
+	return (secondDecision==Decision::cooperate) && (thirdDecision==Decision::cooperate);
 }

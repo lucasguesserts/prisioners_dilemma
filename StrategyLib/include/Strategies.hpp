@@ -185,6 +185,22 @@ class SoftGrudger: public Strategy
 		bool                  timeToDefect(unsigned turn, std::vector<unsigned> triggles);
 };
 
+class Prober: public Strategy
+{
+	public:
+		Prober(void)
+			: Strategy(
+					"Prober",
+					"PB",
+					"Start with D,C,C. If the partner cooperated in the second and third move, always defect afterward. Play tit for tat otherwise."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		Decision initialDecision(unsigned turn);
+		bool     defectionBehavior(std::vector<Decision> partnerDecision);
+};
+
 extern AlwaysCooperate  allC;
 extern AlwaysDefect     allD;
 extern TitForTat        tft ;
@@ -198,5 +214,6 @@ extern HardMajority     hm;
 extern NaiveProber      np;
 extern RemorsefulProber rp;
 extern SoftGrudger      sg;
+extern Prober           pb;
 
 #endif
