@@ -12,7 +12,7 @@
 #define requireFalse REQUIRE_FALSE
 
 #define checkDiscreteProbability(val, prob, func)\
-   check( probability(val, func) == Approx(prob).epsilon(0.01) )
+   check( probability(val, func) == Approx(prob).epsilon(0.05) )
 
 template <typename Val, typename RandomClass>
 double probability(Val val, RandomClass func)
