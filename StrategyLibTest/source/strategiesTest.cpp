@@ -4,6 +4,7 @@
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting   = {Decision::defect};
+std::vector<Decision> twoCooperations  = {Decision::cooperate, Decision::cooperate};
 
 TestCase("Polimorphism", "[Strategy]")
 {
@@ -351,6 +352,70 @@ TestCase("Remorseful Prober", "[Strategies]")
 		partnerDecisions = {Decision::cooperate, Decision::defect   };
 		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect);
 		check( rp.makeDecision(startCooperating, startDefecting)   == Decision::defect );
+	}
+	return;
+}
+
+TestCase("Soft Grudger", "[Strategies]")
+{
+	require( sg.name      == "Soft Grudger" );
+	require( sg.shortName == "SG"           );
+	section("initial decision")
+	{
+		check( sg.makeDecision(emptyDecisions, emptyDecisions)     == Decision::cooperate );
+	}
+	section("cooperation")
+	{
+		check( sg.makeDecision(startCooperating, startCooperating) == Decision::cooperate);
+		check( sg.makeDecision(twoCooperations, twoCooperations)   == Decision::cooperate);
+	}
+	section("reaction to defection")
+	{
+		std::vector<Decision> sgDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate
+		};
+		std::vector<Decision> sgCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<sgDecisions.size() ; ++turn)
+		{
+			check( sg.makeDecision(sgCummulativeDecisions, partnerCummulativeDecisions) == sgDecisions.at(turn) );
+			sgCummulativeDecisions.push_back(sgDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
 	}
 	return;
 }

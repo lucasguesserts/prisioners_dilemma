@@ -169,6 +169,22 @@ class RemorsefulProber: public Strategy
 
 };
 
+class SoftGrudger: public Strategy
+{
+	public:
+		SoftGrudger(void)
+			: Strategy(
+					"Soft Grudger",
+					"SG",
+					"After a partner defection, react with D,D,D,D,C,C."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		std::vector<unsigned> findTriggles(std::vector<Decision> partnerDecision);
+		bool                  timeToDefect(unsigned turn, std::vector<unsigned> triggles);
+};
+
 extern AlwaysCooperate  allC;
 extern AlwaysDefect     allD;
 extern TitForTat        tft ;
@@ -181,5 +197,6 @@ extern SoftMajority     sm;
 extern HardMajority     hm;
 extern NaiveProber      np;
 extern RemorsefulProber rp;
+extern SoftGrudger      sg;
 
 #endif

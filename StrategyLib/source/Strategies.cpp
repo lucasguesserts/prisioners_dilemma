@@ -16,6 +16,7 @@ SoftMajority     sm;
 HardMajority     hm;
 NaiveProber      np;
 RemorsefulProber rp;
+SoftGrudger      sg;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -273,4 +274,46 @@ bool RemorsefulProber::probePartner(void)
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
 	return distribution(generator) < this->probabilityOfProbing;
+}
+
+Decision SoftGrudger::makeDecision(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	auto triggles = SoftGrudger::findTriggles(partnerDecision);
+	if (SoftGrudger::timeToDefect(thisDecision.size(), triggles))
+		decision = Decision::defect;
+	else // time to cooperate incorporated in 'findTrigges' algorithm.
+		decision = Decision::cooperate;
+	return decision;
+}
+
+std::vector<unsigned> SoftGrudger::findTriggles(std::vector<Decision> partnerDecision)
+{
+	std::vector<unsigned> triggles;
+	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
+	{
+		if (partnerDecision.at(turn) == Decision::defect)
+		{
+			triggles.push_back(turn);
+			turn += 6;
+		}
+	}
+	return triggles;
+}
+
+bool SoftGrudger::timeToDefect(unsigned turn, std::vector<unsigned> triggles)
+{
+	bool defect = false;
+	for (auto& triggleTurn: triggles)
+	{
+		if ( (turn > triggleTurn) && (turn <= triggleTurn + 4) )
+		{
+			defect = true;
+			break;
+		}
+	}
+	return defect;
 }
