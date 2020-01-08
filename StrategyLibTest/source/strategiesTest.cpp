@@ -8,12 +8,9 @@ std::vector<Decision> startDefecting   = {Decision::defect};
 TestCase("Polimorphism", "[Strategy]")
 {
 	Strategy * strategy = &allD;
-	section("metadata")
-	{
-		check( strategy->name        == "Always Defect" );
-		check( strategy->shortName   == "AllD" );
-		check( strategy->description == "Always defect." );
-	}
+	require( strategy->name        == "Always Defect" );
+	require( strategy->shortName   == "AllD" );
+	require( strategy->description == "Always defect." );
 	section("test decisions")
 	{
 		check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
@@ -25,12 +22,9 @@ TestCase("Polimorphism", "[Strategy]")
 
 TestCase("Always cooperate", "[Strategies]")
 {
-	section("metadata")
-	{
-		check( allC.name        == "Always Cooperate" );
-		check( allC.shortName   == "AllC" );
-		check( allC.description == "Always cooperate." );
-	}
+	require( allC.name        == "Always Cooperate" );
+	require( allC.shortName   == "AllC" );
+	require( allC.description == "Always cooperate." );
 	section("test decisions")
 	{
 		check( allC.makeDecision(emptyDecisions,   emptyDecisions) == Decision::cooperate );
@@ -42,12 +36,9 @@ TestCase("Always cooperate", "[Strategies]")
 
 TestCase("Always defect", "[Strategies]")
 {
-	section("metadata")
-	{
-		check( allD.name        == "Always Defect" );
-		check( allD.shortName   == "AllD" );
-		check( allD.description == "Always defect." );
-	}
+	require( allD.name        == "Always Defect" );
+	require( allD.shortName   == "AllD" );
+	require( allD.description == "Always defect." );
 	section("test decisions")
 	{
 		check( allD.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
@@ -59,12 +50,9 @@ TestCase("Always defect", "[Strategies]")
 
 TestCase("Tit for tat", "[Strategies]")
 {
-	section("metadata")
-	{
-		check( tft.name        == "Tit for Tat" );
-		check( tft.shortName   == "TFT" );
-		check( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
-	}
+	require( tft.name        == "Tit for Tat" );
+	require( tft.shortName   == "TFT" );
+	require( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
 	section("Basic decisions")
 	{
 		check( tft.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
@@ -95,11 +83,8 @@ TestCase("Random", "[Strategies]")
 
 TestCase("Grim Trigger", "[Strategies]")
 {
-	section("metadata")
-	{
-		check( grim.name        == "Grim Trigger" );
-		check( grim.shortName   == "Grim"         );
-	}
+	require( grim.name        == "Grim Trigger" );
+	require( grim.shortName   == "Grim"         );
 	section("Basic decisions")
 	{
 		check( grim.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
@@ -118,11 +103,8 @@ TestCase("Grim Trigger", "[Strategies]")
 TestCase("Pavlov", "[Strategies]")
 {
 	std::vector<Decision> pavlovDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( pvl.name ==      "Pavlov" );
-		check( pvl.shortName == "PVL"    );
-	}
+	require( pvl.name ==      "Pavlov" );
+	require( pvl.shortName == "PVL"    );
 	section("initial decision")
 	{
 		pavlovDecisions  = {};
@@ -159,11 +141,8 @@ TestCase("Pavlov", "[Strategies]")
 TestCase("Tit for two tats", "[Strategies]")
 {
 	std::vector<Decision> tfttDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( tftt.name ==      "Tit for Two Tats" );
-		check( tftt.shortName == "TFTT"    );
-	}
+	require( tftt.name ==      "Tit for Two Tats" );
+	require( tftt.shortName == "TFTT"    );
 	section("initial decisions")
 	{
 		check( tftt.makeDecision({}, {})                                       == Decision::cooperate );
@@ -193,11 +172,8 @@ TestCase("Tit for two tats", "[Strategies]")
 
 TestCase("Gradual", "[Strategies]")
 {
-	section("metadata")
-	{
-		check( gradualS.name ==      "Gradual Strategy" );
-		check( gradualS.shortName == "GradualS"    );
-	}
+	require( gradualS.name ==      "Gradual Strategy" );
+	require( gradualS.shortName == "GradualS"    );
 	section("initial decisions")
 	{
 		check( gradualS.makeDecision({}, {})                                       == Decision::cooperate );
@@ -268,11 +244,8 @@ TestCase("Gradual", "[Strategies]")
 TestCase("Soft majority", "[Strategies]")
 {
 	std::vector<Decision> smDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( sm.name == "Soft Majority" );
-		check( sm.shortName == "SM" );
-	}
+	require( sm.name == "Soft Majority" );
+	require( sm.shortName == "SM" );
 	section("Initial move")
 	{
 		check( sm.makeDecision({}, {}) == Decision::cooperate );
@@ -300,11 +273,8 @@ TestCase("Soft majority", "[Strategies]")
 TestCase("Hard majority", "[Strategies]")
 {
 	std::vector<Decision> hmDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( hm.name == "Hard Majority" );
-		check( hm.shortName == "HM" );
-	}
+	require( hm.name == "Hard Majority" );
+	require( hm.shortName == "HM" );
 	section("Initial move")
 	{
 		check( hm.makeDecision({}, {}) == Decision::defect );
@@ -332,11 +302,8 @@ TestCase("Hard majority", "[Strategies]")
 TestCase("Naive prober", "[Strategies]")
 {
 	std::vector<Decision> npDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( np.name ==      "Naive Prober" );
-		check( np.shortName == "NP"           );
-	}
+	require( np.name ==      "Naive Prober" );
+	require( np.shortName == "NP"           );
 	section("initial decisions")
 	{
 		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision({},{});});
@@ -361,11 +328,8 @@ TestCase("Naive prober", "[Strategies]")
 TestCase("Remorseful Prober", "[Strategies]")
 {
 	std::vector<Decision> rpDecisions, partnerDecisions;
-	section("metadata")
-	{
-		check( rp.name      == "Remorseful Prober" );
-		check( rp.shortName == "RP"                );
-	}
+	require( rp.name      == "Remorseful Prober" );
+	require( rp.shortName == "RP"                );
 	section("initial decision")
 	{
 		check( rp.makeDecision(emptyDecisions, emptyDecisions) == Decision::cooperate );
