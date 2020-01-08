@@ -201,6 +201,19 @@ class Prober: public Strategy
 		bool     defectionBehavior(std::vector<Decision> partnerDecision);
 };
 
+class FirmButFair: public Strategy
+{
+	public:
+		FirmButFair(void)
+			: Strategy(
+					"Firm but Fair",
+					"FBF",
+					"Defects only after receiving a sucker's payoff."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate  allC;
 extern AlwaysDefect     allD;
 extern TitForTat        tft ;
@@ -215,5 +228,6 @@ extern NaiveProber      np;
 extern RemorsefulProber rp;
 extern SoftGrudger      sg;
 extern Prober           pb;
+extern FirmButFair      fbf;
 
 #endif

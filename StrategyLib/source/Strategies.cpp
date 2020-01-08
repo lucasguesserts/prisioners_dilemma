@@ -18,6 +18,7 @@ NaiveProber      np;
 RemorsefulProber rp;
 SoftGrudger      sg;
 Prober           pb;
+FirmButFair      fbf;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -349,4 +350,19 @@ bool Prober::defectionBehavior(std::vector<Decision> partnerDecision)
 	auto secondDecision = *(partnerDecision.cbegin() + 1);
 	auto thirdDecision  = *(partnerDecision.cbegin() + 2);
 	return (secondDecision==Decision::cooperate) && (thirdDecision==Decision::cooperate);
+}
+
+Decision FirmButFair::makeDecision(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.empty())
+		decision = Decision::cooperate;
+	else if (PayoffComputer::left(thisDecision.back(), partnerDecision.back()) == Payoff::suckers)
+		decision = Decision::defect;
+	else
+		decision = Decision::cooperate;
+	return decision;
 }

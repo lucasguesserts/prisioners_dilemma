@@ -508,3 +508,47 @@ TestCase("Prober", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Firm but Fair", "[Strategies]")
+{
+	require( fbf.name      == "Firm but Fair" );
+	require( fbf.shortName == "FBF"           );
+	section("initial decisions")
+	{
+		check( fbf.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::cooperate );
+	}
+	section("all cases")
+	{
+		std::vector<Decision> fbfDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		// fbf decision, partner decision -> fbf payoff -> fbf next decision
+		// cooperate, cooperate -> reward     -> cooperate
+		// cooperate, defect    -> suckers    -> defect
+		// defect   , cooperate -> temptation -> cooperate
+		// cooperate, defect    -> suckers    -> defect
+		// defect   , defect    -> punishment -> cooperate
+		// cooperate, cooperate -> reward     -> cooperate
+		std::vector<Decision> fbfCummulativeDecisions, partnerCummulativeDecisions;
+		for (std::vector<Decision>::size_type turn=0 ; turn<fbfDecisions.size() ; ++turn)
+		{
+			check( fbf.makeDecision(fbfCummulativeDecisions, partnerCummulativeDecisions) == fbfDecisions.at(turn) );
+			fbfCummulativeDecisions.push_back(fbfDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
+	}
+	return;
+}
