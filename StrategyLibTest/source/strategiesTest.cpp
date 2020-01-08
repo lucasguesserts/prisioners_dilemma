@@ -357,3 +357,36 @@ TestCase("Naive prober", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Remorseful Prober", "[Strategies]")
+{
+	std::vector<Decision> rpDecisions, partnerDecisions;
+	section("metadata")
+	{
+		check( rp.name      == "Remorseful Prober" );
+		check( rp.shortName == "RP"                );
+	}
+	section("initial decision")
+	{
+		check( rp.makeDecision(emptyDecisions, emptyDecisions) == Decision::cooperate );
+	}
+	section("cooperating only")
+	{
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return rp.makeDecision(startCooperating, startCooperating);});
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return rp.makeDecision(startCooperating, startCooperating);});
+	}
+	section("remorse because of probing behavior")
+	{
+		rpDecisions      = {Decision::cooperate, Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		check( rp.makeDecision(rpDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("answer to defections")
+	{
+		rpDecisions      = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect);
+		check( rp.makeDecision(startCooperating, startDefecting)   == Decision::defect );
+	}
+	return;
+}

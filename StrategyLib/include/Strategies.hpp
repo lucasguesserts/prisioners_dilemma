@@ -153,16 +153,33 @@ class NaiveProber: public Strategy
 		bool randomlyDefect(void);
 };
 
-extern AlwaysCooperate allC;
-extern AlwaysDefect    allD;
-extern TitForTat       tft ;
-extern RandomStrategy  randS;
-extern GrimTrigger     grim;
-extern Pavlov          pvl;
-extern TitForTwoTats   tftt;
-extern GradualS        gradualS;
-extern SoftMajority    sm;
-extern HardMajority    hm;
-extern NaiveProber     np;
+class RemorsefulProber: public Strategy
+{
+	public:
+		RemorsefulProber(double probabilityOfProbing = 0.10);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double probabilityOfProbing;
+		bool wasProbing(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision);
+		bool probePartner(void);
+
+};
+
+extern AlwaysCooperate  allC;
+extern AlwaysDefect     allD;
+extern TitForTat        tft ;
+extern RandomStrategy   randS;
+extern GrimTrigger      grim;
+extern Pavlov           pvl;
+extern TitForTwoTats    tftt;
+extern GradualS         gradualS;
+extern SoftMajority     sm;
+extern HardMajority     hm;
+extern NaiveProber      np;
+extern RemorsefulProber rp;
 
 #endif
