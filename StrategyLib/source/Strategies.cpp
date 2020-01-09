@@ -4,22 +4,23 @@
 #include <algorithm>
 #include <stdexcept>
 
-AlwaysCooperate  allC;
-AlwaysDefect     allD;
-TitForTat        tft;
-RandomStrategy   randS;
-GrimTrigger      grim;
-Pavlov           pvl;
-TitForTwoTats    tftt;
-GradualS         gradualS;
-SoftMajority     sm;
-HardMajority     hm;
-NaiveProber      np;
-RemorsefulProber rp;
-SoftGrudger      sg;
-Prober           pb;
-FirmButFair      fbf;
-ReverseTitForTat rtft;
+AlwaysCooperate   allC;
+AlwaysDefect      allD;
+TitForTat         tft;
+RandomStrategy    randS;
+GrimTrigger       grim;
+Pavlov            pvl;
+TitForTwoTats     tftt;
+GradualS          gradualS;
+SoftMajority      sm;
+HardMajority      hm;
+NaiveProber       np;
+RemorsefulProber  rp;
+SoftGrudger       sg;
+Prober            pb;
+FirmButFair       fbf;
+ReverseTitForTat  rtft;
+GenerousTitForTat gtft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -379,4 +380,38 @@ Decision ReverseTitForTat::makeDecision(
 	else
 		decision = ! partnerDecision.back();
 	return decision;
+}
+
+GenerousTitForTat::GenerousTitForTat(double probabilityOfCooperating)
+	: Strategy(
+		"Generous Tit for Tat",
+		"GTFT",
+		"Like Tit for Tat, but after the partner defects, it cooperates with a small probability."
+	  )
+{
+	if ((probabilityOfCooperating < 0.0) || (1.0 < probabilityOfCooperating))
+		throw std::domain_error("Probability of cooperating in Generous Tit for Tat has to be between 0.0 and 1.0.");
+	this->probabilityOfCooperating = probabilityOfCooperating;
+}
+
+Decision GenerousTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.size()==0)
+		decision = Decision::cooperate;
+	else if (this->cooperateAfterDefection())
+		decision = Decision::cooperate; // Cooperate no matter what
+	else
+		decision = partnerDecision.back(); // Like Tit for Tat
+	return decision;
+}
+
+bool GenerousTitForTat::cooperateAfterDefection(void)
+{
+	static std::default_random_engine generator;
+	static std::uniform_real_distribution<double> distribution(0.0,1.0);
+	return distribution(generator) < this->probabilityOfCooperating;
 }

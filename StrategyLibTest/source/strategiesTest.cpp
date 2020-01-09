@@ -571,3 +571,25 @@ TestCase("Reverse Tit for tat", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Generous Tit for tat", "[Strategies]")
+{
+	require( gtft.name        == "Generous Tit for Tat" );
+	require( gtft.shortName   == "GTFT" );
+	section("initial decision")
+	{
+		check( gtft.makeDecision(emptyDecisions, emptyDecisions) == Decision::cooperate );
+	}
+	section("cooperation behavior")
+	{
+		auto randFunc = []{return gtft.makeDecision(startCooperating,startCooperating);};
+		checkDiscreteProbability(Decision::cooperate, 1.0, randFunc);
+	}
+	section("defection behavior")
+	{
+		auto randFunc = []{return gtft.makeDecision(startCooperating,startDefecting  );};
+		checkDiscreteProbability(Decision::cooperate, 0.1, randFunc);
+		checkDiscreteProbability(Decision::defect   , 0.9, randFunc);
+	}
+	return;
+}

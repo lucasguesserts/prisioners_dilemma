@@ -227,21 +227,34 @@ class ReverseTitForTat: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-extern AlwaysCooperate  allC;
-extern AlwaysDefect     allD;
-extern TitForTat        tft ;
-extern RandomStrategy   randS;
-extern GrimTrigger      grim;
-extern Pavlov           pvl;
-extern TitForTwoTats    tftt;
-extern GradualS         gradualS;
-extern SoftMajority     sm;
-extern HardMajority     hm;
-extern NaiveProber      np;
-extern RemorsefulProber rp;
-extern SoftGrudger      sg;
-extern Prober           pb;
-extern FirmButFair      fbf;
-extern ReverseTitForTat rtft;
+class GenerousTitForTat: public Strategy
+{
+	public:
+		GenerousTitForTat(double probabilityOfCooperating = 0.1);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double probabilityOfCooperating;
+		bool cooperateAfterDefection(void);
+};
+
+extern AlwaysCooperate   allC;
+extern AlwaysDefect      allD;
+extern TitForTat         tft ;
+extern RandomStrategy    randS;
+extern GrimTrigger       grim;
+extern Pavlov            pvl;
+extern TitForTwoTats     tftt;
+extern GradualS          gradualS;
+extern SoftMajority      sm;
+extern HardMajority      hm;
+extern NaiveProber       np;
+extern RemorsefulProber  rp;
+extern SoftGrudger       sg;
+extern Prober            pb;
+extern FirmButFair       fbf;
+extern ReverseTitForTat  rtft;
+extern GenerousTitForTat gtft;
 
 #endif
