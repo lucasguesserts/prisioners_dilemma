@@ -239,22 +239,36 @@ class GenerousTitForTat: public Strategy
 		bool cooperateAfterDefection(void);
 };
 
-extern AlwaysCooperate   allC;
-extern AlwaysDefect      allD;
-extern TitForTat         tft ;
-extern RandomStrategy    randS;
-extern GrimTrigger       grim;
-extern Pavlov            pvl;
-extern TitForTwoTats     tftt;
-extern GradualS          gradualS;
-extern SoftMajority      sm;
-extern HardMajority      hm;
-extern NaiveProber       np;
-extern RemorsefulProber  rp;
-extern SoftGrudger       sg;
-extern Prober            pb;
-extern FirmButFair       fbf;
-extern ReverseTitForTat  rtft;
-extern GenerousTitForTat gtft;
+class SuspiciousTitForTat: public Strategy
+{
+	public:
+		SuspiciousTitForTat(void)
+			: Strategy(
+					"Suspicious Tit for Tat",
+					"STFT",
+					"Start defecting. Copy opponent's last move afterwards."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
+extern AlwaysCooperate     allC;
+extern AlwaysDefect        allD;
+extern TitForTat           tft ;
+extern RandomStrategy      randS;
+extern GrimTrigger         grim;
+extern Pavlov              pvl;
+extern TitForTwoTats       tftt;
+extern GradualS            gradualS;
+extern SoftMajority        sm;
+extern HardMajority        hm;
+extern NaiveProber         np;
+extern RemorsefulProber    rp;
+extern SoftGrudger         sg;
+extern Prober              pb;
+extern FirmButFair         fbf;
+extern ReverseTitForTat    rtft;
+extern GenerousTitForTat   gtft;
+extern SuspiciousTitForTat stft;
 
 #endif

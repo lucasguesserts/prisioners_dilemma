@@ -3,8 +3,9 @@
 
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
-std::vector<Decision> startDefecting   = {Decision::defect};
+std::vector<Decision> startDefecting   = {Decision::defect   };
 std::vector<Decision> twoCooperations  = {Decision::cooperate, Decision::cooperate};
+std::vector<Decision> twoDefections    = {Decision::defect,    Decision::defect   };
 
 TestCase("Polimorphism", "[Strategy]")
 {
@@ -590,6 +591,24 @@ TestCase("Generous Tit for tat", "[Strategies]")
 		auto randFunc = []{return gtft.makeDecision(startCooperating,startDefecting  );};
 		checkDiscreteProbability(Decision::cooperate, 0.1, randFunc);
 		checkDiscreteProbability(Decision::defect   , 0.9, randFunc);
+	}
+	return;
+}
+
+TestCase("Suspisious Tit for Tat", "[Strategies]")
+{
+	require( stft.name        == "Suspicious Tit for Tat" );
+	require( stft.shortName   == "STFT" );
+	section("Basic decisions")
+	{
+		check( stft.makeDecision(emptyDecisions, emptyDecisions  ) == Decision::defect    );
+		check( stft.makeDecision(startDefecting, startDefecting  ) == Decision::defect    );
+		check( stft.makeDecision(startDefecting, startCooperating) == Decision::cooperate );
+	}
+	section("Complex decisions")
+	{
+		check( stft.makeDecision(twoCooperations, twoCooperations ) == Decision::cooperate );
+		check( stft.makeDecision(twoDefections  , twoDefections   ) == Decision::defect    );
 	}
 	return;
 }

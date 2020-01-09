@@ -4,23 +4,24 @@
 #include <algorithm>
 #include <stdexcept>
 
-AlwaysCooperate   allC;
-AlwaysDefect      allD;
-TitForTat         tft;
-RandomStrategy    randS;
-GrimTrigger       grim;
-Pavlov            pvl;
-TitForTwoTats     tftt;
-GradualS          gradualS;
-SoftMajority      sm;
-HardMajority      hm;
-NaiveProber       np;
-RemorsefulProber  rp;
-SoftGrudger       sg;
-Prober            pb;
-FirmButFair       fbf;
-ReverseTitForTat  rtft;
-GenerousTitForTat gtft;
+AlwaysCooperate     allC;
+AlwaysDefect        allD;
+TitForTat           tft;
+RandomStrategy      randS;
+GrimTrigger         grim;
+Pavlov              pvl;
+TitForTwoTats       tftt;
+GradualS            gradualS;
+SoftMajority        sm;
+HardMajority        hm;
+NaiveProber         np;
+RemorsefulProber    rp;
+SoftGrudger         sg;
+Prober              pb;
+FirmButFair         fbf;
+ReverseTitForTat    rtft;
+GenerousTitForTat   gtft;
+SuspiciousTitForTat stft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -414,4 +415,17 @@ bool GenerousTitForTat::cooperateAfterDefection(void)
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
 	return distribution(generator) < this->probabilityOfCooperating;
+}
+
+Decision SuspiciousTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.size()==0)
+		decision = Decision::defect;
+	else
+		decision = partnerDecision.back();
+	return decision;
 }
