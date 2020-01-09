@@ -214,6 +214,19 @@ class FirmButFair: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class ReverseTitForTat: public Strategy
+{
+	public:
+		ReverseTitForTat(void)
+			: Strategy(
+					"Reverse Tit for Tat",
+					"RTFT",
+					"Start defecting, then plays the reverse of the partner last decision."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate  allC;
 extern AlwaysDefect     allD;
 extern TitForTat        tft ;
@@ -229,5 +242,6 @@ extern RemorsefulProber rp;
 extern SoftGrudger      sg;
 extern Prober           pb;
 extern FirmButFair      fbf;
+extern ReverseTitForTat rtft;
 
 #endif

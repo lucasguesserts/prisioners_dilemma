@@ -552,3 +552,22 @@ TestCase("Firm but Fair", "[Strategies]")
 	}
 	return;
 }
+
+TestCase("Reverse Tit for tat", "[Strategies]")
+{
+	require( rtft.name        == "Reverse Tit for Tat" );
+	require( rtft.shortName   == "RTFT" );
+	section("Basic decisions")
+	{
+		check( rtft.makeDecision(emptyDecisions, emptyDecisions  ) == Decision::defect    );
+		check( rtft.makeDecision(startDefecting, startDefecting  ) == Decision::cooperate );
+		check( rtft.makeDecision(startDefecting, startCooperating) == Decision::defect    );
+	}
+	section("Complex decisions")
+	{
+		std::vector<Decision> rtftPartner   = {Decision::defect   , Decision::defect, Decision::cooperate};
+		std::vector<Decision> rtftDecisions = {Decision::cooperate, Decision::defect, Decision::cooperate};
+		check( rtft.makeDecision(rtftDecisions, rtftPartner ) == Decision::defect );
+	}
+	return;
+}

@@ -19,6 +19,7 @@ RemorsefulProber rp;
 SoftGrudger      sg;
 Prober           pb;
 FirmButFair      fbf;
+ReverseTitForTat rtft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -364,5 +365,18 @@ Decision FirmButFair::makeDecision(
 		decision = Decision::defect;
 	else
 		decision = Decision::cooperate;
+	return decision;
+}
+
+Decision ReverseTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.size()==0)
+		decision = Decision::defect;
+	else
+		decision = ! partnerDecision.back();
 	return decision;
 }
