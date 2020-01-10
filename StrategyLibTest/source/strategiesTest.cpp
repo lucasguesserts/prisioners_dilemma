@@ -1,4 +1,5 @@
 #include <Test.hpp>
+#include <iostream>
 #include <Strategies.hpp>
 
 std::vector<Decision> emptyDecisions = {};
@@ -609,6 +610,56 @@ TestCase("Suspisious Tit for Tat", "[Strategies]")
 	{
 		check( stft.makeDecision(twoCooperations, twoCooperations ) == Decision::cooperate );
 		check( stft.makeDecision(twoDefections  , twoDefections   ) == Decision::defect    );
+	}
+	return;
+}
+
+TestCase("Hard Tit For Tat", "[Strategies]")
+{
+	require( htft.name      == "Hard Tit for Tat" );
+	require( htft.shortName == "HTFT"             );
+	section("initial decisions")
+	{
+		check( htft.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::cooperate );
+	}
+	section("all cases")
+	{
+		std::vector<Decision> htftDecisions{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		};
+		std::vector<Decision> partnerDecisions{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		};
+		std::vector<Decision> htftCummulativeDecisions, partnerCummulativeDecisions;
+		std::cout << "Start of Test!!!" << "\n\n\n";
+		for (std::vector<Decision>::size_type turn=0 ; turn<htftDecisions.size() ; ++turn)
+		{
+			check( htft.makeDecision(htftCummulativeDecisions, partnerCummulativeDecisions) == htftDecisions.at(turn) );
+			htftCummulativeDecisions.push_back(htftDecisions.at(turn));
+			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
+		}
 	}
 	return;
 }

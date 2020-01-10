@@ -22,6 +22,7 @@ FirmButFair         fbf;
 ReverseTitForTat    rtft;
 GenerousTitForTat   gtft;
 SuspiciousTitForTat stft;
+HardTitForTat       htft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -427,5 +428,22 @@ Decision SuspiciousTitForTat::makeDecision(
 		decision = Decision::defect;
 	else
 		decision = partnerDecision.back();
+	return decision;
+}
+
+Decision HardTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-3); // beginning or the third from the end to the beginning
+	auto end   = partnerDecision.cend();
+	if (thisDecision.size()==0)
+		decision = Decision::cooperate;
+	else if (std::any_of(start, end, [](Decision d){return d==Decision::defect;}))
+		decision = Decision::defect;
+	else
+		decision = Decision::cooperate;
 	return decision;
 }

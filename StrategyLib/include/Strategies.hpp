@@ -252,6 +252,19 @@ class SuspiciousTitForTat: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class HardTitForTat: public Strategy
+{
+	public:
+		HardTitForTat(void)
+			: Strategy(
+					"Hard Tit for Tat",
+					"HTFT",
+					"Start cooperating. Defects if the partner has defected in any of the three previous turns."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 extern AlwaysCooperate     allC;
 extern AlwaysDefect        allD;
 extern TitForTat           tft ;
@@ -270,5 +283,6 @@ extern FirmButFair         fbf;
 extern ReverseTitForTat    rtft;
 extern GenerousTitForTat   gtft;
 extern SuspiciousTitForTat stft;
+extern HardTitForTat       htft;
 
 #endif
