@@ -34,19 +34,6 @@ class AlwaysDefect: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-class TitForTat: public Strategy
-{
-	public:
-		TitForTat(void)
-			: Strategy(
-					"Tit for Tat",
-					"TFT",
-					"Start cooperating. Copy opponent's last move afterwards."){}
-		Decision makeDecision(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
-};
-
 class RandomStrategy: public Strategy
 {
 	public:
@@ -81,19 +68,6 @@ class Pavlov: public Strategy
 					"Pavlov",
 					"PVL",
 					"Start cooperating. Repeat decision if a reward or temptation is received. Change last decision otherwise (if sucker's or punishment is received)."){}
-		Decision makeDecision(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
-};
-
-class TitForTwoTats: public Strategy
-{
-	public:
-		TitForTwoTats(void)
-			: Strategy(
-					"Tit for Two Tats",
-					"TFTT",
-					"Start cooperating. defects when the partner defects twice in a row."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
@@ -214,6 +188,32 @@ class FirmButFair: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class TitForTat: public Strategy
+{
+	public:
+		TitForTat(void)
+			: Strategy(
+					"Tit for Tat",
+					"TFT",
+					"Start cooperating. Copy opponent's last move afterwards."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
+class TitForTwoTats: public Strategy
+{
+	public:
+		TitForTwoTats(void)
+			: Strategy(
+					"Tit for Two Tats",
+					"TFTT",
+					"Start cooperating. defects when the partner defects twice in a row."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 class ReverseTitForTat: public Strategy
 {
 	public:
@@ -267,11 +267,9 @@ class HardTitForTat: public Strategy
 
 extern AlwaysCooperate     allC;
 extern AlwaysDefect        allD;
-extern TitForTat           tft ;
 extern RandomStrategy      randS;
 extern GrimTrigger         grim;
 extern Pavlov              pvl;
-extern TitForTwoTats       tftt;
 extern GradualS            gradualS;
 extern SoftMajority        sm;
 extern HardMajority        hm;
@@ -280,6 +278,8 @@ extern RemorsefulProber    rp;
 extern SoftGrudger         sg;
 extern Prober              pb;
 extern FirmButFair         fbf;
+extern TitForTat           tft ;
+extern TitForTwoTats       tftt;
 extern ReverseTitForTat    rtft;
 extern GenerousTitForTat   gtft;
 extern SuspiciousTitForTat stft;

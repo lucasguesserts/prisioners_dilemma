@@ -51,26 +51,6 @@ TestCase("Always defect", "[Strategies]")
 	return;
 }
 
-TestCase("Tit for tat", "[Strategies]")
-{
-	require( tft.name        == "Tit for Tat" );
-	require( tft.shortName   == "TFT" );
-	require( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
-	section("Basic decisions")
-	{
-		check( tft.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
-		check( tft.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-		check( tft.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
-	}
-	section("Complex decisions")
-	{
-		std::vector<Decision> tftPartner   = {Decision::defect   , Decision::cooperate, Decision::cooperate};
-		std::vector<Decision> tftDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate};
-		check( tft.makeDecision(tftDecisions, tftPartner ) == Decision::cooperate );
-	}
-	return;
-}
-
 TestCase("Random", "[Strategies]")
 {
 	for(auto i=0 ; i<20 ; ++i)
@@ -137,38 +117,6 @@ TestCase("Pavlov", "[Strategies]")
 		pavlovDecisions  = {Decision::cooperate, Decision::cooperate, Decision::defect, Decision::cooperate, Decision::defect   };
 		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect, Decision::defect   , Decision::cooperate};
 		check( pvl.makeDecision(pavlovDecisions, partnerDecisions) == Decision::defect    );
-	}
-	return;
-}
-
-TestCase("Tit for two tats", "[Strategies]")
-{
-	std::vector<Decision> tfttDecisions, partnerDecisions;
-	require( tftt.name ==      "Tit for Two Tats" );
-	require( tftt.shortName == "TFTT"    );
-	section("initial decisions")
-	{
-		check( tftt.makeDecision({}, {})                                       == Decision::cooperate );
-		check( tftt.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
-		check( tftt.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::cooperate );
-	}
-	section("cooperating 1")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   };
-		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate};
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
-	}
-	section("cooperating 2")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate, Decision::defect   };
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
-	}
-	section("defecting")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::defect );
 	}
 	return;
 }
@@ -551,6 +499,58 @@ TestCase("Firm but Fair", "[Strategies]")
 			fbfCummulativeDecisions.push_back(fbfDecisions.at(turn));
 			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
 		}
+	}
+	return;
+}
+
+TestCase("Tit for tat", "[Strategies]")
+{
+	require( tft.name        == "Tit for Tat" );
+	require( tft.shortName   == "TFT" );
+	require( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
+	section("Basic decisions")
+	{
+		check( tft.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
+		check( tft.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+		check( tft.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
+	}
+	section("Complex decisions")
+	{
+		std::vector<Decision> tftPartner   = {Decision::defect   , Decision::cooperate, Decision::cooperate};
+		std::vector<Decision> tftDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate};
+		check( tft.makeDecision(tftDecisions, tftPartner ) == Decision::cooperate );
+	}
+	return;
+}
+
+TestCase("Tit for two tats", "[Strategies]")
+{
+	std::vector<Decision> tfttDecisions, partnerDecisions;
+	require( tftt.name ==      "Tit for Two Tats" );
+	require( tftt.shortName == "TFTT"    );
+	section("initial decisions")
+	{
+		check( tftt.makeDecision({}, {})                                       == Decision::cooperate );
+		check( tftt.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
+		check( tftt.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::cooperate );
+	}
+	section("cooperating 1")
+	{
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate};
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("cooperating 2")
+	{
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate, Decision::defect   };
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("defecting")
+	{
+		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
+		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::defect );
 	}
 	return;
 }

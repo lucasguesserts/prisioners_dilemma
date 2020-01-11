@@ -6,11 +6,9 @@
 
 AlwaysCooperate     allC;
 AlwaysDefect        allD;
-TitForTat           tft;
 RandomStrategy      randS;
 GrimTrigger         grim;
 Pavlov              pvl;
-TitForTwoTats       tftt;
 GradualS            gradualS;
 SoftMajority        sm;
 HardMajority        hm;
@@ -19,6 +17,8 @@ RemorsefulProber    rp;
 SoftGrudger         sg;
 Prober              pb;
 FirmButFair         fbf;
+TitForTat           tft;
+TitForTwoTats       tftt;
 ReverseTitForTat    rtft;
 GenerousTitForTat   gtft;
 SuspiciousTitForTat stft;
@@ -38,19 +38,6 @@ Decision AlwaysDefect::makeDecision(
 )
 {
 	return Decision::defect;
-}
-
-Decision TitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
-{
-	Decision decision;
-	if (thisDecision.size()==0)
-		decision = Decision::cooperate;
-	else
-		decision = partnerDecision.back();
-	return decision;
 }
 
 Decision RandomStrategy::makeDecision(
@@ -91,24 +78,6 @@ Decision Pavlov::makeDecision(
 			decision = thisDecision.back();
 		else
 			decision = !thisDecision.back();
-	}
-	return decision;
-}
-
-Decision TitForTwoTats::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
-{
-	Decision decision;
-	if (partnerDecision.size()<2)
-		decision = Decision::cooperate;
-	else
-	{
-		if ( (*(partnerDecision.crbegin())==Decision::defect) && (*(partnerDecision.crbegin()+1)==Decision::defect) )
-			decision = Decision::defect;
-		else
-			decision = Decision::cooperate;
 	}
 	return decision;
 }
@@ -368,6 +337,37 @@ Decision FirmButFair::makeDecision(
 		decision = Decision::defect;
 	else
 		decision = Decision::cooperate;
+	return decision;
+}
+
+Decision TitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.size()==0)
+		decision = Decision::cooperate;
+	else
+		decision = partnerDecision.back();
+	return decision;
+}
+
+Decision TitForTwoTats::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (partnerDecision.size()<2)
+		decision = Decision::cooperate;
+	else
+	{
+		if ( (*(partnerDecision.crbegin())==Decision::defect) && (*(partnerDecision.crbegin()+1)==Decision::defect) )
+			decision = Decision::defect;
+		else
+			decision = Decision::cooperate;
+	}
 	return decision;
 }
 
