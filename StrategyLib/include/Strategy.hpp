@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <Decision.hpp>
+#include <Test.hpp>
 
 class Strategy
 {
@@ -18,5 +19,11 @@ class Strategy
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) = 0;
 };
+
+void checkDecisionHistory(
+	std::vector<Decision> strategyDecisions,
+	std::vector<Decision> partnerDecisions,
+	Strategy * strategy
+);
 
 #endif

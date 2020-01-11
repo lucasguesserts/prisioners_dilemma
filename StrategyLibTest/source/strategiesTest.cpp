@@ -1,5 +1,4 @@
 #include <Test.hpp>
-#include <iostream>
 #include <Strategies.hpp>
 
 std::vector<Decision> emptyDecisions = {};
@@ -656,6 +655,37 @@ TestCase("Hard Tit For Tat", "[Strategies]")
 {
 	require( htft.name      == "Hard Tit for Tat" );
 	require( htft.shortName == "HTFT"             );
+	//checkDecisionHistory(
+	//	{
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//	},
+	//	{
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//	},
+	//	&htft
+	//);
 	section("initial decisions")
 	{
 		check( htft.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::cooperate );
@@ -691,7 +721,6 @@ TestCase("Hard Tit For Tat", "[Strategies]")
 			Decision::cooperate,
 		};
 		std::vector<Decision> htftCummulativeDecisions, partnerCummulativeDecisions;
-		std::cout << "Start of Test!!!" << "\n\n\n";
 		for (std::vector<Decision>::size_type turn=0 ; turn<htftDecisions.size() ; ++turn)
 		{
 			check( htft.makeDecision(htftCummulativeDecisions, partnerCummulativeDecisions) == htftDecisions.at(turn) );

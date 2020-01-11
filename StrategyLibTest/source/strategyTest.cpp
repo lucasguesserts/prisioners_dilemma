@@ -31,3 +31,53 @@ TestCase("strategy implementation", "[Strategy]")
 	);
 	return;
 }
+
+class TestHistoryStrategy: public Strategy
+{
+	public:
+		TestHistoryStrategy(void)
+			: Strategy(
+					"Test History Strategy",
+					"TestHS",
+					"Class implemented just to make the diecicion history test case."){}
+		Decision makeDecision(
+			[[maybe_unused]] std::vector<Decision> thisDecision,
+			[[maybe_unused]] std::vector<Decision> partnerDecision
+		){
+			Decision decision;
+			if ( partnerDecision.empty() )
+				decision = Decision::cooperate;
+			else
+				decision = !partnerDecision.back();
+			return decision;
+		}
+};
+
+TestCase("Decisions history", "[Strategy]")
+{
+	TestHistoryStrategy strategy;
+	checkDecisionHistory(
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		&strategy
+	);
+	return;
+}
