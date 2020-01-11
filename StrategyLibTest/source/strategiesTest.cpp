@@ -69,14 +69,16 @@ TestCase("Always defect", "[Strategies]")
 	return;
 }
 
-TestCase("Random", "[Strategies]")
+TestCase("Lunatic", "[Strategies]")
 {
+	require( moon.name        == "Lunatic" );
+	require( moon.shortName   == "Moon"    );
 	for(auto i=0 ; i<20 ; ++i)
 	{
-		auto decision = randS.makeDecision(emptyDecisions, emptyDecisions);
+		auto decision = moon.makeDecision(emptyDecisions, emptyDecisions);
 		check( ((decision==Decision::cooperate) || (decision==Decision::defect)) );
 	}
-	auto randomDecision = []{return randS.makeDecision(emptyDecisions, emptyDecisions);};
+	auto randomDecision = []{return moon.makeDecision(emptyDecisions, emptyDecisions);};
 	checkDiscreteProbability(Decision::cooperate, 0.50, randomDecision);
 	checkDiscreteProbability(Decision::defect   , 0.50, randomDecision);
 	return;

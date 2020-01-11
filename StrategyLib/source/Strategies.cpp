@@ -6,7 +6,7 @@
 
 AlwaysCooperate     allC;
 AlwaysDefect        allD;
-RandomStrategy      randS;
+Lunatic             moon;
 GrimTrigger         grim;
 Pavlov              pvl;
 GradualS            gradualS;
@@ -41,7 +41,7 @@ Decision AlwaysDefect::makeDecision(
 	return Decision::defect;
 }
 
-Decision RandomStrategy::makeDecision(
+Decision Lunatic::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
 	[[maybe_unused]] std::vector<Decision> partnerDecision
 )

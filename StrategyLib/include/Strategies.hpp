@@ -34,14 +34,14 @@ class AlwaysDefect: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-class RandomStrategy: public Strategy
+class Lunatic: public Strategy
 {
 	public:
-		RandomStrategy(void)
+		Lunatic(void)
 			: Strategy(
-					"Random Strategy",
-					"RANDS",
-					"Makes a random decision."){}
+					"Lunatic",
+					"Moon",
+					"Cooperate or defect with equal probabilities."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
@@ -279,7 +279,7 @@ class ReverseTitForTat: public Strategy
 
 extern AlwaysCooperate     allC;
 extern AlwaysDefect        allD;
-extern RandomStrategy      randS;
+extern Lunatic             moon;
 extern GrimTrigger         grim;
 extern Pavlov              pvl;
 extern GradualS            gradualS;
