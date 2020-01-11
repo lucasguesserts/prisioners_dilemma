@@ -6,5 +6,5 @@
 void checkDecisionHistory(
 	std::vector<Decision> strategyDecisions,
 	std::vector<Decision> partnerDecisions,
-	Strategy * strategy
+	Strategy & strategy
 );

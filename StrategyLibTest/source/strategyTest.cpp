@@ -78,7 +78,7 @@ TestCase("Decisions history", "[Strategy]")
 			Decision::cooperate,
 			Decision::defect   ,
 		},
-		&strategy
+		strategy
 	);
 	return;
 }
