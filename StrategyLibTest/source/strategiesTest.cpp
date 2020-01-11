@@ -555,6 +555,44 @@ TestCase("Tit for two tats", "[Strategies]")
 	return;
 }
 
+TestCase("Two Tits for Tat", "[Strategies]")
+{
+	std::vector<Decision> ttftDecisions, partnerDecisions;
+	require( ttft.name ==      "Two Tits for Tat" );
+	require( ttft.shortName == "TTFT"             );
+	section("initial decisions")
+	{
+		check( ttft.makeDecision({}, {})                                       == Decision::cooperate );
+		check( ttft.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
+		check( ttft.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::defect    );
+	}
+	section("defecting 1")
+	{
+		ttftDecisions    = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
+	}
+	section("defecting 2")
+	{
+		ttftDecisions    = {Decision::cooperate, Decision::defect   };
+		partnerDecisions = {Decision::defect   , Decision::cooperate};
+		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
+	}
+	section("defecting 3")
+	{
+		ttftDecisions    = {Decision::cooperate, Decision::defect   };
+		partnerDecisions = {Decision::defect   , Decision::defect   };
+		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
+	}
+	section("cooperating")
+	{
+		ttftDecisions    = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate};
+		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	return;
+}
+
 TestCase("Reverse Tit for tat", "[Strategies]")
 {
 	require( rtft.name        == "Reverse Tit for Tat" );

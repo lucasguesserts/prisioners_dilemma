@@ -19,6 +19,7 @@ Prober              pb;
 FirmButFair         fbf;
 TitForTat           tft;
 TitForTwoTats       tftt;
+TwoTitsForTat       ttft;
 ReverseTitForTat    rtft;
 GenerousTitForTat   gtft;
 SuspiciousTitForTat stft;
@@ -368,6 +369,23 @@ Decision TitForTwoTats::makeDecision(
 		else
 			decision = Decision::cooperate;
 	}
+	return decision;
+}
+
+Decision TwoTitsForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-2);
+	auto end   = partnerDecision.cend();
+	if (partnerDecision.empty())
+		decision = Decision::cooperate;
+	else if (std::any_of(start, end, [](Decision d){return d==Decision::defect;}))
+		decision = Decision::defect;
+	else
+		decision = Decision::cooperate;
 	return decision;
 }
 

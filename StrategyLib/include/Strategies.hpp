@@ -214,6 +214,19 @@ class TitForTwoTats: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class TwoTitsForTat: public Strategy
+{
+	public:
+		TwoTitsForTat(void)
+			: Strategy(
+					"Two Tits for Tat",
+					"TTFT",
+					"Start cooperating. Defects if any of the two last decisions of the partner was to defect."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
 class ReverseTitForTat: public Strategy
 {
 	public:
@@ -280,6 +293,7 @@ extern Prober              pb;
 extern FirmButFair         fbf;
 extern TitForTat           tft ;
 extern TitForTwoTats       tftt;
+extern TwoTitsForTat       ttft;
 extern ReverseTitForTat    rtft;
 extern GenerousTitForTat   gtft;
 extern SuspiciousTitForTat stft;
