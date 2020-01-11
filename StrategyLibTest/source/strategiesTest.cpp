@@ -309,63 +309,47 @@ TestCase("Soft Grudger", "[Strategies]")
 {
 	require( sg.name      == "Soft Grudger" );
 	require( sg.shortName == "SG"           );
-	section("initial decision")
-	{
-		check( sg.makeDecision(emptyDecisions, emptyDecisions)     == Decision::cooperate );
-	}
-	section("cooperation")
-	{
-		check( sg.makeDecision(startCooperating, startCooperating) == Decision::cooperate);
-		check( sg.makeDecision(twoCooperations, twoCooperations)   == Decision::cooperate);
-	}
-	section("reaction to defection")
-	{
-		std::vector<Decision> sgDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate
-		};
-		std::vector<Decision> sgCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<sgDecisions.size() ; ++turn)
+	checkDecisionHistory(
 		{
-			check( sg.makeDecision(sgCummulativeDecisions, partnerCummulativeDecisions) == sgDecisions.at(turn) );
-			sgCummulativeDecisions.push_back(sgDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
-	}
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate
+		},
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate
+		},
+		sg
+	);
 	return;
 }
 
@@ -375,85 +359,85 @@ TestCase("Prober", "[Strategies]")
 	require( pb.shortName == "PB"     );
 	section("initial decisions")
 	{
-		check( pb.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::defect    );
-		check( pb.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
-		check( pb.makeDecision(twoCooperations , twoCooperations ) == Decision::cooperate );
+		checkDecisionHistory(
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+			},
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::defect   ,
+			},
+			pb
+		);
 	}
 	section("defection behavior")
 	{
-		std::vector<Decision> pbDecisions{
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
-		{
-			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
-			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
+		checkDecisionHistory(
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::defect   ,
+				Decision::defect   ,
+			},
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::defect   ,
+			},
+			pb
+		);
 	}
 	section("tit for tat behavior 1")
 	{
-		std::vector<Decision> pbDecisions{
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-		};
-		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
-		{
-			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
-			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
+		checkDecisionHistory(
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+			},
+			{
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+			},
+			pb
+		);
 	}
 	section("tit for tat behavior 2")
 	{
-		std::vector<Decision> pbDecisions{
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-		};
-		std::vector<Decision> pbCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<pbDecisions.size() ; ++turn)
-		{
-			check( pb.makeDecision(pbCummulativeDecisions, partnerCummulativeDecisions) == pbDecisions.at(turn) );
-			pbCummulativeDecisions.push_back(pbDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
+		checkDecisionHistory(
+			{
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::defect   ,
+			},
+			{
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+				Decision::defect   ,
+				Decision::cooperate,
+			},
+			pb
+		);
 	}
 	return;
 }
@@ -462,43 +446,32 @@ TestCase("Firm but Fair", "[Strategies]")
 {
 	require( fbf.name      == "Firm but Fair" );
 	require( fbf.shortName == "FBF"           );
-	section("initial decisions")
-	{
-		check( fbf.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::cooperate );
-	}
-	section("all cases")
-	{
-		std::vector<Decision> fbfDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		// fbf decision, partner decision -> fbf payoff -> fbf next decision
-		// cooperate, cooperate -> reward     -> cooperate
-		// cooperate, defect    -> suckers    -> defect
-		// defect   , cooperate -> temptation -> cooperate
-		// cooperate, defect    -> suckers    -> defect
-		// defect   , defect    -> punishment -> cooperate
-		// cooperate, cooperate -> reward     -> cooperate
-		std::vector<Decision> fbfCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<fbfDecisions.size() ; ++turn)
+	checkDecisionHistory(
 		{
-			check( fbf.makeDecision(fbfCummulativeDecisions, partnerCummulativeDecisions) == fbfDecisions.at(turn) );
-			fbfCummulativeDecisions.push_back(fbfDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
-	}
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		fbf
+	);
+	// fbf decision, partner decision -> fbf payoff -> fbf next decision
+	// cooperate, cooperate -> reward     -> cooperate
+	// cooperate, defect    -> suckers    -> defect
+	// defect   , cooperate -> temptation -> cooperate
+	// cooperate, defect    -> suckers    -> defect
+	// defect   , defect    -> punishment -> cooperate
+	// cooperate, cooperate -> reward     -> cooperate
 	return;
 }
 
@@ -507,18 +480,21 @@ TestCase("Tit for tat", "[Strategies]")
 	require( tft.name        == "Tit for Tat" );
 	require( tft.shortName   == "TFT" );
 	require( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
-	section("Basic decisions")
-	{
-		check( tft.makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::cooperate );
-		check( tft.makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-		check( tft.makeDecision(startCooperating, startCooperating) == Decision::cooperate );
-	}
-	section("Complex decisions")
-	{
-		std::vector<Decision> tftPartner   = {Decision::defect   , Decision::cooperate, Decision::cooperate};
-		std::vector<Decision> tftDecisions = {Decision::cooperate, Decision::defect   , Decision::cooperate};
-		check( tft.makeDecision(tftDecisions, tftPartner ) == Decision::cooperate );
-	}
+	checkDecisionHistory(
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		tft
+	);
 	return;
 }
 
@@ -527,30 +503,25 @@ TestCase("Tit for two tats", "[Strategies]")
 	std::vector<Decision> tfttDecisions, partnerDecisions;
 	require( tftt.name ==      "Tit for Two Tats" );
 	require( tftt.shortName == "TFTT"    );
-	section("initial decisions")
-	{
-		check( tftt.makeDecision({}, {})                                       == Decision::cooperate );
-		check( tftt.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
-		check( tftt.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::cooperate );
-	}
-	section("cooperating 1")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   };
-		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate};
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
-	}
-	section("cooperating 2")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::defect   , Decision::defect   , Decision::cooperate, Decision::defect   };
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::cooperate );
-	}
-	section("defecting")
-	{
-		tfttDecisions    = {Decision::cooperate, Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   , Decision::defect   };
-		check( tftt.makeDecision(tfttDecisions, partnerDecisions) == Decision::defect );
-	}
+	checkDecisionHistory(
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		tftt
+	);
 	return;
 }
 
@@ -559,36 +530,25 @@ TestCase("Two Tits for Tat", "[Strategies]")
 	std::vector<Decision> ttftDecisions, partnerDecisions;
 	require( ttft.name ==      "Two Tits for Tat" );
 	require( ttft.shortName == "TTFT"             );
-	section("initial decisions")
-	{
-		check( ttft.makeDecision({}, {})                                       == Decision::cooperate );
-		check( ttft.makeDecision({Decision::cooperate}, {Decision::cooperate}) == Decision::cooperate );
-		check( ttft.makeDecision({Decision::cooperate}, {Decision::defect   }) == Decision::defect    );
-	}
-	section("defecting 1")
-	{
-		ttftDecisions    = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   };
-		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
-	}
-	section("defecting 2")
-	{
-		ttftDecisions    = {Decision::cooperate, Decision::defect   };
-		partnerDecisions = {Decision::defect   , Decision::cooperate};
-		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
-	}
-	section("defecting 3")
-	{
-		ttftDecisions    = {Decision::cooperate, Decision::defect   };
-		partnerDecisions = {Decision::defect   , Decision::defect   };
-		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::defect    );
-	}
-	section("cooperating")
-	{
-		ttftDecisions    = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::cooperate};
-		check( ttft.makeDecision(ttftDecisions, partnerDecisions) == Decision::cooperate );
-	}
+	checkDecisionHistory(
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		ttft
+	);
 	return;
 }
 
@@ -596,18 +556,21 @@ TestCase("Reverse Tit for tat", "[Strategies]")
 {
 	require( rtft.name        == "Reverse Tit for Tat" );
 	require( rtft.shortName   == "RTFT" );
-	section("Basic decisions")
-	{
-		check( rtft.makeDecision(emptyDecisions, emptyDecisions  ) == Decision::defect    );
-		check( rtft.makeDecision(startDefecting, startDefecting  ) == Decision::cooperate );
-		check( rtft.makeDecision(startDefecting, startCooperating) == Decision::defect    );
-	}
-	section("Complex decisions")
-	{
-		std::vector<Decision> rtftPartner   = {Decision::defect   , Decision::defect, Decision::cooperate};
-		std::vector<Decision> rtftDecisions = {Decision::cooperate, Decision::defect, Decision::cooperate};
-		check( rtft.makeDecision(rtftDecisions, rtftPartner ) == Decision::defect );
-	}
+	checkDecisionHistory(
+		{
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		rtft
+	);
 	return;
 }
 
@@ -637,17 +600,23 @@ TestCase("Suspisious Tit for Tat", "[Strategies]")
 {
 	require( stft.name        == "Suspicious Tit for Tat" );
 	require( stft.shortName   == "STFT" );
-	section("Basic decisions")
-	{
-		check( stft.makeDecision(emptyDecisions, emptyDecisions  ) == Decision::defect    );
-		check( stft.makeDecision(startDefecting, startDefecting  ) == Decision::defect    );
-		check( stft.makeDecision(startDefecting, startCooperating) == Decision::cooperate );
-	}
-	section("Complex decisions")
-	{
-		check( stft.makeDecision(twoCooperations, twoCooperations ) == Decision::cooperate );
-		check( stft.makeDecision(twoDefections  , twoDefections   ) == Decision::defect    );
-	}
+	checkDecisionHistory(
+		{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		stft
+	);
 	return;
 }
 
@@ -655,78 +624,36 @@ TestCase("Hard Tit For Tat", "[Strategies]")
 {
 	require( htft.name      == "Hard Tit for Tat" );
 	require( htft.shortName == "HTFT"             );
-	//checkDecisionHistory(
-	//	{
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::cooperate,
-	//	},
-	//	{
-	//		Decision::cooperate,
-	//		Decision::defect   ,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::defect   ,
-	//		Decision::defect   ,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//		Decision::cooperate,
-	//	},
-	//	&htft
-	//);
-	section("initial decisions")
-	{
-		check( htft.makeDecision(emptyDecisions  , emptyDecisions  ) == Decision::cooperate );
-	}
-	section("all cases")
-	{
-		std::vector<Decision> htftDecisions{
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-		};
-		std::vector<Decision> partnerDecisions{
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-			Decision::cooperate,
-		};
-		std::vector<Decision> htftCummulativeDecisions, partnerCummulativeDecisions;
-		for (std::vector<Decision>::size_type turn=0 ; turn<htftDecisions.size() ; ++turn)
+	checkDecisionHistory(
 		{
-			check( htft.makeDecision(htftCummulativeDecisions, partnerCummulativeDecisions) == htftDecisions.at(turn) );
-			htftCummulativeDecisions.push_back(htftDecisions.at(turn));
-			partnerCummulativeDecisions.push_back(partnerDecisions.at(turn));
-		}
-	}
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		htft
+	);
 	return;
 }
