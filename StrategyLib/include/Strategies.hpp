@@ -84,7 +84,7 @@ class GradualS: public Strategy
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
-		// Auxiliar
+	private:
 		static std::vector<std::tuple<unsigned,unsigned>> findTriggles(std::vector<Decision> partnerDecision);
 		static bool timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
 };
