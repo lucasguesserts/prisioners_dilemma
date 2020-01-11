@@ -1,5 +1,6 @@
 #include <Test.hpp>
 #include <Strategy.hpp>
+#include <StrategyTest.hpp>
 
 class TestStrategy: public Strategy
 {

@@ -1,4 +1,5 @@
 #include <Test.hpp>
+#include <StrategyTest.hpp>
 #include <Strategies.hpp>
 
 std::vector<Decision> emptyDecisions = {};
