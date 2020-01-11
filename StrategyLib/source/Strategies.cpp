@@ -149,109 +149,6 @@ Decision HardMajority::makeDecision(
 	return (numberOfCooperates > numberOfDefects) ? Decision::cooperate : Decision::defect;
 }
 
-NaiveProber::NaiveProber(double probabilityOfDefecting)
-	: Strategy(
-			"Naive Prober",
-			"NP",
-			"Like Tit for Tat, but ocasionally defects with a small probability.")
-{
-	if ((probabilityOfDefecting < 0.0) || (1.0 < probabilityOfDefecting))
-		throw std::domain_error("Probability of defecting in Naive Prober has to be between 0.0 and 1.0.");
-	this->probabilityOfDefecting = probabilityOfDefecting;
-}
-
-Decision NaiveProber::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
-{
-	Decision decision;
-	if (this->randomlyDefect())
-		decision = Decision::defect;
-	else
-	{
-		if (partnerDecision.size()==0)
-			decision = Decision::cooperate;
-		else
-			decision = partnerDecision.back();
-	}
-	return decision;
-}
-
-bool NaiveProber::randomlyDefect(void)
-{
-	static std::default_random_engine generator;
-	static std::uniform_real_distribution<double> distribution(0.0,1.0);
-	return distribution(generator) < this->probabilityOfDefecting;
-}
-
-RemorsefulProber::RemorsefulProber(double probabilityOfProbing)
-	: Strategy(
-			"Remorseful Prober",
-			"RP",
-			"If the partner cooperates, prober it with a certain probability. If the partner defects, cooperates if that was caused by a probation, defects otherwise.")
-{
-	if ((probabilityOfProbing < 0.0) || (1.0 < probabilityOfProbing))
-		throw std::domain_error("Probability of probing in Remorseful Prober has to be between 0.0 and 1.0.");
-	this->probabilityOfProbing = probabilityOfProbing;
-}
-
-Decision RemorsefulProber::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
-{
-	Decision decision;
-	if (thisDecision.empty())
-		decision = Decision::cooperate;
-	else
-	{
-		if (partnerDecision.back() == Decision::defect)
-		{
-			if (RemorsefulProber::wasProbing(thisDecision, partnerDecision))
-				decision = Decision::cooperate;
-			else
-				decision = Decision::defect;
-		}
-		else // partnerDecision.back() == Decision::cooperate
-		{
-			if (this->probePartner())
-				decision = Decision::defect;
-			else
-				decision = Decision::cooperate;
-		}
-	}
-	return decision;
-}
-
-bool RemorsefulProber::wasProbing(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
-{
-	bool wasProbing = false;
-	Decision probationDecision, partnerAnswerToProbation, partnerAnswerPriorToProbation;
-	if (thisDecision.size()>=2)
-	{
-		probationDecision             = *(thisDecision.crbegin() + 1);
-		partnerAnswerPriorToProbation = *(partnerDecision.crbegin() + 1);
-		partnerAnswerToProbation      = *partnerDecision.crbegin();
-		// Situation:
-		// this::    {D, *}
-		// partner:: {C, D}
-		if ((probationDecision==Decision::defect) && (partnerAnswerToProbation==Decision::defect) && (partnerAnswerPriorToProbation==Decision::cooperate))
-			wasProbing = true;
-	}
-	return wasProbing;
-}
-
-bool RemorsefulProber::probePartner(void)
-{
-	static std::default_random_engine generator;
-	static std::uniform_real_distribution<double> distribution(0.0,1.0);
-	return distribution(generator) < this->probabilityOfProbing;
-}
-
 Decision SoftGrudger::makeDecision(
 	std::vector<Decision> thisDecision,
 	std::vector<Decision> partnerDecision
@@ -389,17 +286,107 @@ Decision TwoTitsForTat::makeDecision(
 	return decision;
 }
 
-Decision ReverseTitForTat::makeDecision(
+NaiveProber::NaiveProber(double probabilityOfDefecting)
+	: Strategy(
+			"Naive Prober",
+			"NP",
+			"Like Tit for Tat, but ocasionally defects with a small probability.")
+{
+	if ((probabilityOfDefecting < 0.0) || (1.0 < probabilityOfDefecting))
+		throw std::domain_error("Probability of defecting in Naive Prober has to be between 0.0 and 1.0.");
+	this->probabilityOfDefecting = probabilityOfDefecting;
+}
+
+Decision NaiveProber::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
 	[[maybe_unused]] std::vector<Decision> partnerDecision
 )
 {
 	Decision decision;
-	if (thisDecision.size()==0)
+	if (this->randomlyDefect())
 		decision = Decision::defect;
 	else
-		decision = ! partnerDecision.back();
+	{
+		if (partnerDecision.size()==0)
+			decision = Decision::cooperate;
+		else
+			decision = partnerDecision.back();
+	}
 	return decision;
+}
+
+bool NaiveProber::randomlyDefect(void)
+{
+	static std::default_random_engine generator;
+	static std::uniform_real_distribution<double> distribution(0.0,1.0);
+	return distribution(generator) < this->probabilityOfDefecting;
+}
+
+RemorsefulProber::RemorsefulProber(double probabilityOfProbing)
+	: Strategy(
+			"Remorseful Prober",
+			"RP",
+			"If the partner cooperates, prober it with a certain probability. If the partner defects, cooperates if that was caused by a probation, defects otherwise.")
+{
+	if ((probabilityOfProbing < 0.0) || (1.0 < probabilityOfProbing))
+		throw std::domain_error("Probability of probing in Remorseful Prober has to be between 0.0 and 1.0.");
+	this->probabilityOfProbing = probabilityOfProbing;
+}
+
+Decision RemorsefulProber::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.empty())
+		decision = Decision::cooperate;
+	else
+	{
+		if (partnerDecision.back() == Decision::defect)
+		{
+			if (RemorsefulProber::wasProbing(thisDecision, partnerDecision))
+				decision = Decision::cooperate;
+			else
+				decision = Decision::defect;
+		}
+		else // partnerDecision.back() == Decision::cooperate
+		{
+			if (this->probePartner())
+				decision = Decision::defect;
+			else
+				decision = Decision::cooperate;
+		}
+	}
+	return decision;
+}
+
+bool RemorsefulProber::wasProbing(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	bool wasProbing = false;
+	Decision probationDecision, partnerAnswerToProbation, partnerAnswerPriorToProbation;
+	if (thisDecision.size()>=2)
+	{
+		probationDecision             = *(thisDecision.crbegin() + 1);
+		partnerAnswerPriorToProbation = *(partnerDecision.crbegin() + 1);
+		partnerAnswerToProbation      = *partnerDecision.crbegin();
+		// Situation:
+		// this::    {D, *}
+		// partner:: {C, D}
+		if ((probationDecision==Decision::defect) && (partnerAnswerToProbation==Decision::defect) && (partnerAnswerPriorToProbation==Decision::cooperate))
+			wasProbing = true;
+	}
+	return wasProbing;
+}
+
+bool RemorsefulProber::probePartner(void)
+{
+	static std::default_random_engine generator;
+	static std::uniform_real_distribution<double> distribution(0.0,1.0);
+	return distribution(generator) < this->probabilityOfProbing;
 }
 
 GenerousTitForTat::GenerousTitForTat(double probabilityOfCooperating)
@@ -463,5 +450,18 @@ Decision HardTitForTat::makeDecision(
 		decision = Decision::defect;
 	else
 		decision = Decision::cooperate;
+	return decision;
+}
+
+Decision ReverseTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	Decision decision;
+	if (thisDecision.size()==0)
+		decision = Decision::defect;
+	else
+		decision = ! partnerDecision.back();
 	return decision;
 }

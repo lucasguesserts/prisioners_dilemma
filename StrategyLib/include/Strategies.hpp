@@ -115,34 +115,6 @@ class HardMajority: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-class NaiveProber: public Strategy
-{
-	public:
-		NaiveProber(double probabilityOfDefecting = 0.10);
-		Decision makeDecision(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
-	private:
-		double probabilityOfDefecting;
-		bool randomlyDefect(void);
-};
-
-class RemorsefulProber: public Strategy
-{
-	public:
-		RemorsefulProber(double probabilityOfProbing = 0.10);
-		Decision makeDecision(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
-	private:
-		double probabilityOfProbing;
-		bool wasProbing(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision);
-		bool probePartner(void);
-
-};
-
 class SoftGrudger: public Strategy
 {
 	public:
@@ -227,17 +199,31 @@ class TwoTitsForTat: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-class ReverseTitForTat: public Strategy
+class NaiveProber: public Strategy
 {
 	public:
-		ReverseTitForTat(void)
-			: Strategy(
-					"Reverse Tit for Tat",
-					"RTFT",
-					"Start defecting, then plays the reverse of the partner last decision."){}
+		NaiveProber(double probabilityOfDefecting = 0.10);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
+	private:
+		double probabilityOfDefecting;
+		bool randomlyDefect(void);
+};
+
+class RemorsefulProber: public Strategy
+{
+	public:
+		RemorsefulProber(double probabilityOfProbing = 0.10);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double probabilityOfProbing;
+		bool wasProbing(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision);
+		bool probePartner(void);
 };
 
 class GenerousTitForTat: public Strategy
@@ -273,6 +259,19 @@ class HardTitForTat: public Strategy
 					"Hard Tit for Tat",
 					"HTFT",
 					"Start cooperating. Defects if the partner has defected in any of the three previous turns."){}
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+};
+
+class ReverseTitForTat: public Strategy
+{
+	public:
+		ReverseTitForTat(void)
+			: Strategy(
+					"Reverse Tit for Tat",
+					"RTFT",
+					"Start defecting, then plays the reverse of the partner last decision."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;

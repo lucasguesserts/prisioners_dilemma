@@ -249,62 +249,6 @@ TestCase("Hard majority", "[Strategies]")
 	);
 }
 
-TestCase("Naive prober", "[Strategies]")
-{
-	std::vector<Decision> npDecisions, partnerDecisions;
-	require( np.name ==      "Naive Prober" );
-	require( np.shortName == "NP"           );
-	section("initial decisions")
-	{
-		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision({},{});});
-		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision({},{});});
-	}
-	section("tit for tat cooperate")
-	{
-		npDecisions      = {Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::cooperate};
-		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
-		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
-	}
-	section("tit for tat defect")
-	{
-		npDecisions      = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   };
-		check( np.makeDecision(npDecisions, partnerDecisions) == Decision::defect );
-	}
-	return;
-}
-
-TestCase("Remorseful Prober", "[Strategies]")
-{
-	std::vector<Decision> rpDecisions, partnerDecisions;
-	require( rp.name      == "Remorseful Prober" );
-	require( rp.shortName == "RP"                );
-	section("initial decision")
-	{
-		check( rp.makeDecision(emptyDecisions, emptyDecisions) == Decision::cooperate );
-	}
-	section("cooperating only")
-	{
-		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return rp.makeDecision(startCooperating, startCooperating);});
-		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return rp.makeDecision(startCooperating, startCooperating);});
-	}
-	section("remorse because of probing behavior")
-	{
-		rpDecisions      = {Decision::cooperate, Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
-		check( rp.makeDecision(rpDecisions, partnerDecisions) == Decision::cooperate );
-	}
-	section("answer to defections")
-	{
-		rpDecisions      = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   };
-		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect);
-		check( rp.makeDecision(startCooperating, startDefecting)   == Decision::defect );
-	}
-	return;
-}
-
 TestCase("Soft Grudger", "[Strategies]")
 {
 	require( sg.name      == "Soft Grudger" );
@@ -552,25 +496,59 @@ TestCase("Two Tits for Tat", "[Strategies]")
 	return;
 }
 
-TestCase("Reverse Tit for tat", "[Strategies]")
+TestCase("Naive prober", "[Strategies]")
 {
-	require( rtft.name        == "Reverse Tit for Tat" );
-	require( rtft.shortName   == "RTFT" );
-	checkDecisionHistory(
-		{
-			Decision::defect   ,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-		},
-		{
-			Decision::cooperate,
-			Decision::defect   ,
-			Decision::cooperate,
-			Decision::defect   ,
-		},
-		rtft
-	);
+	std::vector<Decision> npDecisions, partnerDecisions;
+	require( np.name ==      "Naive Prober" );
+	require( np.shortName == "NP"           );
+	section("initial decisions")
+	{
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision({},{});});
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision({},{});});
+	}
+	section("tit for tat cooperate")
+	{
+		npDecisions      = {Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate};
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
+	}
+	section("tit for tat defect")
+	{
+		npDecisions      = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( np.makeDecision(npDecisions, partnerDecisions) == Decision::defect );
+	}
+	return;
+}
+
+TestCase("Remorseful Prober", "[Strategies]")
+{
+	std::vector<Decision> rpDecisions, partnerDecisions;
+	require( rp.name      == "Remorseful Prober" );
+	require( rp.shortName == "RP"                );
+	section("initial decision")
+	{
+		check( rp.makeDecision(emptyDecisions, emptyDecisions) == Decision::cooperate );
+	}
+	section("cooperating only")
+	{
+		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return rp.makeDecision(startCooperating, startCooperating);});
+		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return rp.makeDecision(startCooperating, startCooperating);});
+	}
+	section("remorse because of probing behavior")
+	{
+		rpDecisions      = {Decision::cooperate, Decision::defect   , Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		check( rp.makeDecision(rpDecisions, partnerDecisions) == Decision::cooperate );
+	}
+	section("answer to defections")
+	{
+		rpDecisions      = {Decision::cooperate, Decision::cooperate};
+		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect);
+		check( rp.makeDecision(startCooperating, startDefecting)   == Decision::defect );
+	}
 	return;
 }
 
@@ -654,6 +632,28 @@ TestCase("Hard Tit For Tat", "[Strategies]")
 			Decision::cooperate,
 		},
 		htft
+	);
+	return;
+}
+
+TestCase("Reverse Tit for tat", "[Strategies]")
+{
+	require( rtft.name        == "Reverse Tit for Tat" );
+	require( rtft.shortName   == "RTFT" );
+	checkDecisionHistory(
+		{
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		rtft
 	);
 	return;
 }
