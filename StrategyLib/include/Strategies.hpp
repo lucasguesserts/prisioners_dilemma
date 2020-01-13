@@ -54,7 +54,7 @@ class GrimTrigger: public Strategy
 			: Strategy(
 					"Grim Trigger",
 					"Grim",
-					"Cooperates until the partner defects. Thereafter it defects."){}
+					"Cooperates until the partner defects. Thereafter it only defects."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
@@ -73,13 +73,13 @@ class Pavlov: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
-class GradualS: public Strategy
+class Gradual: public Strategy
 {
 	public:
-		GradualS(void)
+		Gradual(void)
 			: Strategy(
-					"Gradual Strategy",
-					"GradualS",
+					"Gradual",
+					"Gradual",
 					"Start cooperating. When the partner defects, it defects as many times as the partner has defected and then cooperates twice."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
@@ -152,7 +152,7 @@ class FirmButFair: public Strategy
 	public:
 		FirmButFair(void)
 			: Strategy(
-					"Firm but Fair",
+					"Firm But Fair",
 					"FBF",
 					"Defects only after receiving a sucker's payoff."){}
 		Decision makeDecision(
@@ -165,7 +165,7 @@ class TitForTat: public Strategy
 	public:
 		TitForTat(void)
 			: Strategy(
-					"Tit for Tat",
+					"Tit For Tat",
 					"TFT",
 					"Start cooperating. Copy opponent's last move afterwards."){}
 		Decision makeDecision(
@@ -178,9 +178,9 @@ class TitForTwoTats: public Strategy
 	public:
 		TitForTwoTats(void)
 			: Strategy(
-					"Tit for Two Tats",
+					"Tit For Two Tats",
 					"TFTT",
-					"Start cooperating. defects when the partner defects twice in a row."){}
+					"Start cooperating. Defects when the partner defects twice in a row."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) final;
@@ -191,7 +191,7 @@ class TwoTitsForTat: public Strategy
 	public:
 		TwoTitsForTat(void)
 			: Strategy(
-					"Two Tits for Tat",
+					"Two Tits For Tat",
 					"TTFT",
 					"Start cooperating. Defects if any of the two last decisions of the partner was to defect."){}
 		Decision makeDecision(
@@ -243,7 +243,7 @@ class SuspiciousTitForTat: public Strategy
 	public:
 		SuspiciousTitForTat(void)
 			: Strategy(
-					"Suspicious Tit for Tat",
+					"Suspicious Tit For Tat",
 					"STFT",
 					"Start defecting. Copy opponent's last move afterwards."){}
 		Decision makeDecision(
@@ -256,7 +256,7 @@ class HardTitForTat: public Strategy
 	public:
 		HardTitForTat(void)
 			: Strategy(
-					"Hard Tit for Tat",
+					"Hard Tit For Tat",
 					"HTFT",
 					"Start cooperating. Defects if the partner has defected in any of the three previous turns."){}
 		Decision makeDecision(
@@ -269,7 +269,7 @@ class ReverseTitForTat: public Strategy
 	public:
 		ReverseTitForTat(void)
 			: Strategy(
-					"Reverse Tit for Tat",
+					"Reverse Tit For Tat",
 					"RTFT",
 					"Start defecting, then plays the reverse of the partner last decision."){}
 		Decision makeDecision(
@@ -333,7 +333,7 @@ extern AlwaysDefect                     allD;
 extern Lunatic                          moon;
 extern GrimTrigger                      grim;
 extern Pavlov                           pvl;
-extern GradualS                         gradualS;
+extern Gradual                          gradual;
 extern SoftMajority                     sm;
 extern HardMajority                     hm;
 extern NaiveProber                      np;

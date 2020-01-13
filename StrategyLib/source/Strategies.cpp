@@ -9,7 +9,7 @@ AlwaysDefect                     allD;
 Lunatic                          moon;
 GrimTrigger                      grim;
 Pavlov                           pvl;
-GradualS                         gradualS;
+Gradual                          gradual;
 SoftMajority                     sm;
 HardMajority                     hm;
 NaiveProber                      np;
@@ -26,6 +26,28 @@ SuspiciousTitForTat              stft;
 HardTitForTat                    htft;
 AdaptativeTitForTat              atft;
 MetaRegulatedAdaptativeTitForTat mratft;
+
+// [Instructions for how to implement a ]
+// class ClassName [All in capital letters]: public Strategy [Always a plublic Strategy]
+// {
+// 	public:
+// 		Constructor(void) [Constructor, set name, shortName, and description.]
+// 			: Strategy(
+// 					"Class Name",        [All words start with a capital letter.                   ]
+// 					"AllC",              [Short name start with a capital letter. No space present.]
+// 					"Always cooperate.") [Description as a phrase. Ends with a full stop.          ]
+// 					{}
+// 		Decision makeDecision(                            [Always implement as the only     ]
+// 			std::vector<Decision> thisDecision,           [public method the 'makeDecision',]
+// 			std::vector<Decision> partnerDecision) final; [as 'final'.                      ]
+// 	private:
+// 		[All auxiliar methods and variables must be kept]
+// 		[private.                                       ]
+// 		[Strategies must not keep any sort of           ]
+// 		[status, the 'makeDecision' function has to be  ]
+// 		[like a mathematical fucntion, it must have only]
+// 		[one output for a given input.                  ]
+// };
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -85,21 +107,21 @@ Decision Pavlov::makeDecision(
 	return decision;
 }
 
-Decision GradualS::makeDecision(
+Decision Gradual::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
 	[[maybe_unused]] std::vector<Decision> partnerDecision
 )
 {
 	Decision decision;
-	auto triggles = GradualS::findTriggles(partnerDecision);
-	if (GradualS::timeToDefect(thisDecision.size(), triggles))
+	auto triggles = Gradual::findTriggles(partnerDecision);
+	if (Gradual::timeToDefect(thisDecision.size(), triggles))
 		decision = Decision::defect;
 	else // time to cooperate incorporated in 'findTrigges' algorithm.
 		decision = Decision::cooperate;
 	return decision;
 }
 
-std::vector<std::tuple<unsigned,unsigned>> GradualS::findTriggles(
+std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
 	std::vector<Decision> partnerDecision)
 {
 	std::vector<std::tuple<unsigned,unsigned>> triggles;
@@ -115,7 +137,7 @@ std::vector<std::tuple<unsigned,unsigned>> GradualS::findTriggles(
 	return triggles;
 }
 
-bool GradualS::timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
+bool Gradual::timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
 {
 	bool defect = false;
 	for (auto& triggle: triggles)
@@ -393,7 +415,7 @@ bool RemorsefulProber::probePartner(void)
 
 GenerousTitForTat::GenerousTitForTat(double probabilityOfCooperating)
 	: Strategy(
-		"Generous Tit for Tat",
+		"Generous Tit For Tat",
 		"GTFT",
 		"Like Tit for Tat, but after the partner defects, it cooperates with a small probability."
 	  )

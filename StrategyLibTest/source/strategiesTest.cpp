@@ -5,14 +5,12 @@
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting   = {Decision::defect   };
-std::vector<Decision> twoCooperations  = {Decision::cooperate, Decision::cooperate};
-std::vector<Decision> twoDefections    = {Decision::defect,    Decision::defect   };
 
 TestCase("Polimorphism", "[Strategy]")
 {
 	Strategy * strategy = &allD;
-	require( strategy->name        == "Always Defect" );
-	require( strategy->shortName   == "AllD" );
+	require( strategy->name        == "Always Defect"  );
+	require( strategy->shortName   == "AllD"           );
 	require( strategy->description == "Always defect." );
 	section("test decisions")
 	{
@@ -23,10 +21,10 @@ TestCase("Polimorphism", "[Strategy]")
 	return;
 }
 
-TestCase("Always cooperate", "[Strategies]")
+TestCase("Always Cooperate", "[Strategies]")
 {
-	require( allC.name        == "Always Cooperate" );
-	require( allC.shortName   == "AllC" );
+	require( allC.name        == "Always Cooperate"  );
+	require( allC.shortName   == "AllC"              );
 	require( allC.description == "Always cooperate." );
 	checkDecisionHistory(
 		{
@@ -46,10 +44,10 @@ TestCase("Always cooperate", "[Strategies]")
 	return;
 }
 
-TestCase("Always defect", "[Strategies]")
+TestCase("Always Defect", "[Strategies]")
 {
-	require( allD.name        == "Always Defect" );
-	require( allD.shortName   == "AllD" );
+	require( allD.name        == "Always Defect"  );
+	require( allD.shortName   == "AllD"           );
 	require( allD.description == "Always defect." );
 	checkDecisionHistory(
 		{
@@ -112,7 +110,6 @@ TestCase("Grim Trigger", "[Strategies]")
 
 TestCase("Pavlov", "[Strategies]")
 {
-	std::vector<Decision> pavlovDecisions, partnerDecisions;
 	require( pvl.name ==      "Pavlov" );
 	require( pvl.shortName == "PVL"    );
 	checkDecisionHistory(
@@ -139,8 +136,8 @@ TestCase("Pavlov", "[Strategies]")
 
 TestCase("Gradual", "[Strategies]")
 {
-	require( gradualS.name ==      "Gradual Strategy" );
-	require( gradualS.shortName == "GradualS"    );
+	require( gradual.name ==      "Gradual");
+	require( gradual.shortName == "Gradual");
 	checkDecisionHistory(
 		{
 			Decision::cooperate,
@@ -170,16 +167,15 @@ TestCase("Gradual", "[Strategies]")
 			Decision::cooperate,
 			Decision::cooperate
 		},
-		gradualS
+		gradual
 	);
 	return;
 }
 
-TestCase("Soft majority", "[Strategies]")
+TestCase("Soft Majority", "[Strategies]")
 {
-	std::vector<Decision> smDecisions, partnerDecisions;
 	require( sm.name == "Soft Majority" );
-	require( sm.shortName == "SM" );
+	require( sm.shortName == "SM"       );
 	checkDecisionHistory(
 		{
 			Decision::cooperate,
@@ -213,9 +209,8 @@ TestCase("Soft majority", "[Strategies]")
 	);
 }
 
-TestCase("Hard majority", "[Strategies]")
+TestCase("Hard Majority", "[Strategies]")
 {
-	std::vector<Decision> hmDecisions, partnerDecisions;
 	require( hm.name == "Hard Majority" );
 	require( hm.shortName == "HM" );
 	checkDecisionHistory(
@@ -388,9 +383,9 @@ TestCase("Prober", "[Strategies]")
 	return;
 }
 
-TestCase("Firm but Fair", "[Strategies]")
+TestCase("Firm But Fair", "[Strategies]")
 {
-	require( fbf.name      == "Firm but Fair" );
+	require( fbf.name      == "Firm But Fair" );
 	require( fbf.shortName == "FBF"           );
 	checkDecisionHistory(
 		{
@@ -421,11 +416,10 @@ TestCase("Firm but Fair", "[Strategies]")
 	return;
 }
 
-TestCase("Tit for tat", "[Strategies]")
+TestCase("Tit For Tat", "[Strategies]")
 {
-	require( tft.name        == "Tit for Tat" );
-	require( tft.shortName   == "TFT" );
-	require( tft.description == "Start cooperating. Copy opponent's last move afterwards." );
+	require( tft.name        == "Tit For Tat" );
+	require( tft.shortName   == "TFT"         );
 	checkDecisionHistory(
 		{
 			Decision::cooperate,
@@ -444,11 +438,10 @@ TestCase("Tit for tat", "[Strategies]")
 	return;
 }
 
-TestCase("Tit for two tats", "[Strategies]")
+TestCase("Tit For Two Tats", "[Strategies]")
 {
-	std::vector<Decision> tfttDecisions, partnerDecisions;
-	require( tftt.name ==      "Tit for Two Tats" );
-	require( tftt.shortName == "TFTT"    );
+	require( tftt.name      == "Tit For Two Tats" );
+	require( tftt.shortName == "TFTT"             );
 	checkDecisionHistory(
 		{
 			Decision::cooperate,
@@ -471,10 +464,9 @@ TestCase("Tit for two tats", "[Strategies]")
 	return;
 }
 
-TestCase("Two Tits for Tat", "[Strategies]")
+TestCase("Two Tits For Tat", "[Strategies]")
 {
-	std::vector<Decision> ttftDecisions, partnerDecisions;
-	require( ttft.name ==      "Two Tits for Tat" );
+	require( ttft.name      == "Two Tits For Tat" );
 	require( ttft.shortName == "TTFT"             );
 	checkDecisionHistory(
 		{
@@ -498,24 +490,24 @@ TestCase("Two Tits for Tat", "[Strategies]")
 	return;
 }
 
-TestCase("Naive prober", "[Strategies]")
+TestCase("Naive Prober", "[Strategies]")
 {
 	std::vector<Decision> npDecisions, partnerDecisions;
-	require( np.name ==      "Naive Prober" );
+	require( np.name      == "Naive Prober" );
 	require( np.shortName == "NP"           );
 	section("initial decisions")
 	{
 		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision({},{});});
 		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision({},{});});
 	}
-	section("tit for tat cooperate")
+	section("tit For tat cooperate")
 	{
 		npDecisions      = {Decision::defect   , Decision::cooperate};
 		partnerDecisions = {Decision::cooperate, Decision::cooperate};
 		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
 		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
 	}
-	section("tit for tat defect")
+	section("tit For tat defect")
 	{
 		npDecisions      = {Decision::cooperate, Decision::cooperate};
 		partnerDecisions = {Decision::cooperate, Decision::defect   };
@@ -548,15 +540,15 @@ TestCase("Remorseful Prober", "[Strategies]")
 	{
 		rpDecisions      = {Decision::cooperate, Decision::cooperate};
 		partnerDecisions = {Decision::cooperate, Decision::defect   };
-		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect);
-		check( rp.makeDecision(startCooperating, startDefecting)   == Decision::defect );
+		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect );
+		check( rp.makeDecision(startCooperating, startDefecting) == Decision::defect );
 	}
 	return;
 }
 
-TestCase("Generous Tit for tat", "[Strategies]")
+TestCase("Generous Tit For tat", "[Strategies]")
 {
-	require( gtft.name        == "Generous Tit for Tat" );
+	require( gtft.name        == "Generous Tit For Tat" );
 	require( gtft.shortName   == "GTFT" );
 	section("initial decision")
 	{
@@ -576,9 +568,9 @@ TestCase("Generous Tit for tat", "[Strategies]")
 	return;
 }
 
-TestCase("Suspisious Tit for Tat", "[Strategies]")
+TestCase("Suspisious Tit For Tat", "[Strategies]")
 {
-	require( stft.name        == "Suspicious Tit for Tat" );
+	require( stft.name        == "Suspicious Tit For Tat" );
 	require( stft.shortName   == "STFT" );
 	checkDecisionHistory(
 		{
@@ -602,7 +594,7 @@ TestCase("Suspisious Tit for Tat", "[Strategies]")
 
 TestCase("Hard Tit For Tat", "[Strategies]")
 {
-	require( htft.name      == "Hard Tit for Tat" );
+	require( htft.name      == "Hard Tit For Tat" );
 	require( htft.shortName == "HTFT"             );
 	checkDecisionHistory(
 		{
@@ -638,10 +630,10 @@ TestCase("Hard Tit For Tat", "[Strategies]")
 	return;
 }
 
-TestCase("Reverse Tit for tat", "[Strategies]")
+TestCase("Reverse Tit For tat", "[Strategies]")
 {
-	require( rtft.name        == "Reverse Tit for Tat" );
-	require( rtft.shortName   == "RTFT" );
+	require( rtft.name        == "Reverse Tit For Tat" );
+	require( rtft.shortName   == "RTFT"                );
 	checkDecisionHistory(
 		{
 			Decision::defect   ,
@@ -662,8 +654,8 @@ TestCase("Reverse Tit for tat", "[Strategies]")
 
 TestCase("Adaptative Tit For Tat", "[Strategies]")
 {
-	require( atft.name == "Adaptative Tit For Tat" );
-	require( atft.shortName == "ATFT"              );
+	require( atft.name      == "Adaptative Tit For Tat" );
+	require( atft.shortName == "ATFT"                   );
 	checkDecisionHistory( // against tit fo tat
 		{
 			Decision::cooperate,
