@@ -1,4 +1,6 @@
 #include <Championship.hpp>
+#include <algorithm>
+#include <numeric>
 
 Championship::Championship(std::vector<Strategy*> strategies)
 {
@@ -15,5 +17,12 @@ void Championship::compete(void)
 	for(left=0u ; left<this->players.size() ; ++left)
 		for(right=left ; right<this->players.size() ; ++right)
 			Match(this->players[left], this->players[right]);
+	return;
+}
+
+void Championship::rank(void)
+{
+	auto compare = [](Player& lhs, Player& rhs){ return lhs.score() < rhs.score(); };
+	std::sort(this->players.begin(), this->players.end(), compare);
 	return;
 }

@@ -68,5 +68,13 @@ TestCase("Three players chapionship", "[Championship]")
 			check(championship.players[2].partners  == partners  );
 		}
 	}
+	section("rank")
+	{
+		championship.compete();
+		championship.rank();
+		check( championship.players[0].strategy == &allD ); // score = 18
+		check( championship.players[1].strategy == &tft  ); // score = 20
+		check( championship.players[2].strategy == &allC ); // score = 25
+	}
 	return;
 }

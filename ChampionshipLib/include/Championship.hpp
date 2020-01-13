@@ -12,6 +12,7 @@ class Championship
 
 		Championship(std::vector<Strategy*>);
 		void compete(void);
+		void rank(void);
 };
 
 #endif
