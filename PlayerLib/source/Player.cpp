@@ -1,4 +1,5 @@
 #include <Player.hpp>
+#include <numeric>
 
 Player::Player(Strategy& strategy)
 	: strategy(&strategy)
@@ -15,4 +16,15 @@ void Player::saveMatch(
 	this->decisions.push_back(decisions);
 	this->payoff.push_back(payoff);
 	return;
+}
+
+unsigned Player::score(void)
+{
+	auto sumPayoffVector = [](std::vector<Payoff> payoff) -> unsigned { return std::accumulate(payoff.cbegin(), payoff.cend(), 0u); };
+	return std::accumulate(
+		this->payoff.cbegin(),
+		this->payoff.cend(),
+		0u,
+		[&sumPayoffVector](unsigned init, std::vector<Payoff> payoff) -> unsigned { return init + sumPayoffVector(payoff); }
+		);
 }

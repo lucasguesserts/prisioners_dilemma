@@ -16,6 +16,7 @@ class Player
 
 		Player(Strategy& strategy);
 		void saveMatch(std::vector<Decision> decisions, std::vector<Payoff> payoff, Strategy* partner);
+		unsigned score(void);
 };
 
 #endif
