@@ -4,11 +4,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <iostream>
-#include <iomanip>
-using std::cout;
-using std::endl;
-
 AlwaysCooperate                  allC;
 AlwaysDefect                     allD;
 Lunatic                          moon;
@@ -572,28 +567,6 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 		this->updateAdaptationRate(turn, thresholdCount, adaptationRateCooperation, adaptationRateDefection);
 		this->updateThresholdCount(turn, thresholdCount, thisDecision.at(turn), partnerDecision.at(turn));
 		world = this->updateWorld(world, partnerDecision.at(turn), adaptationRateCooperation, adaptationRateDefection);
-	}
-	if (  partnerDecision.empty())
-	{
-		cout << std::fixed;
-		cout << std::setprecision(2) << world                                 << " : " \
-			 << std::setprecision(2) << adaptationRateCooperation             << " : " \
-			 << std::setprecision(2) << adaptationRateDefection               << " : " \
-			 << thresholdCount                                                << " : " \
-			 << " 0"                                                          << " : " \
-			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
-			 << ("C")                                                         << endl << endl;
-	}
-	if (! partnerDecision.empty())
-	{
-		cout << std::fixed;
-		cout << std::setprecision(2) << world                                 << " : " \
-			 << std::setprecision(2) << adaptationRateCooperation             << " : " \
-			 << std::setprecision(2) << adaptationRateDefection               << " : " \
-			 << thresholdCount                                                << " : " \
-			 << std::setw(2) << turn                                          << " : " \
-			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
-			 << ((((turn+1)%3)==0) ? "D" : "C")                               << endl << endl;
 	}
 	return world;
 }
