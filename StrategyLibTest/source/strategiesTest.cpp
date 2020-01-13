@@ -760,40 +760,94 @@ TestCase("Meta-Regulated Adaptative Tit For Tat", "[Strategies]")
 	// adaptationThreshold = 2
 	// adaptationRateMinimum = 0.1
 	// adaptationRateMaximim = 0.3
-	checkDecisionHistory( // against suspicious tit fo tat
+	//checkDecisionHistory( // against suspicious tit fo tat
+	//	{
+	//		                     //    w    rc    rd   n    t  td  pd
+	//		Decision::cooperate, // 0.50 : 0.2 : 0.2 : 0 :  0 : C : D
+	//		Decision::defect   , // 0.40 : 0.2 : 0.2 : 0 :  1 : D : C
+	//		Decision::cooperate, // 0.52 : 0.2 : 0.2 : 0 :  2 : C : D
+	//		Decision::defect   , // 0.42 : 0.2 : 0.2 : 0 :  3 : D : C
+	//		Decision::cooperate, // 0.53 : 0.2 : 0.2 : 0 :  4 : C : D
+	//		Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  5 : D : C
+	//		Decision::cooperate, // 0.54 : 0.2 : 0.2 : 0 :  6 : C : D
+	//		Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  7 : D : C
+	//		Decision::cooperate, // 0.55 : 0.2 : 0.2 : 0 :  8 : C : D
+	//		Decision::defect   , // 0.44 : 0.2 : 0.2 : 0 :  9 : D : C
+	//		Decision::cooperate, // 0.61 : 0.3 : 0.1 : 0 : 10 : C : D
+	//		Decision::cooperate, // 0.55 : 0.3 : 0.1 : 0 : 11 : C : C
+	//		Decision::cooperate, // 0.68 : 0.3 : 0.1 : 1 : 12 : C : C
+	//		Decision::cooperate, // 0.78 : 0.3 : 0.1 : 2 : 13 : C : C
+	//		Decision::cooperate, // 0.84 : 0.3 : 0.1 : 3 : 14 : C : C
+	//	},
+	//	{
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::defect   ,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//		Decision::cooperate,
+	//	},
+	//	mratft
+	//);
+	checkDecisionHistory( // against CCD
 		{
-			                     //    w    rc    rd   n    t  td  pd
-			Decision::cooperate, // 0.50 : 0.2 : 0.2 : 0 :  0 : C : D
-			Decision::defect   , // 0.40 : 0.2 : 0.2 : 0 :  1 : D : C
-			Decision::cooperate, // 0.52 : 0.2 : 0.2 : 0 :  2 : C : D
-			Decision::defect   , // 0.42 : 0.2 : 0.2 : 0 :  3 : D : C
-			Decision::cooperate, // 0.53 : 0.2 : 0.2 : 0 :  4 : C : D
-			Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  5 : D : C
-			Decision::cooperate, // 0.54 : 0.2 : 0.2 : 0 :  6 : C : D
-			Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  7 : D : C
-			Decision::cooperate, // 0.55 : 0.2 : 0.2 : 0 :  8 : C : D
-			Decision::defect   , // 0.44 : 0.2 : 0.2 : 0 :  9 : D : C
-			Decision::cooperate, // 0.61 : 0.3 : 0.1 : 0 : 10 : C : D
-			Decision::cooperate, // 0.55 : 0.3 : 0.1 : 0 : 11 : C : C
-			Decision::cooperate, // 0.68 : 0.3 : 0.1 : 1 : 12 : C : C
-			Decision::cooperate, // 0.78 : 0.3 : 0.1 : 2 : 13 : C : C
-			Decision::cooperate, // 0.84 : 0.3 : 0.1 : 3 : 14 : C : C
+			                     //    w     rc     rd   n    t  td  pd
+			Decision::cooperate, // 0.50 : 0.20 : 0.20 : 0 :  0 : C : C
+			Decision::cooperate, // 0.60 : 0.20 : 0.20 : 1 :  1 : C : C
+			Decision::cooperate, // 0.68 : 0.20 : 0.20 : 2 :  2 : C : D
+			Decision::cooperate, // 0.54 : 0.20 : 0.20 : 2 :  3 : C : C
+			Decision::cooperate, // 0.64 : 0.20 : 0.20 : 3 :  4 : C : C
+			Decision::cooperate, // 0.71 : 0.20 : 0.20 : 4 :  5 : C : D
+			Decision::cooperate, // 0.57 : 0.20 : 0.20 : 4 :  6 : C : C
+			Decision::cooperate, // 0.65 : 0.20 : 0.20 : 5 :  7 : C : C
+			Decision::cooperate, // 0.72 : 0.20 : 0.20 : 6 :  8 : C : D
+			Decision::cooperate, // 0.58 : 0.20 : 0.20 : 6 :  9 : C : C
+			Decision::cooperate, // 0.62 : 0.10 : 0.30 : 1 : 10 : C : C
+			Decision::cooperate, // 0.66 : 0.10 : 0.30 : 2 : 11 : C : D
+			Decision::defect   , // 0.46 : 0.10 : 0.30 : 2 : 12 : D : C
+			Decision::cooperate, // 0.51 : 0.10 : 0.30 : 2 : 13 : C : C
+			Decision::cooperate, // 0.56 : 0.10 : 0.30 : 3 : 14 : C : D
+			Decision::defect   , // 0.39 : 0.10 : 0.30 : 3 : 15 : D : C
+			Decision::defect   , // 0.45 : 0.10 : 0.30 : 3 : 16 : D : C
+			Decision::cooperate, // 0.51 : 0.10 : 0.30 : 3 : 17 : C : D
+			Decision::defect   , // 0.36 : 0.10 : 0.30 : 3 : 18 : D : C
+			Decision::defect   , // 0.42 : 0.10 : 0.30 : 0 : 19 : D : C
+			Decision::defect   , // 0.48 : 0.10 : 0.30 : 0 : 20 : D : D
+			Decision::defect   , // 0.34 : 0.10 : 0.30 : 1 : 21 : D : C
+			Decision::defect   , // 0.40 : 0.10 : 0.30 : 1 : 22 : D : C
 		},
-		{
-			Decision::defect   ,
+		{   // CCD strategy
+			Decision::cooperate, 
 			Decision::cooperate,
 			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
 			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
 			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
 			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
 			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
-			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate, 
 			Decision::cooperate,
 		},
 		mratft

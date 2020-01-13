@@ -582,7 +582,7 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 			 << thresholdCount                                                << " : " \
 			 << " 0"                                                          << " : " \
 			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
-			 << ("D")                                                         << endl << endl;
+			 << ("C")                                                         << endl << endl;
 	}
 	if (! partnerDecision.empty())
 	{
@@ -591,9 +591,9 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 			 << std::setprecision(2) << adaptationRateCooperation             << " : " \
 			 << std::setprecision(2) << adaptationRateDefection               << " : " \
 			 << thresholdCount                                                << " : " \
-			 << std::setw(2) << turn                                         << " : " \
+			 << std::setw(2) << turn                                          << " : " \
 			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
-			 << ((*(thisDecision.cend()-1)==Decision::cooperate) ? "C" : "D") << endl << endl;
+			 << ((((turn+1)%3)==0) ? "D" : "C")                               << endl << endl;
 	}
 	return world;
 }
@@ -631,7 +631,7 @@ void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
 	Decision partnerDecision
 )
 {
-	if ((turn % this->adaptationWindow) == 0)
+	if ((turn % (this->adaptationWindow-1)) == 0)
 		thresholdCount = 0u;
 	if(thisDecision == partnerDecision)
 		++thresholdCount;
