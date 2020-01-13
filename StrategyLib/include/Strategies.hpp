@@ -290,26 +290,65 @@ class AdaptativeTitForTat: public Strategy
 		double computeWorld(std::vector<Decision> partnerDecision);
 };
 
-extern AlwaysCooperate     allC;
-extern AlwaysDefect        allD;
-extern Lunatic             moon;
-extern GrimTrigger         grim;
-extern Pavlov              pvl;
-extern GradualS            gradualS;
-extern SoftMajority        sm;
-extern HardMajority        hm;
-extern NaiveProber         np;
-extern RemorsefulProber    rp;
-extern SoftGrudger         sg;
-extern Prober              pb;
-extern FirmButFair         fbf;
-extern TitForTat           tft ;
-extern TitForTwoTats       tftt;
-extern TwoTitsForTat       ttft;
-extern ReverseTitForTat    rtft;
-extern GenerousTitForTat   gtft;
-extern SuspiciousTitForTat stft;
-extern HardTitForTat       htft;
-extern AdaptativeTitForTat atft;
+class MetaRegulatedAdaptativeTitForTat: public Strategy
+{
+	public:
+		MetaRegulatedAdaptativeTitForTat(
+			double worldZero                     = 0.50000001,
+			double adaptationRateCooperationZero = 0.2,
+			double adaptationRateDefectionZero   = 0.2,
+			double adaptationRateMinimum         = 0.1,
+			double adaptationRateMaximum         = 0.3,
+			unsigned adaptationWindow            = 10,
+			unsigned adaptationThreshold         = 2);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double worldZero, adaptationRateCooperationZero, adaptationRateDefectionZero;
+		double adaptationRateMinimum, adaptationRateMaximum;
+		unsigned adaptationWindow, adaptationThreshold;
+		double computeWorld(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision);
+		void updateAdaptationRate(
+			unsigned turn,
+			unsigned thresholdCount,
+			double&  adaptationRateCooperation,
+			double&  adaptationRateDefection);
+		void updateThresholdCount(
+			unsigned turn,
+			unsigned &thresholdCount,
+			Decision thisDecision,
+			Decision partnerDecision);
+		double updateWorld(
+			double   world,
+			Decision partnerDecision,
+			double   adaptationRateCooperation,
+			double   adaptationRateDefection);
+};
+
+extern AlwaysCooperate                  allC;
+extern AlwaysDefect                     allD;
+extern Lunatic                          moon;
+extern GrimTrigger                      grim;
+extern Pavlov                           pvl;
+extern GradualS                         gradualS;
+extern SoftMajority                     sm;
+extern HardMajority                     hm;
+extern NaiveProber                      np;
+extern RemorsefulProber                 rp;
+extern SoftGrudger                      sg;
+extern Prober                           pb;
+extern FirmButFair                      fbf;
+extern TitForTat                        tft;
+extern TitForTwoTats                    tftt;
+extern TwoTitsForTat                    ttft;
+extern ReverseTitForTat                 rtft;
+extern GenerousTitForTat                gtft;
+extern SuspiciousTitForTat              stft;
+extern HardTitForTat                    htft;
+extern AdaptativeTitForTat              atft;
+extern MetaRegulatedAdaptativeTitForTat mratft;
 
 #endif

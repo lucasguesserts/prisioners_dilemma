@@ -4,27 +4,28 @@
 #include <algorithm>
 #include <stdexcept>
 
-AlwaysCooperate     allC;
-AlwaysDefect        allD;
-Lunatic             moon;
-GrimTrigger         grim;
-Pavlov              pvl;
-GradualS            gradualS;
-SoftMajority        sm;
-HardMajority        hm;
-NaiveProber         np;
-RemorsefulProber    rp;
-SoftGrudger         sg;
-Prober              pb;
-FirmButFair         fbf;
-TitForTat           tft;
-TitForTwoTats       tftt;
-TwoTitsForTat       ttft;
-ReverseTitForTat    rtft;
-GenerousTitForTat   gtft;
-SuspiciousTitForTat stft;
-HardTitForTat       htft;
-AdaptativeTitForTat atft;
+AlwaysCooperate                  allC;
+AlwaysDefect                     allD;
+Lunatic                          moon;
+GrimTrigger                      grim;
+Pavlov                           pvl;
+GradualS                         gradualS;
+SoftMajority                     sm;
+HardMajority                     hm;
+NaiveProber                      np;
+RemorsefulProber                 rp;
+SoftGrudger                      sg;
+Prober                           pb;
+FirmButFair                      fbf;
+TitForTat                        tft;
+TitForTwoTats                    tftt;
+TwoTitsForTat                    ttft;
+ReverseTitForTat                 rtft;
+GenerousTitForTat                gtft;
+SuspiciousTitForTat              stft;
+HardTitForTat                    htft;
+AdaptativeTitForTat              atft;
+MetaRegulatedAdaptativeTitForTat mratft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -502,5 +503,120 @@ double AdaptativeTitForTat::computeWorld(std::vector<Decision> partnerDecision)
 		else
 			world = world + adaptationRate * (0 - world);
 	}
+	return world;
+}
+
+MetaRegulatedAdaptativeTitForTat::MetaRegulatedAdaptativeTitForTat(
+	double worldZero                    ,
+	double adaptationRateCooperationZero,
+	double adaptationRateDefectionZero  ,
+	double adaptationRateMinimum        ,
+	double adaptationRateMaximum        ,
+	unsigned adaptationWindow           ,
+	unsigned adaptationThreshold
+)
+	: Strategy(
+		"Meta-Regulated Adaptative Tit For Tat",
+		"MRATFT",
+		"Check the paper 'Toward Adaptive Cooperative Behavior' of the author 'Elpida S. Tzafestas'."
+	  )
+{
+	if ((worldZero>1) || (worldZero<0))
+		throw std::domain_error("World Zero in Adaptative Tit For Tat must be in the interval [0,1].");
+	if ((adaptationRateCooperationZero>1) || (adaptationRateCooperationZero<0))
+		throw std::domain_error("Cooperative Adaptation Rate Zero in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
+	if ((adaptationRateDefectionZero>1) || (adaptationRateDefectionZero<0))
+		throw std::domain_error("Defection Adaptation Rate Zero in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
+	if ((adaptationRateMinimum>1) || (adaptationRateMinimum<0))
+		throw std::domain_error("Defection Adaptation Rate Minimum in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
+	if ((adaptationRateMaximum>1) || (adaptationRateMaximum<0))
+		throw std::domain_error("Defection Adaptation Rate Maximum in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
+	if (adaptationThreshold > adaptationWindow)
+		throw std::domain_error("Adaptation Threshold has to be smaller of equals to Adaptation Window.");
+	this->worldZero                     = worldZero                    ;
+	this->adaptationRateCooperationZero = adaptationRateCooperationZero;
+	this->adaptationRateDefectionZero   = adaptationRateDefectionZero  ;
+	this->adaptationRateMinimum         = adaptationRateMinimum        ;
+	this->adaptationRateMaximum         = adaptationRateMaximum        ;
+	this->adaptationWindow              = adaptationWindow             ;
+	this->adaptationThreshold           = adaptationThreshold          ;
+	return;
+}
+
+Decision MetaRegulatedAdaptativeTitForTat::makeDecision(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	double world = this->computeWorld(thisDecision, partnerDecision);
+	return (world>=0.5) ? Decision::cooperate : Decision::defect;
+}
+
+double MetaRegulatedAdaptativeTitForTat::computeWorld(
+	std::vector<Decision> thisDecision,
+	std::vector<Decision> partnerDecision
+)
+{
+	double   world                     = this->worldZero;
+	double   adaptationRateCooperation = this->adaptationRateCooperationZero;
+	double   adaptationRateDefection   = this->adaptationRateDefectionZero;
+	unsigned thresholdCount            = 0;
+	for (unsigned turn=0u ; turn<partnerDecision.size() ; ++turn)
+	{
+		this->updateAdaptationRate(turn, thresholdCount, adaptationRateCooperation, adaptationRateDefection);
+		this->updateThresholdCount(turn, thresholdCount, thisDecision.at(turn), partnerDecision.at(turn));
+		world = this->updateWorld(world, partnerDecision.at(turn), adaptationRateCooperation, adaptationRateDefection);
+	}
+	return world;
+}
+
+void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
+	unsigned turn,
+	unsigned thresholdCount,
+	double&  adaptationRateCooperation,
+	double&  adaptationRateDefection
+)
+{
+	if ((turn % this->adaptationWindow) == 0)
+	{
+		if (thresholdCount > this->adaptationThreshold)
+		{
+			adaptationRateCooperation = this->adaptationRateMinimum;
+			adaptationRateDefection   = this->adaptationRateMaximum;
+		}
+		else
+		{
+			adaptationRateCooperation = this->adaptationRateMaximum;
+			adaptationRateDefection   = this->adaptationRateMinimum;
+		}
+	}
+	return;
+}
+
+void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
+	unsigned turn,
+	unsigned &thresholdCount,
+	Decision thisDecision,
+	Decision partnerDecision
+)
+{
+	if ((turn % this->adaptationWindow) == 0)
+		thresholdCount = 0u;
+	if(thisDecision == partnerDecision)
+		++thresholdCount;
+	return;
+}
+
+double MetaRegulatedAdaptativeTitForTat::updateWorld(
+	double   world,
+	Decision partnerDecision,
+	double   adaptationRateCooperation,
+	double   adaptationRateDefection
+)
+{
+	if (partnerDecision == Decision::cooperate)
+		world = world + adaptationRateCooperation * (1 - world);
+	else
+		world = world + adaptationRateDefection   * (0 - world);
 	return world;
 }
