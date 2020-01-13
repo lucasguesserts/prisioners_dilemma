@@ -744,3 +744,59 @@ TestCase("Adaptative Tit For Tat", "[Strategies]")
 	);
 	return;
 }
+
+TestCase("Meta-Regulated Adaptative Tit For Tat", "[Strategies]")
+{
+	require( mratft.name == "Meta-Regulated Adaptative Tit For Tat" );
+	require( mratft.shortName == "MRATFT"              );
+	// w: world
+	// rc: adaptationRateCooperation
+	// rd: adaptationRateDefection
+	// n: thresholdCount
+	// t: turn
+	// td: thisDecision.back()
+	// pd: partnerDecision.back()
+	// adaptationWindow = 10
+	// adaptationThreshold = 2
+	// adaptationRateMinimum = 0.1
+	// adaptationRateMaximim = 0.3
+	checkDecisionHistory( // against suspicious tit fo tat
+		{
+			                     //    w    rc    rd   n    t  td  pd
+			Decision::cooperate, // 0.50 : 0.2 : 0.2 : 0 :  0 : C : D
+			Decision::defect   , // 0.40 : 0.2 : 0.2 : 0 :  1 : D : C
+			Decision::cooperate, // 0.52 : 0.2 : 0.2 : 0 :  2 : C : D
+			Decision::defect   , // 0.42 : 0.2 : 0.2 : 0 :  3 : D : C
+			Decision::cooperate, // 0.53 : 0.2 : 0.2 : 0 :  4 : C : D
+			Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  5 : D : C
+			Decision::cooperate, // 0.54 : 0.2 : 0.2 : 0 :  6 : C : D
+			Decision::defect   , // 0.43 : 0.2 : 0.2 : 0 :  7 : D : C
+			Decision::cooperate, // 0.55 : 0.2 : 0.2 : 0 :  8 : C : D
+			Decision::defect   , // 0.44 : 0.2 : 0.2 : 0 :  9 : D : C
+			Decision::cooperate, // 0.61 : 0.3 : 0.1 : 0 : 10 : C : D
+			Decision::cooperate, // 0.55 : 0.3 : 0.1 : 0 : 11 : C : C
+			Decision::cooperate, // 0.68 : 0.3 : 0.1 : 1 : 12 : C : C
+			Decision::cooperate, // 0.78 : 0.3 : 0.1 : 2 : 13 : C : C
+			Decision::cooperate, // 0.84 : 0.3 : 0.1 : 3 : 14 : C : C
+		},
+		{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		mratft
+	);
+	return;
+}

@@ -4,6 +4,11 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include <iostream>
+#include <iomanip>
+using std::cout;
+using std::endl;
+
 AlwaysCooperate                  allC;
 AlwaysDefect                     allD;
 Lunatic                          moon;
@@ -561,11 +566,34 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 	double   adaptationRateCooperation = this->adaptationRateCooperationZero;
 	double   adaptationRateDefection   = this->adaptationRateDefectionZero;
 	unsigned thresholdCount            = 0;
-	for (unsigned turn=0u ; turn<partnerDecision.size() ; ++turn)
+	unsigned turn = 0u;
+	for (turn=0u ; turn<partnerDecision.size() ; ++turn)
 	{
 		this->updateAdaptationRate(turn, thresholdCount, adaptationRateCooperation, adaptationRateDefection);
 		this->updateThresholdCount(turn, thresholdCount, thisDecision.at(turn), partnerDecision.at(turn));
 		world = this->updateWorld(world, partnerDecision.at(turn), adaptationRateCooperation, adaptationRateDefection);
+	}
+	if (  partnerDecision.empty())
+	{
+		cout << std::fixed;
+		cout << std::setprecision(2) << world                                 << " : " \
+			 << std::setprecision(2) << adaptationRateCooperation             << " : " \
+			 << std::setprecision(2) << adaptationRateDefection               << " : " \
+			 << thresholdCount                                                << " : " \
+			 << " 0"                                                          << " : " \
+			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
+			 << ("D")                                                         << endl << endl;
+	}
+	if (! partnerDecision.empty())
+	{
+		cout << std::fixed;
+		cout << std::setprecision(2) << world                                 << " : " \
+			 << std::setprecision(2) << adaptationRateCooperation             << " : " \
+			 << std::setprecision(2) << adaptationRateDefection               << " : " \
+			 << thresholdCount                                                << " : " \
+			 << std::setw(2) << turn                                         << " : " \
+			 << ((world>=0.5) ? "C" : "D")                                    << " : " \
+			 << ((*(thisDecision.cend()-1)==Decision::cooperate) ? "C" : "D") << endl << endl;
 	}
 	return world;
 }
@@ -577,17 +605,20 @@ void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
 	double&  adaptationRateDefection
 )
 {
-	if ((turn % this->adaptationWindow) == 0)
+	if (turn!=0u) // It is annoying, the case `turn = 0` has to be excluded.
 	{
-		if (thresholdCount > this->adaptationThreshold)
+		if ((turn % (this->adaptationWindow-1)) == 0) // `-1` because it starts at 0
 		{
-			adaptationRateCooperation = this->adaptationRateMinimum;
-			adaptationRateDefection   = this->adaptationRateMaximum;
-		}
-		else
-		{
-			adaptationRateCooperation = this->adaptationRateMaximum;
-			adaptationRateDefection   = this->adaptationRateMinimum;
+			if (thresholdCount > this->adaptationThreshold)
+			{
+				adaptationRateCooperation = this->adaptationRateMinimum;
+				adaptationRateDefection   = this->adaptationRateMaximum;
+			}
+			else
+			{
+				adaptationRateCooperation = this->adaptationRateMaximum;
+				adaptationRateDefection   = this->adaptationRateMinimum;
+			}
 		}
 	}
 	return;
