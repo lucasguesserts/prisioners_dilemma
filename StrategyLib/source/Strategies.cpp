@@ -24,6 +24,7 @@ ReverseTitForTat    rtft;
 GenerousTitForTat   gtft;
 SuspiciousTitForTat stft;
 HardTitForTat       htft;
+AdaptativeTitForTat atft;
 
 Decision AlwaysCooperate::makeDecision(
 	[[maybe_unused]] std::vector<Decision> thisDecision,
@@ -464,4 +465,42 @@ Decision ReverseTitForTat::makeDecision(
 	else
 		decision = ! partnerDecision.back();
 	return decision;
+}
+
+AdaptativeTitForTat::AdaptativeTitForTat(double worldZero, double adaptationRate)
+	: Strategy(
+		"Adaptative Tit For Tat",
+		"ATFT",
+		"Check the paper 'Toward Adaptive Cooperative Behavior' of the author 'Elpida S. Tzafestas'."
+	  )
+{
+	if ((worldZero>1) || (worldZero<0))
+		throw std::domain_error("World Zero in Adaptative Tit For Tat must be in the interval [0,1].");
+	if ((adaptationRate>1) || (adaptationRate<0))
+		throw std::domain_error("Adaptation Rate in Adaptative Tit For Tat must be in the interval [0,1].");
+	this->worldZero      = worldZero;
+	this->adaptationRate = adaptationRate;
+	return;
+}
+
+Decision AdaptativeTitForTat::makeDecision(
+	[[maybe_unused]] std::vector<Decision> thisDecision,
+	[[maybe_unused]] std::vector<Decision> partnerDecision
+)
+{
+	double world = AdaptativeTitForTat::computeWorld(partnerDecision);
+	return (world>=0.5) ? Decision::cooperate : Decision::defect;
+}
+
+double AdaptativeTitForTat::computeWorld(std::vector<Decision> partnerDecision)
+{
+	double world = this->worldZero;
+	for (auto decision: partnerDecision)
+	{
+		if (decision == Decision::cooperate)
+			world = world + adaptationRate * (1 - world);
+		else
+			world = world + adaptationRate * (0 - world);
+	}
+	return world;
 }

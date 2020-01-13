@@ -659,3 +659,88 @@ TestCase("Reverse Tit for tat", "[Strategies]")
 	);
 	return;
 }
+
+TestCase("Adaptative Tit For Tat", "[Strategies]")
+{
+	require( atft.name == "Adaptative Tit For Tat" );
+	require( atft.shortName == "ATFT"              );
+	checkDecisionHistory( // against tit fo tat
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		atft
+	);
+	checkDecisionHistory( // against suspicious tit fo tat
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		{
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+		},
+		atft
+	);
+	checkDecisionHistory( // against CCD behavior
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::cooperate,
+		},
+		{
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::cooperate,
+			Decision::defect   ,
+		},
+		atft
+	);
+	checkDecisionHistory( // against CDD behavior
+		{
+			Decision::cooperate, // world = 0.50
+			Decision::cooperate, // world = 0.60
+			Decision::defect   , // world = 0.48
+			Decision::defect   , // world = 0.38
+			Decision::cooperate, // world = 0.51
+			Decision::defect   , // world = 0.45
+			Decision::defect   , // world = 0.32
+			Decision::defect   , // world = 0.46
+			Decision::defect   , // world = 0.36
+		},
+		{
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+			Decision::cooperate,
+			Decision::defect   ,
+			Decision::defect   ,
+		},
+		atft
+	);
+	return;
+}

@@ -277,6 +277,19 @@ class ReverseTitForTat: public Strategy
 			std::vector<Decision> partnerDecision) final;
 };
 
+class AdaptativeTitForTat: public Strategy
+{
+	public:
+		AdaptativeTitForTat(double worldZero = 0.500000001, double adaptationRate = 0.2);
+		Decision makeDecision(
+			std::vector<Decision> thisDecision,
+			std::vector<Decision> partnerDecision) final;
+	private:
+		double worldZero;
+		double adaptationRate;
+		double computeWorld(std::vector<Decision> partnerDecision);
+};
+
 extern AlwaysCooperate     allC;
 extern AlwaysDefect        allD;
 extern Lunatic             moon;
@@ -297,5 +310,6 @@ extern ReverseTitForTat    rtft;
 extern GenerousTitForTat   gtft;
 extern SuspiciousTitForTat stft;
 extern HardTitForTat       htft;
+extern AdaptativeTitForTat atft;
 
 #endif
