@@ -20,6 +20,10 @@ enum class Payoff : unsigned {
 	punishment = 2
 };
 
+unsigned operator+(const Payoff&   lhs, const Payoff&   rhs);
+unsigned operator+(const Payoff&   lhs, const unsigned& rhs);
+unsigned operator+(const unsigned& lhs, const Payoff&   rhs);
+
 class PayoffComputer
 {
 	public:

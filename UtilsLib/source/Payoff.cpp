@@ -1,6 +1,21 @@
 #include <Payoff.hpp>
 #include <stdexcept>
 
+unsigned operator+(const Payoff& lhs, const Payoff& rhs)
+{
+	return static_cast<unsigned>(lhs) + static_cast<unsigned>(rhs);
+}
+
+unsigned operator+(const Payoff& lhs, const unsigned& rhs)
+{
+	return static_cast<unsigned>(lhs) + rhs;
+}
+
+unsigned operator+(const unsigned& lhs, const Payoff& rhs)
+{
+	return lhs + static_cast<unsigned>(rhs);
+}
+
 std::tuple<Payoff, Payoff> PayoffComputer::compute(Decision leftDecision, Decision rightDecision)
 {
 	std::tuple<Payoff, Payoff> payoff;

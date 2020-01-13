@@ -11,6 +11,14 @@ TestCase("Payoff order", "[Payoff]")
 	return;
 }
 
+TestCase("Payoff sum", "[Payoff]")
+{
+	check( Payoff::reward  + Payoff::punishment == 3u );
+	check( Payoff::suckers + 2u                 == 5u );
+	check( 2u              + Payoff::temptation == 2u );
+	return;
+}
+
 TestCase("Payoff left", "[PayoffComputer]")
 {
 	check( PayoffComputer::left(Decision::cooperate, Decision::cooperate) == Payoff::reward     );
