@@ -23,12 +23,14 @@ void Match::computeDecisionsAndPayoff(void)
 {
 	for(unsigned turn=0 ; turn<Match::numberOfTurns ; ++turn)
 	{
+		auto leftDecision  = leftPlayer.strategy->makeDecision (leftDecisions,  rightDecisions);
+		auto rightDecision = rightPlayer.strategy->makeDecision(rightDecisions, leftDecisions );
 		// Compute and store decisions
-		this->leftDecisions.push_back(   leftPlayer.strategy->makeDecision(leftDecisions,  rightDecisions) );
-		this->rightDecisions.push_back( rightPlayer.strategy->makeDecision(rightDecisions, leftDecisions)  );
+		this->leftDecisions.push_back ( leftDecision  );
+		this->rightDecisions.push_back( rightDecision );
 		// Compute and store payoffs
-		this->leftPayoff.push_back(  PayoffComputer::left (leftDecisions.back(), rightDecisions.back()) );
-		this->rightPayoff.push_back( PayoffComputer::right(leftDecisions.back(), rightDecisions.back()) );
+		this->leftPayoff.push_back ( PayoffComputer::left (leftDecision , rightDecision) );
+		this->rightPayoff.push_back( PayoffComputer::right(leftDecision, rightDecision) );
 	}
 	return;
 }
