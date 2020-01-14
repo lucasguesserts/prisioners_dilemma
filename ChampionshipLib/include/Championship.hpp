@@ -2,6 +2,7 @@
 #define CHAMPIONSHIP_HPP
 
 #include <vector>
+#include <iostream>
 #include <Player.hpp>
 #include <Match.hpp>
 
@@ -15,5 +16,7 @@ class Championship
 		void compete(void);
 		void rank(void);
 };
+
+std::ostream& operator<<(std::ostream& os, Championship& championship);
 
 #endif
