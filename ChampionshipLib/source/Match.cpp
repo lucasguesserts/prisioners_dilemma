@@ -1,8 +1,9 @@
 #include <Match.hpp>
 
-Match::Match(Player& left, Player& right)
+Match::Match(Player& left, Player& right, unsigned numberOfTurns)
 	: leftPlayer(left),
-	  rightPlayer(right)
+	  rightPlayer(right),
+	  numberOfTurns(numberOfTurns)
 {
 	this->reserveMemory();
 	this->computeDecisionsAndPayoff();
@@ -12,16 +13,16 @@ Match::Match(Player& left, Player& right)
 
 void Match::reserveMemory(void)
 {
-	this->leftDecisions.reserve(Match::numberOfTurns);
-	this->rightDecisions.reserve(Match::numberOfTurns);
-	this->leftPayoff.reserve(Match::numberOfTurns);
-	this->rightPayoff.reserve(Match::numberOfTurns);
+	this->leftDecisions.reserve(this->numberOfTurns);
+	this->rightDecisions.reserve(this->numberOfTurns);
+	this->leftPayoff.reserve(this->numberOfTurns);
+	this->rightPayoff.reserve(this->numberOfTurns);
 	return;
 }
 
 void Match::computeDecisionsAndPayoff(void)
 {
-	for(unsigned turn=0 ; turn<Match::numberOfTurns ; ++turn)
+	for(unsigned turn=0 ; turn<this->numberOfTurns ; ++turn)
 	{
 		auto leftDecision  = leftPlayer.strategy->makeDecision (leftDecisions,  rightDecisions);
 		auto rightDecision = rightPlayer.strategy->makeDecision(rightDecisions, leftDecisions );

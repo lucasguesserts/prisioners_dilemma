@@ -4,11 +4,13 @@
 
 TestCase("Three players chapionship", "[Championship]")
 {
+	const unsigned numberOfTurns = 5;
 	Championship championship({
 		&allC,
 		&allD,
 		&tft
-	});
+	},
+	numberOfTurns);
 
 	section("Championship constructor", "[Championship]")
 	{
@@ -23,12 +25,12 @@ TestCase("Three players chapionship", "[Championship]")
 		section("Always cooperate")
 		{
 			std::vector<std::vector<Decision>> decisions = {
-				3, std::vector<Decision>{Match::numberOfTurns, Decision::cooperate}
+				3, std::vector<Decision>{numberOfTurns, Decision::cooperate}
 			};
 			std::vector<std::vector<Payoff  >> payoff    = {
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::reward } },
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::suckers} },
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::reward } },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::reward } },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::suckers} },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::reward } },
 			};
 			std::vector<Strategy*> partners              = { &allC, &allD, &tft };
 			check(championship.players[0].decisions == decisions );
@@ -38,11 +40,11 @@ TestCase("Three players chapionship", "[Championship]")
 		section("Always defect")
 		{
 			std::vector<std::vector<Decision>> decisions = {
-				3, std::vector<Decision>{Match::numberOfTurns, Decision::defect}
+				3, std::vector<Decision>{numberOfTurns, Decision::defect}
 			};
 			std::vector<std::vector<Payoff  >> payoff    = {
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::temptation} },
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::punishment} },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::temptation} },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::punishment} },
 				{ {Payoff::temptation, Payoff::punishment, Payoff::punishment, Payoff::punishment, Payoff::punishment} },
 			};
 			std::vector<Strategy*> partners              = { &allC, &allD, &tft };
@@ -53,14 +55,14 @@ TestCase("Three players chapionship", "[Championship]")
 		section("Tit for Tat")
 		{
 			std::vector<std::vector<Decision>> decisions = {
-				{ std::vector<Decision>{Match::numberOfTurns, Decision::cooperate} },
+				{ std::vector<Decision>{numberOfTurns, Decision::cooperate} },
 				{ Decision::cooperate, Decision::defect, Decision::defect, Decision::defect, Decision::defect },
-				{ std::vector<Decision>{Match::numberOfTurns, Decision::cooperate} }
+				{ std::vector<Decision>{numberOfTurns, Decision::cooperate} }
 			};
 			std::vector<std::vector<Payoff  >> payoff    = {
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::reward} },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::reward} },
 				{ {Payoff::suckers, Payoff::punishment, Payoff::punishment, Payoff::punishment, Payoff::punishment} },
-				{ std::vector<Payoff>{Match::numberOfTurns, Payoff::reward} },
+				{ std::vector<Payoff>{numberOfTurns, Payoff::reward} },
 			};
 			std::vector<Strategy*> partners              = { &allC, &allD, &tft };
 			check(championship.players[2].decisions == decisions );

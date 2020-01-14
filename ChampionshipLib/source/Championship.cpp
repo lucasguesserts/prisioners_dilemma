@@ -2,7 +2,8 @@
 #include <algorithm>
 #include <numeric>
 
-Championship::Championship(std::vector<Strategy*> strategies)
+Championship::Championship(std::vector<Strategy*> strategies, unsigned numberOfTurns)
+	: numberOfTurns(numberOfTurns)
 {
 	this->players.reserve(strategies.size());
 	for(Strategy* strategy: strategies)
@@ -16,7 +17,7 @@ void Championship::compete(void)
 	std::vector<Player>::size_type left, right;
 	for(left=0u ; left<this->players.size() ; ++left)
 		for(right=left ; right<this->players.size() ; ++right)
-			Match(this->players[left], this->players[right]);
+			Match(this->players[left], this->players[right], this->numberOfTurns);
 	return;
 }
 
