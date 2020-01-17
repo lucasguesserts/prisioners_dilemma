@@ -12,7 +12,7 @@ class Championship
 		std::vector<Player> players;
 		unsigned numberOfTurns;
 
-		Championship(std::vector<Strategy*>, unsigned numberOfTurns=5);
+		Championship(std::vector<Strategy*>, unsigned numberOfTurns);
 		void compete(void);
 		void rank(void);
 };
