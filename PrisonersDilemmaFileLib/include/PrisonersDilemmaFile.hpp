@@ -3,11 +3,18 @@
 
 #include <H5Cpp.h>
 #include <string>
+#include <Championship.hpp>
 
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(const std::string &filePath);
+		PrisonersDilemmaFile(const char * filePath);
+
+		void save(Championship &);
+
+	private:
+		static void createAttribute(H5::Group group, std::string attributeName, std::string attributeData);
+		static void createAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
 };
 
 #endif

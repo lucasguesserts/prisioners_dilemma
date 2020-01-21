@@ -1,8 +1,50 @@
 #include <PrisonersDilemmaFile.hpp>
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(const std::string &filePath)
+PrisonersDilemmaFile::PrisonersDilemmaFile(const char * filePath)
 	: H5::H5File(filePath, H5F_ACC_TRUNC)
 {
+	return;
+}
+
+void PrisonersDilemmaFile::save(Championship & championship)
+{
+	// TODO: add try/catch
+	H5::Group group = this->createGroup(championship.name);
+	PrisonersDilemmaFile::createAttribute(group, "name"         , championship.name          );
+	PrisonersDilemmaFile::createAttribute(group, "description"  , championship.description   );
+	PrisonersDilemmaFile::createAttribute(group, "numberOfTurns", championship.numberOfTurns );
+	group.close();
+	return;
+}
+
+void PrisonersDilemmaFile::createAttribute(
+	H5::Group   group,
+	std::string attributeName,
+	std::string attributeData
+){
+	const hsize_t dims[]    = {1};
+	H5::StrType dtype(H5::PredType::C_S1);
+	dtype.setSize((attributeData.size()+1)*sizeof(char));
+	H5::DataSpace dataspace(1, dims);
+	H5::Attribute attribute = group.createAttribute(attributeName.c_str(), dtype, dataspace);
+	attribute.write(dtype, attributeData.c_str()); 
+	dtype.close();
+	dataspace.close();
+	attribute.close();
+	return;
+}
+
+void PrisonersDilemmaFile::createAttribute(
+	H5::Group   group,
+	std::string attributeName,
+	unsigned    attributeValue
+){
+	const hsize_t dims[]    = {1};
+	H5::DataSpace dataspace(1, dims);
+	H5::Attribute attribute = group.createAttribute(attributeName.c_str(), H5::PredType::STD_U32LE, dataspace);
+	attribute.write(H5::PredType::NATIVE_UINT, &attributeValue); 
+	dataspace.close();
+	attribute.close();
 	return;
 }
 
