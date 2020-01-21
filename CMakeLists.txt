@@ -27,6 +27,7 @@ else()
 endif()                                                                                                                                            
 message("\n")
 
+# Libraries
 add_subdirectory(UtilsLib)
 add_subdirectory(UtilsLibTest)
 add_subdirectory(StrategyLib)
@@ -35,8 +36,6 @@ add_subdirectory(PlayerLib)
 add_subdirectory(PlayerLibTest)
 add_subdirectory(ChampionshipLib)
 add_subdirectory(ChampionshipLibTest)
-add_subdirectory(Championship)
 
-# To include HDF5 in a project
-# set(INCLUDE_DEPENDENCIES ${HDF5_INCLUDE_DIRS} ...)
-# set(LINK_DEPENDENCIES ${HDF5_LIBRARIES})
+# Apps
+add_subdirectory(Championship)

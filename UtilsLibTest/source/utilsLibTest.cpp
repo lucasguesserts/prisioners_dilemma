@@ -1,5 +1,7 @@
 #include <vector>
 #include <random>
+#include <fstream>
+#include <filesystem>
 
 #include <Test.hpp>
 
@@ -57,5 +59,22 @@ TestCase("check with a probability", "[basic]")
 	auto randFunc = [&randomGenerator, &uniformDistribution](){return uniformDistribution(randomGenerator);};
 	checkDiscreteProbability(4u, 0.1, randFunc);
 	checkDiscreteProbability(8u, 0.1, randFunc);
+	return;
+}
+
+TestCase("Create and delete file", "[basic]")
+{
+	const char *filePath = "./.UtilsLibTest_create_and_delete_file.txt";
+	// Remove file if exists
+	if (std::filesystem::exists(filePath))
+		std::filesystem::remove(filePath);
+	// Require a existing file
+	std::ofstream file(filePath);
+	file << "Hello World!";
+	file.close();
+	// Check
+	check( std::filesystem::exists(filePath) );
+	std::filesystem::remove(filePath);
+	checkFalse( std::filesystem::exists(filePath) );
 	return;
 }
