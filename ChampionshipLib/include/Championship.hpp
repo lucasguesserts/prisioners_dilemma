@@ -9,10 +9,17 @@
 class Championship
 {
 	public:
+		std::string         name;
+		std::string         description;
+		unsigned            numberOfTurns;
 		std::vector<Player> players;
-		unsigned numberOfTurns;
 
-		Championship(std::vector<Strategy*>, unsigned numberOfTurns);
+		Championship(
+			std::string            name,
+			std::string            description,
+			unsigned               numberOfTurns,
+			std::vector<Strategy*> strategies);
+
 		void compete(void);
 		void rank(void);
 };

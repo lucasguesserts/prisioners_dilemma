@@ -3,15 +3,20 @@
 #include <numeric>
 #include <iomanip>
 
-Championship::Championship(std::vector<Strategy*> strategies, unsigned numberOfTurns)
-	: numberOfTurns(numberOfTurns)
+Championship::Championship(
+	std::string            name,
+	std::string            description,
+	unsigned               numberOfTurns,
+	std::vector<Strategy*> strategies)
+	: name(name),
+	  description(description),
+	  numberOfTurns(numberOfTurns)
 {
 	this->players.reserve(strategies.size());
 	for(Strategy* strategy: strategies)
 		this->players.push_back( Player(*strategy) );
 	return;
 }
-
 
 void Championship::compete(void)
 {

@@ -5,20 +5,22 @@
 TestCase("Three players chapionship", "[Championship]")
 {
 	const unsigned numberOfTurns = 5;
-	Championship championship({
-		&allC,
-		&allD,
-		&tft
-	},
-	numberOfTurns);
-
+	Championship championship(
+		"Simple Test",
+		"Use three strategies to test the Championship class.",
+		numberOfTurns,
+		{
+			&allC,
+			&allD,
+			&tft
+		}
+	);
 	section("Championship constructor", "[Championship]")
 	{
 		check( championship.players[0].strategy == &allC );
 		check( championship.players[1].strategy == &allD );
 		check( championship.players[2].strategy == &tft );
 	}
-
 	section("Compete", "[Championship]")
 	{
 		championship.compete();

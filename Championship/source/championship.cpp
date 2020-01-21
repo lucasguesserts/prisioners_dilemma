@@ -5,7 +5,11 @@
 int main()
 {
 	const unsigned numberOfTurns = 50;
-	Championship championship({
+	Championship championship(
+		"All strategies",
+		"Competition among all strategies",
+		numberOfTurns,
+		{
 			&allC   ,
 			&allD   ,
 			&moon   ,
@@ -28,8 +32,7 @@ int main()
 			&htft   ,
 			&atft   ,
 			&mratft ,
-		},
-		numberOfTurns
+		}
 	);
 	championship.compete();
 	championship.rank();
