@@ -36,6 +36,8 @@ add_subdirectory(PlayerLib)
 add_subdirectory(PlayerLibTest)
 add_subdirectory(ChampionshipLib)
 add_subdirectory(ChampionshipLibTest)
+add_subdirectory(PrisonersDilemmaFileLib)
+add_subdirectory(PrisonersDilemmaFileLibTest)
 
 # Apps
 add_subdirectory(Championship)
