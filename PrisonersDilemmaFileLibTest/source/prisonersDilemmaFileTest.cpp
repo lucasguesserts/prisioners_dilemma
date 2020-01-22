@@ -141,6 +141,40 @@ TestCase("Load championship", "[PrisonersDilemmaFile]")
 		check( loadedChampionship.description   == championship.description   );
 		check( loadedChampionship.numberOfTurns == championship.numberOfTurns );
 	}
+	// Close and delete file
+	requireNoThrow( roFile.close() );
+	std::filesystem::remove(filePath);
+	checkFalse( std::filesystem::exists(filePath) );
+	return;
+}
+
+TestCase("Load strategy", "[PrisonersDilemmaFile]")
+{
+	const unsigned numberOfTurns = 5;
+	Championship championship(
+		"Save Championship - Basic",
+		"Save Championship basic data.",
+		numberOfTurns,
+		{
+			&allC,
+			&allD,
+			&tft
+		}
+	);
+	// Create file
+	std::string filePath = ".PrisonersDilemmaFileTest_load_strategy.h5";
+	PrisonersDilemmaFile file(filePath);
+	requireNoThrow( file.save(championship) );
+	requireNoThrow( file.close() );
+	check( std::filesystem::exists(filePath) );
+	// Read only file
+	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
+	requireNoThrow( roFile.loadStrategy("Always Cooperate") );
+	requireThrow  ( roFile.loadStrategy("super saiyan"    ) );
+	check( &allC == roFile.loadStrategy("Always Cooperate") );
+	check( &allD == roFile.loadStrategy("Always Defect"   ) );
+	check( &tft  == roFile.loadStrategy("Tit For Tat"     ) );
+	// Close and delete file
 	requireNoThrow( roFile.close() );
 	std::filesystem::remove(filePath);
 	checkFalse( std::filesystem::exists(filePath) );

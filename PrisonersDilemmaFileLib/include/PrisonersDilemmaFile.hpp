@@ -4,6 +4,7 @@
 #include <H5Cpp.h>
 #include <string>
 #include <Championship.hpp>
+#include <Strategies.hpp>
 
 class PrisonersDilemmaFile: public H5::H5File
 {
@@ -13,6 +14,7 @@ class PrisonersDilemmaFile: public H5::H5File
 		void save(Championship &);
 		void save(Strategy *);
 		Championship load(std::string champioshipName);
+		Strategy*    loadStrategy(std::string strategyName);
 
 		static const std::string strategiesGroup;
 
