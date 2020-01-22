@@ -8,7 +8,7 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(const char * filePath);
+		PrisonersDilemmaFile(std::string filePath);
 
 		void save(Championship &);
 

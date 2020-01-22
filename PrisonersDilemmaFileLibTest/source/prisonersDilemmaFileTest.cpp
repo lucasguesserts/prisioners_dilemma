@@ -4,7 +4,7 @@
 
 TestCase("Create file", "[PrisonersDilemmaFile]")
 {
-	const char * filePath = ".PrisonersDilemmaFileTest_Create_file.h5";
+	std::string filePath = ".PrisonersDilemmaFileTest_Create_file.h5";
 	PrisonersDilemmaFile file(filePath);
 	file.close();
 	check( std::filesystem::exists(filePath) );
@@ -27,7 +27,7 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 		}
 	);
 	// Create file
-	const char * filePath = ".PrisonersDilemmaFileTest_save_championship_basic_data.h5";
+	std::string filePath = ".PrisonersDilemmaFileTest_save_championship_basic_data.h5";
 	PrisonersDilemmaFile file(filePath);
 	requireNoThrow( file.save(championship) );
 	requireNoThrow( file.close() );
@@ -65,6 +65,7 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 		check( attrData == championship.numberOfTurns );
 	}
 	requireNoThrow( group.close() );
+	requireNoThrow( roFile.close() );
 	std::filesystem::remove(filePath);
 	checkFalse( std::filesystem::exists(filePath) );
 	return;

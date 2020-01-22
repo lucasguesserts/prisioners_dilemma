@@ -1,6 +1,6 @@
 #include <PrisonersDilemmaFile.hpp>
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(const char * filePath)
+PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath)
 	: H5::H5File(filePath, H5F_ACC_TRUNC)
 {
 	return;
