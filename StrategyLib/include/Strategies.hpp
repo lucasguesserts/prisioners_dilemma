@@ -351,4 +351,6 @@ extern HardTitForTat                    htft;
 extern AdaptativeTitForTat              atft;
 extern MetaRegulatedAdaptativeTitForTat mratft;
 
+extern std::vector<Strategy *> allStrategies;
+
 #endif

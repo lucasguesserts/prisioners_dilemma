@@ -6,6 +6,37 @@ std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting   = {Decision::defect   };
 
+TestCase("All strategies", "[Strategies]")
+{
+	std::vector<Strategy *> testAllStrategies =
+	{
+		& allC,
+		& allD,
+		& moon,
+		& grim,
+		& pvl,
+		& gradual,
+		& sm,
+		& hm,
+		& np,
+		& rp,
+		& sg,
+		& pb,
+		& fbf,
+		& tft,
+		& tftt,
+		& ttft,
+		& rtft,
+		& gtft,
+		& stft,
+		& htft,
+		& atft,
+		& mratft,
+	};
+	check( allStrategies == testAllStrategies );
+	return;
+}
+
 TestCase("Polimorphism", "[Strategy]")
 {
 	Strategy * strategy = &allD;

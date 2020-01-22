@@ -27,6 +27,32 @@ HardTitForTat                    htft;
 AdaptativeTitForTat              atft;
 MetaRegulatedAdaptativeTitForTat mratft;
 
+std::vector<Strategy *> allStrategies =
+{
+	& allC,
+	& allD,
+	& moon,
+	& grim,
+	& pvl,
+	& gradual,
+	& sm,
+	& hm,
+	& np,
+	& rp,
+	& sg,
+	& pb,
+	& fbf,
+	& tft,
+	& tftt,
+	& ttft,
+	& rtft,
+	& gtft,
+	& stft,
+	& htft,
+	& atft,
+	& mratft,
+};
+
 // [Instructions for how to implement a ]
 // class ClassName [All in capital letters]: public Strategy [Always a plublic Strategy]
 // {
