@@ -53,6 +53,26 @@ std::vector<Strategy *> allStrategies =
 	& mratft,
 };
 
+Strategy * findStrategy(
+	std::string name,
+	std::string shortName,
+	std::string description
+){
+	Strategy * found = nullptr;
+	for(auto strategy: allStrategies)
+	{
+		if ( (strategy->name == name) &&\
+		     (strategy->shortName == shortName) &&\
+		     (strategy->description == description)
+		)
+		{
+			found = strategy;
+			break;
+		}
+	}
+	return found;
+}
+
 // [Instructions for how to implement a ]
 // class ClassName [All in capital letters]: public Strategy [Always a plublic Strategy]
 // {

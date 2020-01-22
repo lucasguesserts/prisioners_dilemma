@@ -351,6 +351,10 @@ extern HardTitForTat                    htft;
 extern AdaptativeTitForTat              atft;
 extern MetaRegulatedAdaptativeTitForTat mratft;
 
+Strategy * findStrategy(
+	std::string name,
+	std::string shortName,
+	std::string description);
 extern std::vector<Strategy *> allStrategies;
 
 #endif

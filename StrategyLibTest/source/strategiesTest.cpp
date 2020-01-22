@@ -6,6 +6,21 @@ std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting   = {Decision::defect   };
 
+TestCase("Polimorphism", "[Strategy]")
+{
+	Strategy * strategy = &allD;
+	require( strategy->name        == "Always Defect"  );
+	require( strategy->shortName   == "AllD"           );
+	require( strategy->description == "Always defect." );
+	section("test decisions")
+	{
+		check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
+		check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
+		check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
+	}
+	return;
+}
+
 TestCase("All strategies", "[Strategies]")
 {
 	std::vector<Strategy *> testAllStrategies =
@@ -37,18 +52,11 @@ TestCase("All strategies", "[Strategies]")
 	return;
 }
 
-TestCase("Polimorphism", "[Strategy]")
+TestCase("Find strategy", "[Strategies]")
 {
-	Strategy * strategy = &allD;
-	require( strategy->name        == "Always Defect"  );
-	require( strategy->shortName   == "AllD"           );
-	require( strategy->description == "Always defect." );
-	section("test decisions")
-	{
-		check( strategy->makeDecision(emptyDecisions,   emptyDecisions  ) == Decision::defect );
-		check( strategy->makeDecision(startCooperating, startDefecting  ) == Decision::defect );
-		check( strategy->makeDecision(startDefecting,   startCooperating) == Decision::defect );
-	}
+	check( &allC == findStrategy("Always Cooperate", "AllC", "Always cooperate."                            ) );
+	check( &allD == findStrategy("Always Defect"   , "AllD", "Always defect."                               ) );
+	check( &moon == findStrategy("Lunatic"         , "Moon", "Cooperate or defect with equal probabilities.") );
 	return;
 }
 
