@@ -11,9 +11,13 @@ class PrisonersDilemmaFile: public H5::H5File
 		PrisonersDilemmaFile(std::string filePath, int flags=H5F_ACC_TRUNC);
 
 		void save(Championship &);
+		void save(Strategy *);
 		Championship load(std::string champioshipName);
 
+		static const std::string strategiesGroup;
+
 	private:
+		H5::Group getStrategiesGroup(void);
 		static void saveAttribute(H5::Group group, std::string attributeName, std::string attributeData);
 		static void saveAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
 		static std::string loadStrAttribute(H5::Group group, std::string attributeName);

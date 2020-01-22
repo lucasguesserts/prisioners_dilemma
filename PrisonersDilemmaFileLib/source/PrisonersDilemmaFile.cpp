@@ -1,5 +1,7 @@
 #include <PrisonersDilemmaFile.hpp>
 
+const std::string PrisonersDilemmaFile::strategiesGroup = "Strategies";
+
 PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath, int flags)
 	: H5::H5File(filePath, flags)
 {
@@ -13,8 +15,35 @@ void PrisonersDilemmaFile::save(Championship & championship)
 	PrisonersDilemmaFile::saveAttribute(group, "name"         , championship.name          );
 	PrisonersDilemmaFile::saveAttribute(group, "description"  , championship.description   );
 	PrisonersDilemmaFile::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
+	for(auto& player: championship.players)
+	{
+		this->save(player.strategy);
+	}
 	group.close();
 	return;
+}
+
+void PrisonersDilemmaFile::save(Strategy *strategy)
+{
+	H5::Group strategiesGroup = this->getStrategiesGroup();
+	H5::Group thisStrategyGroup = strategiesGroup.createGroup(strategy->name);
+	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "name",        strategy->name       );
+	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "shortName",   strategy->shortName  );
+	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "description", strategy->description);
+	thisStrategyGroup.close();
+	strategiesGroup.close();
+}
+
+H5::Group PrisonersDilemmaFile::getStrategiesGroup(void)
+{
+	// TODO: add try/catch
+	std::string strategiesGroupName = PrisonersDilemmaFile::strategiesGroup;
+	H5::Group strategiesGroup;
+	if (this->exists("Strategies"))
+		strategiesGroup = this->openGroup(strategiesGroupName);
+	else
+		strategiesGroup = this->createGroup(strategiesGroupName);
+	return strategiesGroup;
 }
 
 void PrisonersDilemmaFile::saveAttribute(

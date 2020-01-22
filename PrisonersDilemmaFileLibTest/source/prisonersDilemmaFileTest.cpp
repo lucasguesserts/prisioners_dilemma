@@ -64,10 +64,52 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 		requireNoThrow( attribute.close() );
 		check( attrData == championship.numberOfTurns );
 	}
+	section("strategies")
+	{
+		H5::Group strategiesGroup;
+		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroup) );
+		section("Always cooperate")
+		{
+			H5::Group thisStrategyGroup;
+			requireNoThrow( thisStrategyGroup = strategiesGroup.openGroup(allC.name) );
+			section("name")
+			{
+				std::string attrName = "name";
+				std::string attrData;
+				H5::Attribute attribute;
+				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
+				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+				requireNoThrow( attribute.close() );
+				check( attrData == allC.name );
+			}
+			section("short name")
+			{
+				std::string attrName = "shortName";
+				std::string attrData;
+				H5::Attribute attribute;
+				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
+				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+				requireNoThrow( attribute.close() );
+				check( attrData == allC.shortName );
+			}
+			section("description")
+			{
+				std::string attrName = "description";
+				std::string attrData;
+				H5::Attribute attribute;
+				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
+				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+				requireNoThrow( attribute.close() );
+				check( attrData == allC.description );
+			}
+			requireNoThrow( thisStrategyGroup.close() );
+		}
+		requireNoThrow( strategiesGroup.close() );
+	}
 	requireNoThrow( group.close() );
 	requireNoThrow( roFile.close() );
-	std::filesystem::remove(filePath);
-	checkFalse( std::filesystem::exists(filePath) );
+	// std::filesystem::remove(filePath);
+	// checkFalse( std::filesystem::exists(filePath) );
 	return;
 }
 
