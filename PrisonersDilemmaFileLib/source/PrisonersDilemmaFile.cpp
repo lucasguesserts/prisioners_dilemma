@@ -1,7 +1,7 @@
 #include <PrisonersDilemmaFile.hpp>
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath)
-	: H5::H5File(filePath, H5F_ACC_TRUNC)
+PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath, int flags)
+	: H5::H5File(filePath, flags)
 {
 	return;
 }
@@ -45,6 +45,45 @@ void PrisonersDilemmaFile::createAttribute(
 	dataspace.close();
 	attribute.close();
 	return;
+}
+
+Championship PrisonersDilemmaFile::load(std::string groupName)
+{
+	H5::Group group = this->openGroup(groupName);
+	std::string championshipName = PrisonersDilemmaFile::loadStrAttribute(group, "name");
+	std::string championshipDescription = PrisonersDilemmaFile::loadStrAttribute(group, "description");
+	unsigned numberOfTurns = PrisonersDilemmaFile::loadUnsignedAttribute(group, "numberOfTurns");
+
+	return Championship(
+		championshipName,
+		championshipDescription,
+		numberOfTurns,
+		{}
+	);
+}
+
+std::string PrisonersDilemmaFile::loadStrAttribute(
+	H5::Group group,
+	std::string attributeName
+){
+	std::string attrData;
+	H5::Attribute attribute;
+	attribute = group.openAttribute(attributeName);
+	attribute.read(attribute.getStrType(), attrData);
+	attribute.close();
+	return attrData;
+}
+
+unsigned PrisonersDilemmaFile::loadUnsignedAttribute(
+	H5::Group group,
+	std::string attributeName
+){
+	unsigned attrData;
+	H5::Attribute attribute;
+	attribute = group.openAttribute(attributeName);
+	attribute.read(H5::PredType::NATIVE_UINT, &attrData);
+	attribute.close();
+	return attrData;
 }
 
 /*

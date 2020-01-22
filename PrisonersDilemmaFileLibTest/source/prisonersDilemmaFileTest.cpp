@@ -70,3 +70,37 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 	checkFalse( std::filesystem::exists(filePath) );
 	return;
 }
+
+TestCase("Load championship", "[PrisonersDilemmaFile]")
+{
+	const unsigned numberOfTurns = 5;
+	Championship championship(
+		"Save Championship - Basic",
+		"Save Championship basic data.",
+		numberOfTurns,
+		{
+			&allC,
+			&allD,
+			&tft
+		}
+	);
+	// Create file
+	std::string filePath = ".PrisonersDilemmaFileTest_load_championship.h5";
+	PrisonersDilemmaFile file(filePath);
+	requireNoThrow( file.save(championship) );
+	requireNoThrow( file.close() );
+	check( std::filesystem::exists(filePath) );
+	// Load championship
+	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
+	Championship loadedChampionship = roFile.load(championship.name);
+	section("basic data")
+	{
+		check( loadedChampionship.name          == championship.name          );
+		check( loadedChampionship.description   == championship.description   );
+		check( loadedChampionship.numberOfTurns == championship.numberOfTurns );
+	}
+	requireNoThrow( roFile.close() );
+	std::filesystem::remove(filePath);
+	checkFalse( std::filesystem::exists(filePath) );
+	return;
+}
