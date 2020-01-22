@@ -44,7 +44,25 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 		requireNoThrow( attribute = group.openAttribute("name") );
 		requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
 		requireNoThrow( attribute.close() );
-		check( attrData == championship.name);
+		check( attrData == championship.name );
+	}
+	section("description")
+	{
+		std::string attrData;
+		H5::Attribute attribute;
+		requireNoThrow( attribute = group.openAttribute("description") );
+		requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+		requireNoThrow( attribute.close() );
+		check( attrData == championship.description );
+	}
+	section("number of turns")
+	{
+		unsigned attrData;
+		H5::Attribute attribute;
+		requireNoThrow( attribute = group.openAttribute("numberOfTurns") );
+		requireNoThrow( attribute.read(H5::PredType::NATIVE_UINT, &attrData) );
+		requireNoThrow( attribute.close() );
+		check( attrData == championship.numberOfTurns );
 	}
 	requireNoThrow( group.close() );
 	std::filesystem::remove(filePath);
