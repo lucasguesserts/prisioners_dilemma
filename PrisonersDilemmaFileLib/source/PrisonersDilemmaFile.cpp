@@ -10,14 +10,14 @@ void PrisonersDilemmaFile::save(Championship & championship)
 {
 	// TODO: add try/catch
 	H5::Group group = this->createGroup(championship.name);
-	PrisonersDilemmaFile::createAttribute(group, "name"         , championship.name          );
-	PrisonersDilemmaFile::createAttribute(group, "description"  , championship.description   );
-	PrisonersDilemmaFile::createAttribute(group, "numberOfTurns", championship.numberOfTurns );
+	PrisonersDilemmaFile::saveAttribute(group, "name"         , championship.name          );
+	PrisonersDilemmaFile::saveAttribute(group, "description"  , championship.description   );
+	PrisonersDilemmaFile::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
 	group.close();
 	return;
 }
 
-void PrisonersDilemmaFile::createAttribute(
+void PrisonersDilemmaFile::saveAttribute(
 	H5::Group   group,
 	std::string attributeName,
 	std::string attributeData
@@ -34,7 +34,7 @@ void PrisonersDilemmaFile::createAttribute(
 	return;
 }
 
-void PrisonersDilemmaFile::createAttribute(
+void PrisonersDilemmaFile::saveAttribute(
 	H5::Group   group,
 	std::string attributeName,
 	unsigned    attributeValue

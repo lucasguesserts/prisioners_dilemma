@@ -14,8 +14,8 @@ class PrisonersDilemmaFile: public H5::H5File
 		Championship load(std::string champioshipName);
 
 	private:
-		static void createAttribute(H5::Group group, std::string attributeName, std::string attributeData);
-		static void createAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
+		static void saveAttribute(H5::Group group, std::string attributeName, std::string attributeData);
+		static void saveAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
 		static std::string loadStrAttribute(H5::Group group, std::string attributeName);
 		static unsigned loadUnsignedAttribute(H5::Group group, std::string attributeName);
 };
