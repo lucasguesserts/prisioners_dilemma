@@ -22,12 +22,12 @@ void PrisonersDilemmaFile::createAttribute(
 	std::string attributeName,
 	std::string attributeData
 ){
-	const hsize_t dims[]    = {1};
 	H5::StrType dtype(H5::PredType::C_S1);
-	dtype.setSize((attributeData.size()+1)*sizeof(char));
-	H5::DataSpace dataspace(1, dims);
-	H5::Attribute attribute = group.createAttribute(attributeName.c_str(), dtype, dataspace);
-	attribute.write(dtype, attributeData.c_str()); 
+	dtype.setCset(H5T_CSET_UTF8);
+	dtype.setSize(H5T_VARIABLE);
+	H5::DataSpace dataspace(H5S_SCALAR);
+	H5::Attribute attribute = group.createAttribute(attributeName, dtype, dataspace);
+	attribute.write(dtype, attributeData); 
 	dtype.close();
 	dataspace.close();
 	attribute.close();
@@ -39,8 +39,7 @@ void PrisonersDilemmaFile::createAttribute(
 	std::string attributeName,
 	unsigned    attributeValue
 ){
-	const hsize_t dims[]    = {1};
-	H5::DataSpace dataspace(1, dims);
+	H5::DataSpace dataspace(H5S_SCALAR);
 	H5::Attribute attribute = group.createAttribute(attributeName.c_str(), H5::PredType::STD_U32LE, dataspace);
 	attribute.write(H5::PredType::NATIVE_UINT, &attributeValue); 
 	dataspace.close();
@@ -64,23 +63,14 @@ int main()
 		const hsize_t dims[]    = {1};
 
 		H5::StrType dtype(H5::PredType::C_S1);
+		dtype.setCset(H5T_CSET_UTF8);
 		dtype.setSize(H5T_VARIABLE);
-		H5::DataSpace dataspace(1, dims);
+		H5::DataSpace dataspace(H5S_SCALAR);
 		H5::Attribute attribute = file.createAttribute(attrName, dtype, dataspace);
 		attribute.write(dtype, attrData); 
 		attribute.close();
 		dataspace.close();
 	}
-
-	// Writing string attribute with fixed size
-	// 
-	// H5::AtomType dtype(H5::PredType::C_S1);
-	// dtype.setSize(attrData.size()*sizeof(char));
-	// H5::DataSpace dataspace(1, dims);
-	// H5::Attribute attribute = file.createAttribute(attrName, dtype, dataspace);
-	// attribute.write(dtype, attrData); 
-	// attribute.close();
-	// dataspace.close();
 
 	// Group
 	H5::Group group = file.createGroup("group example");
