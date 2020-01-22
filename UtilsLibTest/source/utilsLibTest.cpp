@@ -2,6 +2,7 @@
 #include <random>
 #include <fstream>
 #include <filesystem>
+#include <stdexcept>
 
 #include <Test.hpp>
 
@@ -33,6 +34,17 @@ TestCase("catch floating point test", "[basic]")
 	require( a==b );
 	b = 3.141592;
 	require( a==Approx(b) );
+	return;
+}
+
+TestCase("catch nothrow", "[basic]")
+{
+	auto thisThrow       = []() -> void { throw std::runtime_error("Test exception"); };
+	auto thisDoesntThrow = []() -> void { return; };
+	requireThrow  (thisThrow());
+	checkThrow    (thisThrow());
+	requireNoThrow(thisDoesntThrow());
+	checkNoThrow  (thisDoesntThrow());
 	return;
 }
 

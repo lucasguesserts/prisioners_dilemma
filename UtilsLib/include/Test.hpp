@@ -11,6 +11,11 @@
 #define require REQUIRE
 #define requireFalse REQUIRE_FALSE
 
+#define requireThrow REQUIRE_THROWS
+#define checkThrow CHECK_THROWS
+#define requireNoThrow REQUIRE_NOTHROW
+#define checkNoThrow CHECK_NOTHROW
+
 #define checkDiscreteProbability(val, prob, func)\
    check( probability(val, func) == Approx(prob).epsilon(0.05) )
 
