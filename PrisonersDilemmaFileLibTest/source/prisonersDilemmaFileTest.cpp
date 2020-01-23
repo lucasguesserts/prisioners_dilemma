@@ -127,6 +127,7 @@ TestCase("Save player", "[PrisonersDilemmaFile]")
 			&tft
 		}
 	);
+	championship.compete();
 	// Create file
 	std::string filePath = ".PrisonersDilemmaFileTest_save_player.h5";
 	PrisonersDilemmaFile file(filePath);
@@ -178,8 +179,8 @@ TestCase("Save player", "[PrisonersDilemmaFile]")
 	}
 	// Close and delete file
 	requireNoThrow( roFile.close() );
-	// std::filesystem::remove(filePath);
-	// checkFalse( std::filesystem::exists(filePath) );
+	std::filesystem::remove(filePath);
+	checkFalse( std::filesystem::exists(filePath) );
 	return;
 }
 

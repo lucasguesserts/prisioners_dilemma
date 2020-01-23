@@ -40,7 +40,57 @@ void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
 	if (!this->exists(PrisonersDilemmaFile::strategiesGroup))
 		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroup + " group does not exists.");
 	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroup + player.strategy->name, "strategy");
+	for(unsigned match=0 ; match<player.partners.size() ; ++match)
+		this->savePlayerData(
+			championshipGroup,
+			playerGroup,
+			player.decisions.at(match),
+			player.payoff.at(match),
+			player.partners.at(match)
+		);
 	playerGroup.close();
+	return;
+}
+
+// TODO: remove the championship group from the arguments
+void PrisonersDilemmaFile::savePlayerData(
+	H5::Group championshipGroup,
+	H5::Group playerGroup,
+	std::vector<Decision> decision,
+	std::vector<Payoff> payoff,
+	Strategy * partnerStrategy
+){
+	H5::Group partnerGroup = playerGroup.createGroup(partnerStrategy->name);
+	partnerGroup.link(H5L_TYPE_SOFT, championshipGroup.getObjName()+"/"+partnerStrategy->name, partnerStrategy->name);
+	{
+		// Decision dataset
+		H5std_string  datasetName = "decisions";
+		const hsize_t dims[] = {decision.size()};
+		H5::DataType fileType(H5::PredType::STD_U8LE);
+		H5::DataType memType (H5::PredType::NATIVE_UCHAR);
+		H5::DataSpace dataspace(1, dims);
+		H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
+		dataset.write(decision.data(), memType);
+		fileType.close();
+		memType.close();
+		dataspace.close();
+		dataset.close();
+	}
+	{
+		// payoff dataset
+		H5std_string  datasetName = "payoff";
+		const hsize_t dims[] = {payoff.size()};
+		H5::DataType fileType(H5::PredType::STD_U8LE);
+		H5::DataType memType (H5::PredType::NATIVE_UINT);
+		H5::DataSpace dataspace(1, dims);
+		H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
+		dataset.write(payoff.data(), memType);
+		fileType.close();
+		memType.close();
+		dataspace.close();
+		dataset.close();
+	}
+	partnerGroup.close();
 	return;
 }
 

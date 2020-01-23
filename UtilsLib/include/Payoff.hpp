@@ -13,6 +13,7 @@
 // S: sucker's   payoff
 // P: punishment payoff
 
+// TODO: change it to a smaller type
 enum class Payoff : unsigned {
 	reward     = 1,
 	temptation = 0,

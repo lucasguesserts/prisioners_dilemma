@@ -20,6 +20,7 @@ class PrisonersDilemmaFile: public H5::H5File
 		static const std::string strategiesGroup;
 
 	private:
+		void savePlayerData(H5::Group championshipGroup, H5::Group playerGroup, std::vector<Decision> decision, std::vector<Payoff> payoff, Strategy * partnerStrategy);
 		H5::Group getStrategiesGroup(void);
 		static void saveAttribute(H5::Group group, std::string attributeName, std::string attributeData);
 		static void saveAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
