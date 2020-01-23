@@ -16,9 +16,9 @@ void PrisonersDilemmaFile::save(Championship & championship)
 	PrisonersDilemmaFile::saveAttribute(group, "description"  , championship.description   );
 	PrisonersDilemmaFile::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
 	for(auto& player: championship.players)
-	{
 		this->save(player.strategy);
-	}
+	for(auto& player: championship.players)
+		this->save(group, player);
 	group.close();
 	return;
 }
@@ -32,6 +32,16 @@ void PrisonersDilemmaFile::save(Strategy *strategy)
 	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "description", strategy->description);
 	thisStrategyGroup.close();
 	strategiesGroup.close();
+}
+
+void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
+{
+	H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
+	if (!this->exists(PrisonersDilemmaFile::strategiesGroup))
+		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroup + " group does not exists.");
+	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroup + player.strategy->name, "strategy");
+	playerGroup.close();
+	return;
 }
 
 H5::Group PrisonersDilemmaFile::getStrategiesGroup(void)

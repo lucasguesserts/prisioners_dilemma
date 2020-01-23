@@ -68,6 +68,7 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 	{
 		H5::Group strategiesGroup;
 		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroup) );
+		// TODO: Add sections testing more strategies
 		section("Always cooperate")
 		{
 			H5::Group thisStrategyGroup;
@@ -107,6 +108,75 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 		requireNoThrow( strategiesGroup.close() );
 	}
 	requireNoThrow( group.close() );
+	requireNoThrow( roFile.close() );
+	std::filesystem::remove(filePath);
+	checkFalse( std::filesystem::exists(filePath) );
+	return;
+}
+
+TestCase("Save player", "[PrisonersDilemmaFile]")
+{
+	const unsigned numberOfTurns = 5;
+	Championship championship(
+		"Save Championship - Basic",
+		"Save Championship basic data.",
+		numberOfTurns,
+		{
+			&allC,
+			&allD,
+			&tft
+		}
+	);
+	// Create file
+	std::string filePath = ".PrisonersDilemmaFileTest_save_player.h5";
+	PrisonersDilemmaFile file(filePath);
+	requireNoThrow( file.save(championship) );
+	requireNoThrow( file.close() );
+	check( std::filesystem::exists(filePath) );
+	// Load file
+	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
+	section("always cooperate player")
+	{
+		H5::Group playerGroup, strategyGroup;
+		std::string playerGroupPath = "/" + championship.name + "/" + "Always Cooperate" + "/";
+		std::string strategyPath = playerGroupPath + "strategy" + "/";
+		requireNoThrow( playerGroup = roFile.openGroup(playerGroupPath) );
+		check( playerGroup.exists("strategy") );
+		requireNoThrow( strategyGroup = roFile.openGroup(strategyPath) );
+		section("name")
+		{
+			std::string attrName = "name";
+			std::string attrData;
+			H5::Attribute attribute;
+			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
+			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+			requireNoThrow( attribute.close() );
+			check( attrData == allC.name );
+		}
+		section("short name")
+		{
+			std::string attrName = "shortName";
+			std::string attrData;
+			H5::Attribute attribute;
+			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
+			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+			requireNoThrow( attribute.close() );
+			check( attrData == allC.shortName );
+		}
+		section("description")
+		{
+			std::string attrName = "description";
+			std::string attrData;
+			H5::Attribute attribute;
+			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
+			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
+			requireNoThrow( attribute.close() );
+			check( attrData == allC.description );
+		}
+		requireNoThrow( strategyGroup.close() );
+		requireNoThrow( playerGroup.close() );
+	}
+	// Close and delete file
 	requireNoThrow( roFile.close() );
 	// std::filesystem::remove(filePath);
 	// checkFalse( std::filesystem::exists(filePath) );
@@ -170,7 +240,6 @@ TestCase("Load strategy", "[PrisonersDilemmaFile]")
 	// Read only file
 	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
 	requireNoThrow( roFile.loadStrategy("Always Cooperate") );
-	requireThrow  ( roFile.loadStrategy("super saiyan"    ) );
 	check( &allC == roFile.loadStrategy("Always Cooperate") );
 	check( &allD == roFile.loadStrategy("Always Defect"   ) );
 	check( &tft  == roFile.loadStrategy("Tit For Tat"     ) );
