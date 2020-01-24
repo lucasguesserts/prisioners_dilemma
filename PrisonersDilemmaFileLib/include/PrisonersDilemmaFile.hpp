@@ -14,8 +14,6 @@ class PrisonersDilemmaFile: public H5::H5File
 		void save(Championship &);
 		void save(Strategy *);
 		void save(H5::Group &, Player &);
-		Championship load(std::string champioshipName);
-		Strategy*    loadStrategy(std::string strategyName);
 
 		static const std::string strategiesGroup;
 

@@ -136,47 +136,6 @@ void PrisonersDilemmaFile::saveAttribute(
 	return;
 }
 
-Championship PrisonersDilemmaFile::load(std::string groupName)
-{
-	H5::Group group = this->openGroup(groupName);
-	std::string championshipName = PrisonersDilemmaFile::loadStrAttribute(group, "name");
-	std::string championshipDescription = PrisonersDilemmaFile::loadStrAttribute(group, "description");
-	unsigned numberOfTurns = PrisonersDilemmaFile::loadUnsignedAttribute(group, "numberOfTurns");
-
-	return Championship(
-		championshipName,
-		championshipDescription,
-		numberOfTurns,
-		{}
-	);
-}
-
-Strategy* PrisonersDilemmaFile::loadStrategy(std::string strategyName)
-{
-	std::string groupLocation = PrisonersDilemmaFile::strategiesGroup + strategyName + "/";
-	try
-	{
-		Strategy * strategy;
-		H5::Group group = this->openGroup(groupLocation);
-		std::string name        = loadStrAttribute(group, "name");
-		std::string shortName   = loadStrAttribute(group, "shortName");
-		std::string description = loadStrAttribute(group, "description");
-		group.close();
-		strategy = findStrategy(name, shortName, description);
-		if (strategy == nullptr)
-			throw std::runtime_error("The strategy loaded is not implemented.\nName: " + name + "\nshort name: " + shortName + "\nDescription: " + description);
-		return strategy;
-	}
-	catch(H5::GroupIException &groupException)
-	{
-		throw std::domain_error("Strategy '" + strategyName + "' is not present in file '" + this->getFileName() + "'." + "\n" + groupException.getDetailMsg() + "\n");
-	}
-	catch(H5::AttributeIException &attributeException)
-	{
-		throw std::runtime_error("File '" + this->getFileName() + "', group '" + groupLocation + "', some attributes could not be read." + attributeException.getDetailMsg() + "\n");
-	}
-}
-
 std::string PrisonersDilemmaFile::loadStrAttribute(
 	H5::Group group,
 	std::string attributeName
