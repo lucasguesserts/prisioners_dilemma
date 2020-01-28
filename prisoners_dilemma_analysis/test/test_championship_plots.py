@@ -20,3 +20,10 @@ def test_PlayerPlot(pdFile):
         os.remove(figurePath)
     os.rmdir(folder)
     return
+
+def test_ChampionshipPlot(pdFile):
+    pdFile.championshipPlot()
+    figurePath = 'championship_all_strategies.png'
+    assert os.path.isfile(figurePath)
+    os.remove(figurePath)
+    return
