@@ -2,6 +2,7 @@ import os
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 plt.rcParams['font.family'] = 'Arial'
 plt.rcParams['font.size'] = 12
@@ -50,12 +51,16 @@ class PrisonersDilemmaFile:
         for score, label in score_and_labels.items():
             plt.text(y=score*self.numberOfTurns+0.01*yMax, x=len(self.__getPartners(playerName)), s=label)
             plt.axhline(y=score*self.numberOfTurns, **hlines)
+        xtickLabels = [self.file[self.championshipName][partnerName]['strategy'].attrs['shortName'] for partnerName in self.__getPartners(playerName)]
+        ax.set_xticks(np.arange(len(xtickLabels)))
+        ax.set_xticklabels(labels=xtickLabels, rotation='vertical')
         return fig, ax
 
     def __plotScorePlayerPlot(self, playerName, ax):
+        colors = cm.gist_rainbow(np.linspace(0, 1, len(self.__getPartners(playerName))))
         for index, partnerName in enumerate(self.__getPartners(playerName)):
             payoff = np.sum(self.championship[playerName][partnerName]['payoff'])
-            ax.bar(index, payoff)
+            ax.bar(index, payoff, color=colors[index])
  
     def __getPartners(self, playerName):
         partnerNames = list(self.championship[playerName].keys())
