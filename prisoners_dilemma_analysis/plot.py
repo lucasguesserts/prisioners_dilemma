@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 filePath = './test/data/all_strategies.prisonersdilemma'
 mode = 'r' # read only
 file = h5py.File(filePath, mode)
-championshipName = 'Save Championship - Basic'
+championshipName = 'All strategies'
 championship = file[championshipName]
 
 ## Competition rules
@@ -30,11 +30,12 @@ del partners['strategy']
 # Base plot
 figSize = (10, 5)
 plt.figure(figsize=figSize)
-plt.title(championshipName + '\n' + playerName)
+plt.title((playerName + '\n' + "Championship " + championshipName).title())
 plt.ylabel('Score')
 plt.xlabel('Strategies')
-plt.ylim([0, 3*numberOfTurns*1.1])
-xMax = len(partners) + 1
+yMax = 3*numberOfTurns*1.1
+plt.ylim([0, yMax])
+xMax = 1.1*len(partners)
 plt.xlim([-0.3, xMax])
 plt.grid(which='major', color='gray', linestyle='-', linewidth=1, alpha=0.5, axis='y')
 
@@ -42,7 +43,7 @@ plt.grid(which='major', color='gray', linestyle='-', linewidth=1, alpha=0.5, axi
 hlines = {'linestyle':'--', 'color':'black'}
 score_and_labels = {3:'suckers', 2:'punishment', 1:'reward', 0:'temptation'}
 for score, label in score_and_labels.items():
-    plt.text(y=score*numberOfTurns+0.2, x=xMax-0.48, s=label)
+    plt.text(y=score*numberOfTurns+0.01*yMax, x=len(partners), s=label)
     plt.axhline(y=score*numberOfTurns, **hlines)
 
 ## x ticks
