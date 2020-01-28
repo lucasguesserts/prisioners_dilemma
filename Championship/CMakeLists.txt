@@ -1,7 +1,8 @@
 project(Championship)
 
-set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib ${PROJECT_NAME})
-set(LINK_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib)
+include_directories("${HDF5_INCLUDE_DIRS}/")
+set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib PrisonersDilemmaFileLib ${PROJECT_NAME})
+set(LINK_DEPENDENCIES ${HDF5_LIBRARIES} UtilsLib StrategyLib PlayerLib ChampionshipLib PrisonersDilemmaFileLib)
 
 foreach(INCLUDE_DEPENDENCY in ${INCLUDE_DEPENDENCIES})
 	include_directories(${CMAKE_SOURCE_DIR}/${INCLUDE_DEPENDENCY}/include)

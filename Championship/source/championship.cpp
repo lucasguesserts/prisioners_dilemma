@@ -1,13 +1,15 @@
 #include <Championship.hpp>
+#include <PrisonersDilemmaFile.hpp>
 #include <iostream>
-#include <iomanip>
 
 int main()
 {
+
+	// Championship
 	const unsigned numberOfTurns = 50;
 	Championship championship(
 		"All strategies",
-		"Competition among all strategies",
+		"Competition among all strategies.",
 		numberOfTurns,
 		{
 			&allC   ,
@@ -37,5 +39,10 @@ int main()
 	championship.compete();
 	championship.rank();
 	std::cout << championship;
+
+	//Save result in file
+	PrisonersDilemmaFile file("all_strategies.prisonersdilemma", H5F_ACC_TRUNC);
+	file.save(championship);
+	
 	return 0;
 }
