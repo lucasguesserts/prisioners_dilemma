@@ -1,15 +1,10 @@
 project(Championship)
 
-include_directories("${HDF5_INCLUDE_DIRS}/")
-set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib PrisonersDilemmaFileLib ${PROJECT_NAME})
-set(LINK_DEPENDENCIES ${HDF5_LIBRARIES} UtilsLib StrategyLib PlayerLib ChampionshipLib PrisonersDilemmaFileLib)
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-foreach(INCLUDE_DEPENDENCY in ${INCLUDE_DEPENDENCIES})
-	include_directories(${CMAKE_SOURCE_DIR}/${INCLUDE_DEPENDENCY}/include)
-endforeach(INCLUDE_DEPENDENCY)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-file(GLOB ${PROJECT_NAME}_sources ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/source/*.cpp)
+include_directories(${CMAKE_SOURCE_DIR}/UtilsLib/include/)
+target_link_libraries(${PROJECT_NAME} PRIVATE ChampionshipLib PrisonersDilemmaFileLib)
 
-add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
-
-target_link_libraries(${PROJECT_NAME} ${LINK_DEPENDENCIES})
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})

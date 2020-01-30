@@ -1,16 +1,11 @@
 project(ChampionshipLibTest)
 
-set(INCLUDE_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib ${PROJECT_NAME})
-set(LINK_DEPENDENCIES UtilsLib StrategyLib PlayerLib ChampionshipLib)
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-foreach(INCLUDE_DEPENDENCY in ${INCLUDE_DEPENDENCIES})
-	include_directories(${CMAKE_SOURCE_DIR}/${INCLUDE_DEPENDENCY}/include)
-endforeach(INCLUDE_DEPENDENCY)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-file(GLOB ${PROJECT_NAME}_sources ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/source/*.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ChampionshipLib)
 
-add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
-
-target_link_libraries(${PROJECT_NAME} ${LINK_DEPENDENCIES})
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
