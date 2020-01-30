@@ -1,10 +1,15 @@
 #include <Test.hpp>
-#include <StrategyTest.hpp>
 #include <Strategies.hpp>
 
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
 std::vector<Decision> startDefecting   = {Decision::defect   };
+
+extern void checkDecisionHistory(
+	std::vector<Decision> strategyDecisions,
+	std::vector<Decision> partnerDecisions,
+	Strategy & strategy
+);
 
 TestCase("Polimorphism", "[Strategy]")
 {

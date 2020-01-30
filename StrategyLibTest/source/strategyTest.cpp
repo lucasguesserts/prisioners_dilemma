@@ -1,6 +1,11 @@
 #include <Test.hpp>
 #include <Strategy.hpp>
-#include <StrategyTest.hpp>
+
+extern void checkDecisionHistory(
+	std::vector<Decision> strategyDecisions,
+	std::vector<Decision> partnerDecisions,
+	Strategy & strategy
+);
 
 class TestStrategy: public Strategy
 {
