@@ -18,7 +18,7 @@ class TestStrategy: public Strategy
 		Decision makeDecision(
 			[[maybe_unused]] std::vector<Decision> thisDecision,
 			[[maybe_unused]] std::vector<Decision> partnerDecision
-		){
+		) final override {
 			return Decision::cooperate;
 		}
 };
@@ -49,7 +49,7 @@ class TestHistoryStrategy: public Strategy
 		Decision makeDecision(
 			[[maybe_unused]] std::vector<Decision> thisDecision,
 			[[maybe_unused]] std::vector<Decision> partnerDecision
-		){
+		) final override {
 			Decision decision;
 			if ( partnerDecision.empty() )
 				decision = Decision::cooperate;

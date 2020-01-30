@@ -4,7 +4,7 @@ set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-set(DEFAULT_COMPILE_WARNINGS -Wall -Wextra -ansi -pedantic)
+set(DEFAULT_COMPILE_WARNINGS -Og -Wall -Wextra -ansi -Wpedantic -pedantic-errors -Wnull-dereference -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -Wduplicated-branches -Wduplicated-cond)
 
 project(prisoners_dilemma)
 

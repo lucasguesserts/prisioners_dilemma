@@ -18,7 +18,7 @@ class AlwaysCooperate: public Strategy
 					"Always cooperate."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class AlwaysDefect: public Strategy
@@ -31,7 +31,7 @@ class AlwaysDefect: public Strategy
 					"Always defect."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class Lunatic: public Strategy
@@ -44,7 +44,7 @@ class Lunatic: public Strategy
 					"Cooperate or defect with equal probabilities."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class GrimTrigger: public Strategy
@@ -57,7 +57,7 @@ class GrimTrigger: public Strategy
 					"Cooperates until the partner defects. Thereafter it only defects."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class Pavlov: public Strategy
@@ -70,7 +70,7 @@ class Pavlov: public Strategy
 					"Start cooperating. Repeat decision if a reward or temptation is received. Change last decision otherwise (if sucker's or punishment is received)."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class Gradual: public Strategy
@@ -83,7 +83,7 @@ class Gradual: public Strategy
 					"Start cooperating. When the partner defects, it defects as many times as the partner has defected and then cooperates twice."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		static std::vector<std::tuple<unsigned,unsigned>> findTriggles(std::vector<Decision> partnerDecision);
 		static bool timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
@@ -99,7 +99,7 @@ class SoftMajority: public Strategy
 					"Cooperates as long as the number of defections of the partner is not greater than the number of cooperations."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class HardMajority: public Strategy
@@ -112,7 +112,7 @@ class HardMajority: public Strategy
 					"Defects as long as the number of cooperations of the partner is not greater than the number of defections."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class SoftGrudger: public Strategy
@@ -125,7 +125,7 @@ class SoftGrudger: public Strategy
 					"After a partner defection, react with D,D,D,D,C,C."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		std::vector<unsigned> findTriggles(std::vector<Decision> partnerDecision);
 		bool                  timeToDefect(unsigned turn, std::vector<unsigned> triggles);
@@ -141,7 +141,7 @@ class Prober: public Strategy
 					"Start with D,C,C. If the partner cooperated in the second and third move, always defect afterward. Play tit for tat otherwise."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		Decision initialDecision(unsigned turn);
 		bool     defectionBehavior(std::vector<Decision> partnerDecision);
@@ -157,7 +157,7 @@ class FirmButFair: public Strategy
 					"Defects only after receiving a sucker's payoff."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class TitForTat: public Strategy
@@ -170,7 +170,7 @@ class TitForTat: public Strategy
 					"Start cooperating. Copy opponent's last move afterwards."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class TitForTwoTats: public Strategy
@@ -183,7 +183,7 @@ class TitForTwoTats: public Strategy
 					"Start cooperating. Defects when the partner defects twice in a row."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class TwoTitsForTat: public Strategy
@@ -196,7 +196,7 @@ class TwoTitsForTat: public Strategy
 					"Start cooperating. Defects if any of the two last decisions of the partner was to defect."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class NaiveProber: public Strategy
@@ -205,7 +205,7 @@ class NaiveProber: public Strategy
 		NaiveProber(double probabilityOfDefecting = 0.10);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		double probabilityOfDefecting;
 		bool randomlyDefect(void);
@@ -217,7 +217,7 @@ class RemorsefulProber: public Strategy
 		RemorsefulProber(double probabilityOfProbing = 0.10);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		double probabilityOfProbing;
 		bool wasProbing(
@@ -232,7 +232,7 @@ class GenerousTitForTat: public Strategy
 		GenerousTitForTat(double probabilityOfCooperating = 0.1);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		double probabilityOfCooperating;
 		bool cooperateAfterDefection(void);
@@ -248,7 +248,7 @@ class SuspiciousTitForTat: public Strategy
 					"Start defecting. Copy opponent's last move afterwards."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class HardTitForTat: public Strategy
@@ -261,7 +261,7 @@ class HardTitForTat: public Strategy
 					"Start cooperating. Defects if the partner has defected in any of the three previous turns."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class ReverseTitForTat: public Strategy
@@ -274,7 +274,7 @@ class ReverseTitForTat: public Strategy
 					"Start defecting, then plays the reverse of the partner last decision."){}
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 };
 
 class AdaptativeTitForTat: public Strategy
@@ -283,7 +283,7 @@ class AdaptativeTitForTat: public Strategy
 		AdaptativeTitForTat(double worldZero = 0.500000001, double adaptationRate = 0.2);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		double worldZero;
 		double adaptationRate;
@@ -303,7 +303,7 @@ class MetaRegulatedAdaptativeTitForTat: public Strategy
 			unsigned adaptationThreshold         = 2);
 		Decision makeDecision(
 			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) final;
+			std::vector<Decision> partnerDecision) override final;
 	private:
 		double worldZero, adaptationRateCooperationZero, adaptationRateDefectionZero;
 		double adaptationRateMinimum, adaptationRateMaximum;
