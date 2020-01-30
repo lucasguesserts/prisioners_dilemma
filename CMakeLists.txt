@@ -3,7 +3,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -ansi -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+set(DEFAULT_COMPILE_WARNINGS -Wall -Wextra -ansi -pedantic)
 
 project(prisoners_dilemma)
 

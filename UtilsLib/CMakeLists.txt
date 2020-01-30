@@ -1,10 +1,11 @@
 project(UtilsLib)
 
-include_directories(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include)
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-file(GLOB ${PROJECT_NAME}_headers ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include/*.hpp)
-file(GLOB ${PROJECT_NAME}_sources ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/source/*.cpp)
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_sources} ${${PROJECT_NAME}_headers})
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} stdc++fs)
+target_link_libraries(${PROJECT_NAME} PUBLIC stdc++fs)
+
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
