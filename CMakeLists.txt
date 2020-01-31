@@ -10,8 +10,7 @@ project(prisoners_dilemma
 
 # Compiler Setup
 set(CMAKE_BUILD_TYPE Debug)
-set(DEFAULT_COMPILE_WARNINGS -Wall -Wextra -Wpedantic -pedantic-errors -Wnull-dereference -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -Wduplicated-branches -Wduplicated-cond -Wfloat-equal -Wunsafe-loop-optimizations)
-# -Wconversion -Wshadow=local
+set(DEFAULT_COMPILE_WARNINGS -Wall -Wextra -Wpedantic -pedantic-errors -Wnull-dereference -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -Wduplicated-branches -Wduplicated-cond -Wfloat-equal -Wunsafe-loop-optimizations -Wundef -Wunused-macros -Wcast-qual -Wcast-align=strict -Wzero-as-null-pointer-constant -Wdangling-else -Wuseless-cast -Wextra-semi -Wlogical-op -Wmissing-declarations -Winline -Wvla -Wdisabled-optimization -Wconversion -Wshadow=local -Wsign-conversion)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
