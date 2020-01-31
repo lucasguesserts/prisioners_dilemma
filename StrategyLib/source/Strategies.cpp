@@ -183,7 +183,7 @@ std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
 	return triggles;
 }
 
-bool Gradual::timeToDefect(long unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
+bool Gradual::timeToDefect(size_t turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
 {
 	bool defect = false;
 	for (auto& triggle: triggles)
@@ -204,8 +204,8 @@ Decision SoftMajority::makeDecision(
 	[[maybe_unused]] std::vector<Decision> partnerDecision
 )
 {
-	unsigned numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
-	unsigned numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
+	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
+	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
 	return (numberOfDefects > numberOfCooperates) ? Decision::defect : Decision::cooperate;
 }
 
@@ -214,8 +214,8 @@ Decision HardMajority::makeDecision(
 	[[maybe_unused]] std::vector<Decision> partnerDecision
 )
 {
-	unsigned numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
-	unsigned numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
+	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
+	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
 	return (numberOfCooperates > numberOfDefects) ? Decision::cooperate : Decision::defect;
 }
 
@@ -247,7 +247,7 @@ std::vector<unsigned> SoftGrudger::findTriggles(std::vector<Decision> partnerDec
 	return triggles;
 }
 
-bool SoftGrudger::timeToDefect(unsigned turn, std::vector<unsigned> triggles)
+bool SoftGrudger::timeToDefect(size_t turn, std::vector<unsigned> triggles)
 {
 	bool defect = false;
 	for (auto& triggleTurn: triggles)
@@ -267,7 +267,7 @@ Decision Prober::makeDecision(
 )
 {
 	Decision decision;
-	unsigned turn = thisDecision.size();
+	auto turn = thisDecision.size();
 	if (turn<=2)
 		decision = Prober::initialDecision(turn); // Start with D,C,C
 	else
@@ -280,7 +280,7 @@ Decision Prober::makeDecision(
 	return decision;
 }
 
-Decision Prober::initialDecision(unsigned turn)
+Decision Prober::initialDecision(size_t turn)
 {
 	static std::vector<Decision> initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
 	return initialDecisions.at(turn);

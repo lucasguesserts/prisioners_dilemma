@@ -6,6 +6,12 @@ void checkDecisionHistory(
 	std::vector<Decision> strategyDecisions,
 	std::vector<Decision> partnerDecisions,
 	Strategy & strategy
+);
+
+void checkDecisionHistory(
+	std::vector<Decision> strategyDecisions,
+	std::vector<Decision> partnerDecisions,
+	Strategy & strategy
 )
 {
 	check( strategyDecisions.size() == partnerDecisions.size() );

@@ -67,7 +67,7 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 	section("strategies")
 	{
 		H5::Group strategiesGroup;
-		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroup) );
+		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroupName) );
 		// TODO: Add sections testing more strategies
 		section("Always cooperate")
 		{

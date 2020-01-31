@@ -9,13 +9,13 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(std::string filePath, int flags=H5F_ACC_TRUNC);
+		PrisonersDilemmaFile(std::string filePath, unsigned flags=H5F_ACC_TRUNC);
 
 		void save(Championship &);
 		void save(Strategy *);
 		void save(H5::Group &, Player &);
 
-		static const std::string strategiesGroup;
+		static const std::string strategiesGroupName;
 
 	private:
 		void savePlayerData(H5::Group championshipGroup, H5::Group playerGroup, std::vector<Decision> decision, std::vector<Payoff> payoff, Strategy * partnerStrategy);

@@ -1,8 +1,8 @@
 #include <PrisonersDilemmaFile.hpp>
 
-const std::string PrisonersDilemmaFile::strategiesGroup = "/Strategies/";
+const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath, int flags)
+PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath, unsigned flags)
 	: H5::H5File(filePath, flags)
 {
 	return;
@@ -37,9 +37,9 @@ void PrisonersDilemmaFile::save(Strategy *strategy)
 void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
 {
 	H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
-	if (!this->exists(PrisonersDilemmaFile::strategiesGroup))
-		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroup + " group does not exists.");
-	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroup + player.strategy->name, "strategy");
+	if (!this->exists(PrisonersDilemmaFile::strategiesGroupName))
+		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroupName + " group does not exists.");
+	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroupName + player.strategy->name, "strategy");
 	for(unsigned match=0 ; match<player.partners.size() ; ++match)
 		this->savePlayerData(
 			championshipGroup,
@@ -97,12 +97,11 @@ void PrisonersDilemmaFile::savePlayerData(
 H5::Group PrisonersDilemmaFile::getStrategiesGroup(void)
 {
 	// TODO: add try/catch
-	std::string strategiesGroupName = PrisonersDilemmaFile::strategiesGroup;
 	H5::Group strategiesGroup;
 	if (this->exists("Strategies"))
-		strategiesGroup = this->openGroup(strategiesGroupName);
+		strategiesGroup = this->openGroup(PrisonersDilemmaFile::strategiesGroupName);
 	else
-		strategiesGroup = this->createGroup(strategiesGroupName);
+		strategiesGroup = this->createGroup(PrisonersDilemmaFile::strategiesGroupName);
 	return strategiesGroup;
 }
 

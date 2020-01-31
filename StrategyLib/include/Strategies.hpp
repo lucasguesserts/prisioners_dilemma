@@ -86,7 +86,7 @@ class Gradual: public Strategy
 			std::vector<Decision> partnerDecision) override final;
 	private:
 		static std::vector<std::tuple<unsigned,unsigned>> findTriggles(std::vector<Decision> partnerDecision);
-		static bool timeToDefect(long unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
+		static bool timeToDefect(size_t turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
 };
 
 class SoftMajority: public Strategy
@@ -128,7 +128,7 @@ class SoftGrudger: public Strategy
 			std::vector<Decision> partnerDecision) override final;
 	private:
 		std::vector<unsigned> findTriggles(std::vector<Decision> partnerDecision);
-		bool                  timeToDefect(unsigned turn, std::vector<unsigned> triggles);
+		bool                  timeToDefect(size_t turn, std::vector<unsigned> triggles);
 };
 
 class Prober: public Strategy
@@ -143,7 +143,7 @@ class Prober: public Strategy
 			std::vector<Decision> thisDecision,
 			std::vector<Decision> partnerDecision) override final;
 	private:
-		Decision initialDecision(unsigned turn);
+		Decision initialDecision(size_t turn);
 		bool     defectionBehavior(std::vector<Decision> partnerDecision);
 };
 
