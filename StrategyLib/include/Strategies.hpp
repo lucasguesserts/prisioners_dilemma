@@ -86,7 +86,7 @@ class Gradual: public Strategy
 			std::vector<Decision> partnerDecision) override final;
 	private:
 		static std::vector<std::tuple<unsigned,unsigned>> findTriggles(std::vector<Decision> partnerDecision);
-		static bool timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
+		static bool timeToDefect(long unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles);
 };
 
 class SoftMajority: public Strategy

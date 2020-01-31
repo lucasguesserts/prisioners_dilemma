@@ -183,7 +183,7 @@ std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
 	return triggles;
 }
 
-bool Gradual::timeToDefect(unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
+bool Gradual::timeToDefect(long unsigned turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
 {
 	bool defect = false;
 	for (auto& triggle: triggles)

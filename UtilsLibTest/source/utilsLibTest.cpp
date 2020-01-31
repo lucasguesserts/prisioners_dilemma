@@ -30,8 +30,6 @@ TestCase("catch floating point test", "[basic]")
 {
 	double a,b;
 	a = 3.1415926535898;
-	b = 3.1415926535898;
-	require( a==b );
 	b = 3.141592;
 	require( a==Approx(b) );
 	return;
@@ -50,14 +48,14 @@ TestCase("catch nothrow", "[basic]")
 
 TestCase("cpp_11_foreach", "[basic]")
 {
-	std::vector<double> values;
+	std::vector<int> values;
 	int nValues = 5;
-	double rawValues[] = { 2.71, 3.14, 0.0, -3.14, -2.71 };
+	int rawValues[] = { 2, 3, 0, -3, -2 };
 	for( int i = 0; i < nValues; ++i ){
 		values.push_back( rawValues[ i ] );
 	}
 	int counter = 0;
-	for( double v: values ){
+	for( auto v: values ){
 		check( rawValues[counter]==v );
 		++counter; 
 	}
