@@ -1,7 +1,13 @@
-#include <Championship.hpp>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <numeric>
-#include <iomanip>
+#include <Strategy.hpp>
+#include <Player.hpp>
+#include <Match.hpp>
+#include <Championship.hpp>
 
 Championship::Championship(
 	std::string            name,

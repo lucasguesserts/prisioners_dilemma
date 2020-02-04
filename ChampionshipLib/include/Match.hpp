@@ -2,7 +2,7 @@
 #define MATCH_HPP
 
 #include <vector>
-#include <Strategies.hpp>
+#include <Decision.hpp>
 #include <Payoff.hpp>
 #include <Player.hpp>
 

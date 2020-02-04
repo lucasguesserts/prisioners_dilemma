@@ -1,5 +1,10 @@
+#include <vector>
 #include <Test.hpp>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
 #include <Strategies.hpp>
+#include <Player.hpp>
 #include <Championship.hpp>
 
 TestCase("Three players chapionship", "[Championship]")

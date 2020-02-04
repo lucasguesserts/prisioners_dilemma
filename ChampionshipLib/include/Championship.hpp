@@ -1,8 +1,10 @@
 #ifndef CHAMPIONSHIP_HPP
 #define CHAMPIONSHIP_HPP
 
+#include <string>
 #include <vector>
 #include <iostream>
+#include <Strategy.hpp>
 #include <Player.hpp>
 #include <Match.hpp>
 
