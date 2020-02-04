@@ -1,8 +1,13 @@
-#include <Strategies.hpp>
-#include <Payoff.hpp>
+#include <cstddef>
 #include <random>
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
+#include <tuple>
+#include <string>
+#include <Strategies.hpp>
+#include <Decision.hpp>
+#include <Payoff.hpp>
 
 AlwaysCooperate                  allC;
 AlwaysDefect                     allD;

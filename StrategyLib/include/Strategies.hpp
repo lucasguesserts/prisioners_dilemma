@@ -3,8 +3,10 @@
 
 // Based on http://www.prisoners-dilemma.com/strategies.html
 
+#include <cstddef>
 #include <vector>
 #include <tuple>
+#include <string>
 #include <Strategy.hpp>
 #include <Decision.hpp>
 

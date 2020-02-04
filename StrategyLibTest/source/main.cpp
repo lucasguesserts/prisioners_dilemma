@@ -1,5 +1,9 @@
 #define CATCH_CONFIG_MAIN
+#include <vector>
+#include <cstddef>
 #include <Test.hpp>
+#include <Decision.hpp>
+#include <Strategy.hpp>
 #include <Strategies.hpp>
 
 void checkDecisionHistory(
@@ -16,7 +20,7 @@ void checkDecisionHistory(
 {
 	check( strategyDecisions.size() == partnerDecisions.size() );
 	std::vector<Decision> strategyCummulativeDecisions, partnerCummulativeDecisions;
-	for (std::vector<Decision>::size_type turn=0 ; turn<strategyDecisions.size() ; ++turn)
+	for (size_t turn=0 ; turn<strategyDecisions.size() ; ++turn)
 	{
 		check( strategy.makeDecision(strategyCummulativeDecisions, partnerCummulativeDecisions) == strategyDecisions.at(turn) );
 		strategyCummulativeDecisions.push_back(strategyDecisions.at(turn));

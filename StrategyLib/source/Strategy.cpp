@@ -1,3 +1,4 @@
+#include <string>
 #include <Strategy.hpp>
 
 Strategy::Strategy(void)
