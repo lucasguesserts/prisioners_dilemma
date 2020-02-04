@@ -1,5 +1,7 @@
-#include <Payoff.hpp>
 #include <stdexcept>
+#include <tuple>
+#include <Decision.hpp>
+#include <Payoff.hpp>
 
 unsigned operator+(const Payoff& lhs, const Payoff& rhs)
 {
