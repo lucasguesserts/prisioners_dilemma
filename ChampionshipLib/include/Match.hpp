@@ -2,9 +2,9 @@
 #define MATCH_HPP
 
 #include <vector>
-#include <Decision.hpp>
-#include <Payoff.hpp>
-#include <Player.hpp>
+#include "Decision.hpp"
+#include "Payoff.hpp"
+#include "Player.hpp"
 
 class Match
 {

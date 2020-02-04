@@ -2,7 +2,7 @@
 #define PAYOFF_HPP
 
 #include <tuple>
-#include <Decision.hpp>
+#include "Decision.hpp"
 
 // | A/B       | cooperate | defect |
 // | cooperate |    R/R    |   S/T  |

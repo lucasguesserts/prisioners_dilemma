@@ -1,11 +1,11 @@
 #include <vector>
-#include <Test.hpp>
-#include <Decision.hpp>
-#include <Payoff.hpp>
-#include <Strategy.hpp>
-#include <Strategies.hpp>
-#include <Player.hpp>
-#include <Match.hpp>
+#include "Test.hpp"
+#include "Decision.hpp"
+#include "Payoff.hpp"
+#include "Strategy.hpp"
+#include "Strategies.hpp"
+#include "Player.hpp"
+#include "Match.hpp"
 
 TestCase("Simple Match", "[Match]")
 {

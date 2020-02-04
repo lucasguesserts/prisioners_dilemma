@@ -1,5 +1,5 @@
-#include <Test.hpp>
-#include <Payoff.hpp>
+#include "Test.hpp"
+#include "Payoff.hpp"
 
 TestCase("Payoff order", "[Payoff]")
 {

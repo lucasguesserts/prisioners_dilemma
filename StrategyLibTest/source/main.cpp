@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include <vector>
 #include <cstddef>
-#include <Test.hpp>
-#include <Decision.hpp>
-#include <Strategy.hpp>
-#include <Strategies.hpp>
+#include "Test.hpp"
+#include "Decision.hpp"
+#include "Strategy.hpp"
+#include "Strategies.hpp"
 
 void checkDecisionHistory(
 	std::vector<Decision> strategyDecisions,

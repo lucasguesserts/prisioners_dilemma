@@ -7,8 +7,8 @@
 #include <vector>
 #include <tuple>
 #include <string>
-#include <Strategy.hpp>
-#include <Decision.hpp>
+#include "Strategy.hpp"
+#include "Decision.hpp"
 
 class AlwaysCooperate: public Strategy
 {

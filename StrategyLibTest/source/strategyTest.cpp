@@ -1,5 +1,5 @@
-#include <Test.hpp>
-#include <Strategy.hpp>
+#include "Test.hpp"
+#include "Strategy.hpp"
 
 extern void checkDecisionHistory(
 	std::vector<Decision> strategyDecisions,

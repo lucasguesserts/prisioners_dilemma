@@ -1,7 +1,7 @@
 #ifndef UTILS_TEST_H
 #define UTILS_TEST_H
 
-#include <catch.hpp>
+#include "catch.hpp"
 
 #define TestCase TEST_CASE
 #define section SECTION

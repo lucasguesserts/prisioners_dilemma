@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <Strategy.hpp>
-#include <Player.hpp>
-#include <Match.hpp>
+#include "Strategy.hpp"
+#include "Player.hpp"
+#include "Match.hpp"
 
 class Championship
 {

@@ -4,10 +4,10 @@
 #include <iomanip>
 #include <algorithm>
 #include <numeric>
-#include <Strategy.hpp>
-#include <Player.hpp>
-#include <Match.hpp>
-#include <Championship.hpp>
+#include "Strategy.hpp"
+#include "Player.hpp"
+#include "Match.hpp"
+#include "Championship.hpp"
 
 Championship::Championship(
 	std::string            name,

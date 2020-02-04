@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <stdexcept>
 
-#include <Test.hpp>
+#include "Test.hpp"
 
 TestCase("catch test", "[basic]")
 {

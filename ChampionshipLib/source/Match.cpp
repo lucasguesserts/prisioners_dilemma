@@ -1,9 +1,9 @@
 #include <vector>
-#include <Decision.hpp>
-#include <Payoff.hpp>
-#include <Player.hpp>
-#include <Strategy.hpp>
-#include <Match.hpp>
+#include "Decision.hpp"
+#include "Payoff.hpp"
+#include "Player.hpp"
+#include "Strategy.hpp"
+#include "Match.hpp"
 
 Match::Match(Player& left, Player& right, unsigned numberOfTurns)
 	: leftPlayer(left),

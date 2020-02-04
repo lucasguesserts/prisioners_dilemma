@@ -1,5 +1,5 @@
-#include <Test.hpp>
-#include <Decision.hpp>
+#include "Test.hpp"
+#include "Decision.hpp"
 
 TestCase("decision", "[Decision]")
 {

@@ -1,5 +1,5 @@
 #include <string>
-#include <Strategy.hpp>
+#include "Strategy.hpp"
 
 Strategy::Strategy(void)
 	: name(""),

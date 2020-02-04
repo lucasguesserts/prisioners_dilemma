@@ -5,9 +5,9 @@
 #include <vector>
 #include <tuple>
 #include <string>
-#include <Strategies.hpp>
-#include <Decision.hpp>
-#include <Payoff.hpp>
+#include "Strategies.hpp"
+#include "Decision.hpp"
+#include "Payoff.hpp"
 
 AlwaysCooperate                  allC;
 AlwaysDefect                     allD;

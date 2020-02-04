@@ -1,15 +1,15 @@
 #ifndef PRISONERS_DILEMMA_FILE_HPP
 #define PRISONERS_DILEMMA_FILE_HPP
 
-#include <H5Cpp.h>
+#include "H5Cpp.h"
 #include <string>
 #include <vector>
-#include <Decision.hpp>
-#include <Payoff.hpp>
-#include <Strategy.hpp>
-#include <Strategies.hpp>
-#include <Player.hpp>
-#include <Championship.hpp>
+#include "Decision.hpp"
+#include "Payoff.hpp"
+#include "Strategy.hpp"
+#include "Strategies.hpp"
+#include "Player.hpp"
+#include "Championship.hpp"
 
 class PrisonersDilemmaFile: public H5::H5File
 {

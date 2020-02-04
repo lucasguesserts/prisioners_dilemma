@@ -1,8 +1,8 @@
 #include <vector>
-#include <Test.hpp>
-#include <Decision.hpp>
-#include <Strategy.hpp>
-#include <Strategies.hpp>
+#include "Test.hpp"
+#include "Decision.hpp"
+#include "Strategy.hpp"
+#include "Strategies.hpp"
 
 std::vector<Decision> emptyDecisions = {};
 std::vector<Decision> startCooperating = {Decision::cooperate};
