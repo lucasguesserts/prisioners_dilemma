@@ -3,8 +3,13 @@
 
 #include <H5Cpp.h>
 #include <string>
-#include <Championship.hpp>
+#include <vector>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
 #include <Strategies.hpp>
+#include <Player.hpp>
+#include <Championship.hpp>
 
 class PrisonersDilemmaFile: public H5::H5File
 {

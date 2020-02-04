@@ -1,3 +1,14 @@
+#include <H5Cpp.h>
+#include <cstddef>
+#include <string>
+#include <vector>
+#include <stdexcept>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
+#include <Strategies.hpp>
+#include <Player.hpp>
+#include <Championship.hpp>
 #include <PrisonersDilemmaFile.hpp>
 
 const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
@@ -40,7 +51,7 @@ void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
 	if (!this->exists(PrisonersDilemmaFile::strategiesGroupName))
 		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroupName + " group does not exists.");
 	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroupName + player.strategy->name, "strategy");
-	for(unsigned match=0 ; match<player.partners.size() ; ++match)
+	for(size_t match=0 ; match<player.partners.size() ; ++match)
 		this->savePlayerData(
 			championshipGroup,
 			playerGroup,

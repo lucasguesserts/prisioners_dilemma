@@ -1,5 +1,14 @@
-#include <Test.hpp>
+#include <H5Cpp.h>
+#include <string>
+#include <vector>
 #include <filesystem>
+#include <Test.hpp>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
+#include <Strategies.hpp>
+#include <Player.hpp>
+#include <Championship.hpp>
 #include <PrisonersDilemmaFile.hpp>
 
 TestCase("Create file", "[PrisonersDilemmaFile]")
