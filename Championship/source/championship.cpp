@@ -1,6 +1,14 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <H5Cpp.h>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
+#include <Strategies.hpp>
+#include <Player.hpp>
 #include <Championship.hpp>
 #include <PrisonersDilemmaFile.hpp>
-#include <iostream>
 
 int main()
 {
