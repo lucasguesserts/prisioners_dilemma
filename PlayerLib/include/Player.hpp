@@ -2,9 +2,9 @@
 #define PLAYER_HPP
 
 #include <vector>
-#include <Strategy.hpp>
 #include <Decision.hpp>
 #include <Payoff.hpp>
+#include <Strategy.hpp>
 
 class Player
 {

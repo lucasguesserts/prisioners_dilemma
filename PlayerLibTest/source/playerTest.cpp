@@ -1,4 +1,7 @@
+#include <vector>
 #include <Test.hpp>
+#include <Decision.hpp>
+#include <Payoff.hpp>
 #include <Strategies.hpp>
 #include <Player.hpp>
 

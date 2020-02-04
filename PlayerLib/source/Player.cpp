@@ -1,5 +1,9 @@
-#include <Player.hpp>
+#include <vector>
 #include <numeric>
+#include <Decision.hpp>
+#include <Payoff.hpp>
+#include <Strategy.hpp>
+#include <Player.hpp>
 
 Player::Player(Strategy& strategy)
 	: strategy(&strategy)
