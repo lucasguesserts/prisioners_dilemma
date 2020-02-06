@@ -8,15 +8,15 @@
 class Strategy
 {
 	public:
-		std::string name;
-		std::string shortName;
-		std::string description;
+		const std::string name;
+		const std::string shortName;
+		const std::string description;
 	
 		Strategy(void);
-		Strategy(std::string name, std::string shortName, std::string description);
+		Strategy(const std::string& name, const std::string& shortName, const std::string& description);
 		virtual Decision makeDecision(
-			std::vector<Decision> thisDecision,
-			std::vector<Decision> partnerDecision) = 0;
+			const std::vector<Decision>& thisDecision,
+			const std::vector<Decision>& partnerDecision) const = 0;
 };
 
 #endif

@@ -7,7 +7,10 @@ Strategy::Strategy(void)
 	  description("")
 {}
 
-Strategy::Strategy(std::string name, std::string shortName, std::string description)
+Strategy::Strategy(
+	const std::string& name,
+	const std::string& shortName,
+	const std::string& description)
 	: name(name),
 	  shortName(shortName),
 	  description(description)

@@ -88,9 +88,9 @@ Strategy * findStrategy(
 // 					"AllC",              [Short name start with a capital letter. No space present.]
 // 					"Always cooperate.") [Description as a phrase. Ends with a full stop.          ]
 // 					{}
-// 		Decision makeDecision(                            [Always implement as the only     ]
-// 			std::vector<Decision> thisDecision,           [public method the 'makeDecision',]
-// 			std::vector<Decision> partnerDecision) final; [as 'final'.                      ]
+// 		Decision makeDecision(
+// 			const std::vector<Decision> & thisDecision,
+// 			const std::vector<Decision> & partnerDecision) const override final;
 // 	private:
 // 		[All auxiliar methods and variables must be kept]
 // 		[private.                                       ]
@@ -101,25 +101,25 @@ Strategy * findStrategy(
 // };
 
 Decision AlwaysCooperate::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	return Decision::cooperate;
 }
 
 Decision AlwaysDefect::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	return Decision::defect;
 }
 
 Decision Lunatic::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	static std::default_random_engine randomGenerator;
 	static std::uniform_int_distribution<unsigned> uniformDistribution(0, 1);
@@ -127,9 +127,9 @@ Decision Lunatic::makeDecision(
 }
 
 Decision GrimTrigger::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if ( std::any_of(partnerDecision.begin(), partnerDecision.end(), [](Decision d){return d==Decision::defect;}) )
@@ -140,9 +140,9 @@ Decision GrimTrigger::makeDecision(
 }
 
 Decision Pavlov::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.empty())
@@ -159,9 +159,9 @@ Decision Pavlov::makeDecision(
 }
 
 Decision Gradual::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	auto triggles = Gradual::findTriggles(partnerDecision);
@@ -173,14 +173,14 @@ Decision Gradual::makeDecision(
 }
 
 std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
-	std::vector<Decision> partnerDecision)
+	const std::vector<Decision> & partnerDecision)
 {
 	std::vector<std::tuple<unsigned,unsigned>> triggles;
 	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
 	{
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
-			unsigned numberOfDefects = static_cast<unsigned>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+turn+1, Decision::defect));
+			const unsigned numberOfDefects = static_cast<unsigned>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+turn+1, Decision::defect));
 			triggles.push_back({turn, numberOfDefects});
 			turn += numberOfDefects + 2;
 		}
@@ -188,10 +188,10 @@ std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
 	return triggles;
 }
 
-bool Gradual::timeToDefect(size_t turn, std::vector<std::tuple<unsigned,unsigned>> triggles)
+bool Gradual::timeToDefect(const size_t & turn, const std::vector<std::tuple<unsigned,unsigned>> & triggles)
 {
 	bool defect = false;
-	for (auto& triggle: triggles)
+	for (auto & triggle: triggles)
 	{
 		auto triggleTurn = std::get<0>(triggle);
 		auto numberOfDefects = std::get<1>(triggle);
@@ -205,9 +205,9 @@ bool Gradual::timeToDefect(size_t turn, std::vector<std::tuple<unsigned,unsigned
 }
 
 Decision SoftMajority::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
@@ -215,9 +215,9 @@ Decision SoftMajority::makeDecision(
 }
 
 Decision HardMajority::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
@@ -225,9 +225,9 @@ Decision HardMajority::makeDecision(
 }
 
 Decision SoftGrudger::makeDecision(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	auto triggles = SoftGrudger::findTriggles(partnerDecision);
@@ -238,7 +238,7 @@ Decision SoftGrudger::makeDecision(
 	return decision;
 }
 
-std::vector<unsigned> SoftGrudger::findTriggles(std::vector<Decision> partnerDecision)
+std::vector<unsigned> SoftGrudger::findTriggles(const std::vector<Decision> & partnerDecision) const
 {
 	std::vector<unsigned> triggles;
 	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
@@ -252,24 +252,20 @@ std::vector<unsigned> SoftGrudger::findTriggles(std::vector<Decision> partnerDec
 	return triggles;
 }
 
-bool SoftGrudger::timeToDefect(size_t turn, std::vector<unsigned> triggles)
+bool SoftGrudger::timeToDefect(const size_t & turn, const std::vector<unsigned> & triggles) const
 {
-	bool defect = false;
-	for (auto& triggleTurn: triggles)
-	{
-		if ( (turn > triggleTurn) && (turn <= triggleTurn + 4) )
-		{
-			defect = true;
-			break;
-		}
-	}
-	return defect;
+	return std::any_of(
+		triggles.cbegin(),
+		triggles.cend(),
+		[&turn](const unsigned & triggleTurn){
+			return (turn > triggleTurn) && (turn <= triggleTurn + 4);
+		});
 }
 
 Decision Prober::makeDecision(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	auto turn = thisDecision.size();
@@ -285,13 +281,13 @@ Decision Prober::makeDecision(
 	return decision;
 }
 
-Decision Prober::initialDecision(size_t turn)
+Decision Prober::initialDecision(const size_t & turn) const
 {
-	static std::vector<Decision> initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
+	static const std::vector<Decision> & initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
 	return initialDecisions.at(turn);
 }
 
-bool Prober::defectionBehavior(std::vector<Decision> partnerDecision)
+bool Prober::defectionBehavior(const std::vector<Decision> & partnerDecision) const
 {
 	auto secondDecision = *(partnerDecision.cbegin() + 1);
 	auto thirdDecision  = *(partnerDecision.cbegin() + 2);
@@ -299,9 +295,9 @@ bool Prober::defectionBehavior(std::vector<Decision> partnerDecision)
 }
 
 Decision FirmButFair::makeDecision(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.empty())
@@ -314,9 +310,9 @@ Decision FirmButFair::makeDecision(
 }
 
 Decision TitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.size()==0)
@@ -327,9 +323,9 @@ Decision TitForTat::makeDecision(
 }
 
 Decision TitForTwoTats::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (partnerDecision.size()<2)
@@ -345,9 +341,9 @@ Decision TitForTwoTats::makeDecision(
 }
 
 Decision TwoTitsForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-2);
@@ -373,9 +369,9 @@ NaiveProber::NaiveProber(double probabilityOfDefecting)
 }
 
 Decision NaiveProber::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (this->randomlyDefect())
@@ -390,7 +386,7 @@ Decision NaiveProber::makeDecision(
 	return decision;
 }
 
-bool NaiveProber::randomlyDefect(void)
+bool NaiveProber::randomlyDefect(void) const
 {
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
@@ -409,9 +405,9 @@ RemorsefulProber::RemorsefulProber(double probabilityOfProbing)
 }
 
 Decision RemorsefulProber::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.empty())
@@ -437,9 +433,9 @@ Decision RemorsefulProber::makeDecision(
 }
 
 bool RemorsefulProber::wasProbing(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	bool wasProbing = false;
 	Decision probationDecision, partnerAnswerToProbation, partnerAnswerPriorToProbation;
@@ -457,7 +453,7 @@ bool RemorsefulProber::wasProbing(
 	return wasProbing;
 }
 
-bool RemorsefulProber::probePartner(void)
+bool RemorsefulProber::probePartner(void) const
 {
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
@@ -477,9 +473,9 @@ GenerousTitForTat::GenerousTitForTat(double probabilityOfCooperating)
 }
 
 Decision GenerousTitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.size()==0)
@@ -491,17 +487,16 @@ Decision GenerousTitForTat::makeDecision(
 	return decision;
 }
 
-bool GenerousTitForTat::cooperateAfterDefection(void)
-{
+bool GenerousTitForTat::cooperateAfterDefection(void) const {
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
 	return distribution(generator) < this->probabilityOfCooperating;
 }
 
 Decision SuspiciousTitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.size()==0)
@@ -512,9 +507,9 @@ Decision SuspiciousTitForTat::makeDecision(
 }
 
 Decision HardTitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-3); // beginning or the third from the end to the beginning
@@ -529,9 +524,9 @@ Decision HardTitForTat::makeDecision(
 }
 
 Decision ReverseTitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	Decision decision;
 	if (thisDecision.size()==0)
@@ -558,15 +553,15 @@ AdaptativeTitForTat::AdaptativeTitForTat(double worldZero, double adaptationRate
 }
 
 Decision AdaptativeTitForTat::makeDecision(
-	[[maybe_unused]] std::vector<Decision> thisDecision,
-	[[maybe_unused]] std::vector<Decision> partnerDecision
-)
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
+) const
 {
 	double world = AdaptativeTitForTat::computeWorld(partnerDecision);
 	return (world>=0.5) ? Decision::cooperate : Decision::defect;
 }
 
-double AdaptativeTitForTat::computeWorld(std::vector<Decision> partnerDecision)
+double AdaptativeTitForTat::computeWorld(const std::vector<Decision> & partnerDecision) const
 {
 	double world = this->worldZero;
 	for (auto decision: partnerDecision)
@@ -580,13 +575,13 @@ double AdaptativeTitForTat::computeWorld(std::vector<Decision> partnerDecision)
 }
 
 MetaRegulatedAdaptativeTitForTat::MetaRegulatedAdaptativeTitForTat(
-	double worldZero                    ,
-	double adaptationRateCooperationZero,
-	double adaptationRateDefectionZero  ,
-	double adaptationRateMinimum        ,
-	double adaptationRateMaximum        ,
-	unsigned adaptationWindow           ,
-	unsigned adaptationThreshold
+	const double   & worldZero                    ,
+	const double   & adaptationRateCooperationZero,
+	const double   & adaptationRateDefectionZero  ,
+	const double   & adaptationRateMinimum        ,
+	const double   & adaptationRateMaximum        ,
+	const unsigned & adaptationWindow           ,
+	const unsigned & adaptationThreshold
 )
 	: Strategy(
 		"Meta-Regulated Adaptative Tit For Tat",
@@ -617,18 +612,18 @@ MetaRegulatedAdaptativeTitForTat::MetaRegulatedAdaptativeTitForTat(
 }
 
 Decision MetaRegulatedAdaptativeTitForTat::makeDecision(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	double world = this->computeWorld(thisDecision, partnerDecision);
 	return (world>=0.5) ? Decision::cooperate : Decision::defect;
 }
 
 double MetaRegulatedAdaptativeTitForTat::computeWorld(
-	std::vector<Decision> thisDecision,
-	std::vector<Decision> partnerDecision
-)
+	const std::vector<Decision> & thisDecision,
+	const std::vector<Decision> & partnerDecision
+) const
 {
 	double   world                     = this->worldZero;
 	double   adaptationRateCooperation = this->adaptationRateCooperationZero;
@@ -645,11 +640,11 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
-	unsigned turn,
-	unsigned thresholdCount,
-	double&  adaptationRateCooperation,
-	double&  adaptationRateDefection
-)
+	const unsigned & turn,
+	const unsigned & thresholdCount,
+	double &  adaptationRateCooperation,
+	double &  adaptationRateDefection
+) const
 {
 	if (turn!=0u) // It is annoying, the case `turn = 0` has to be excluded.
 	{
@@ -671,11 +666,11 @@ void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
-	unsigned turn,
-	unsigned &thresholdCount,
-	Decision thisDecision,
-	Decision partnerDecision
-)
+	const unsigned & turn,
+	unsigned & thresholdCount,
+	const Decision & thisDecision,
+	const Decision & partnerDecision
+) const
 {
 	if ((turn % (this->adaptationWindow-1)) == 0)
 		thresholdCount = 0u;
@@ -686,10 +681,10 @@ void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
 
 double MetaRegulatedAdaptativeTitForTat::updateWorld(
 	double   world,
-	Decision partnerDecision,
-	double   adaptationRateCooperation,
-	double   adaptationRateDefection
-)
+	const Decision & partnerDecision,
+	const double &   adaptationRateCooperation,
+	const double &   adaptationRateDefection
+) const
 {
 	if (partnerDecision == Decision::cooperate)
 		world = world + adaptationRateCooperation * (1 - world);

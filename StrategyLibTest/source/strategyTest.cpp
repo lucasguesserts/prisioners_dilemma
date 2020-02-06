@@ -16,9 +16,9 @@ class TestStrategy: public Strategy
 					"TestS",
 					"Class implemented just to make the following test case."){}
 		Decision makeDecision(
-			[[maybe_unused]] std::vector<Decision> thisDecision,
-			[[maybe_unused]] std::vector<Decision> partnerDecision
-		) final override {
+			[[maybe_unused]] const std::vector<Decision>& thisDecision,
+			[[maybe_unused]] const std::vector<Decision>& partnerDecision
+		) const final override {
 			return Decision::cooperate;
 		}
 };
@@ -47,9 +47,9 @@ class TestHistoryStrategy: public Strategy
 					"TestHS",
 					"Class implemented just to make the diecicion history test case."){}
 		Decision makeDecision(
-			[[maybe_unused]] std::vector<Decision> thisDecision,
-			[[maybe_unused]] std::vector<Decision> partnerDecision
-		) final override {
+			[[maybe_unused]] const std::vector<Decision>& thisDecision,
+			[[maybe_unused]] const std::vector<Decision>& partnerDecision
+		) const final override {
 			Decision decision;
 			if ( partnerDecision.empty() )
 				decision = Decision::cooperate;
