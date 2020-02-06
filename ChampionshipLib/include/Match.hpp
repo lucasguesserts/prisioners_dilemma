@@ -9,10 +9,10 @@
 class Match
 {
 	public:
-		Match(Player& left, Player& right, unsigned numberOfTurns);
+		Match(Player& left, Player& right, const unsigned & numberOfTurns);
 
 		Player &leftPlayer, &rightPlayer;
-		unsigned numberOfTurns;
+		const unsigned numberOfTurns;
 		std::vector<Decision> leftDecisions, rightDecisions;
 		std::vector<Payoff>   leftPayoff,    rightPayoff;
 	

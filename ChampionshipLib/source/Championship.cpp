@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -10,23 +11,24 @@
 #include "Championship.hpp"
 
 Championship::Championship(
-	std::string            name,
-	std::string            description,
-	unsigned               numberOfTurns,
-	std::vector<Strategy*> strategies)
+	const std::string &                   name,
+	const std::string &                   description,
+	const unsigned &                      numberOfTurns,
+	const std::vector<const Strategy *> & strategies)
 	: name(name),
 	  description(description),
 	  numberOfTurns(numberOfTurns)
 {
-	this->players.reserve(strategies.size());
-	for(Strategy* strategy: strategies)
-		this->players.push_back( Player(*strategy) );
+	for(auto strategy: strategies)
+	{
+		this->players.emplace_back(*strategy);
+	}
 	return;
 }
 
 void Championship::compete(void)
 {
-	std::vector<Player>::size_type left, right;
+	size_t left, right;
 	for(left=0u ; left<this->players.size() ; ++left)
 		for(right=left ; right<this->players.size() ; ++right)
 			Match(this->players[left], this->players[right], this->numberOfTurns);
@@ -53,9 +55,9 @@ std::ostream& operator<<(std::ostream& os, Championship& championship)
 	os << std::endl << "Strategies rank:" << std::endl;
 	auto divisor = " : ";
 	os << "Place" << divisor << " Score" << divisor << "Strategy" << std::endl;
-	for(unsigned place=0u ; place<championship.players.size() ; place++)
+	for(size_t place=0u ; place<championship.players.size() ; place++)
 	{
-		Player& player = championship.players.at(place);
+		const Player& player = championship.players.at(place);
 		os << \
 			std::setw( 5) << std::right << place                   << divisor << \
 			std::setw( 6) << std::right << player.score()          << divisor << \
