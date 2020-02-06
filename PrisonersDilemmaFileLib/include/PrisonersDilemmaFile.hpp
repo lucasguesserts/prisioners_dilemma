@@ -14,21 +14,23 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(std::string filePath, unsigned flags=H5F_ACC_TRUNC);
+		PrisonersDilemmaFile(const std::string & filePath, const unsigned & flags=H5F_ACC_TRUNC);
 
-		void save(Championship &);
-		void save(Strategy *);
-		void save(H5::Group &, Player &);
+		void save(const Championship &                  ) const;
+		void save(const Strategy * const                ) const;
+		void save(const H5::Group &     , const Player &) const;
 
 		static const std::string strategiesGroupName;
 
 	private:
-		void savePlayerData(H5::Group championshipGroup, H5::Group playerGroup, std::vector<Decision> decision, std::vector<Payoff> payoff, Strategy * partnerStrategy);
-		H5::Group getStrategiesGroup(void);
-		static void saveAttribute(H5::Group group, std::string attributeName, std::string attributeData);
-		static void saveAttribute(H5::Group group, std::string attributeName, unsigned attributeValue  );
-		static std::string loadStrAttribute(H5::Group group, std::string attributeName);
-		static unsigned loadUnsignedAttribute(H5::Group group, std::string attributeName);
+		// TODO: those functions receive a lot of parameters and
+		// they do a lot of things. Correct it.
+		void savePlayerData(const H5::Group & championshipGroup, const H5::Group & playerGroup, const std::vector<Decision> & decision, const std::vector<Payoff> & payoff, const Strategy * const partnerStrategy) const;
+		H5::Group getStrategiesGroup(void) const;
+		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const std::string & attributeData);
+		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const unsigned & attributeValue  );
+		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
+		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
 };
 
 #endif

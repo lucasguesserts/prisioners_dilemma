@@ -13,45 +13,42 @@
 
 const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(std::string filePath, unsigned flags)
+PrisonersDilemmaFile::PrisonersDilemmaFile(
+		const std::string & filePath,
+		const unsigned & flags)
 	: H5::H5File(filePath, flags)
-{
-	return;
-}
+{}
 
-void PrisonersDilemmaFile::save(Championship & championship)
+void PrisonersDilemmaFile::save(const Championship & championship) const
 {
 	// TODO: add try/catch
-	H5::Group group = this->createGroup(championship.name);
+	const H5::Group group = this->createGroup(championship.name);
 	PrisonersDilemmaFile::saveAttribute(group, "name"         , championship.name          );
 	PrisonersDilemmaFile::saveAttribute(group, "description"  , championship.description   );
 	PrisonersDilemmaFile::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
-	for(auto& player: championship.players)
+	for(const auto& player: championship.players)
 		this->save(player.strategy);
-	for(auto& player: championship.players)
+	for(const auto& player: championship.players)
 		this->save(group, player);
-	group.close();
 	return;
 }
 
-void PrisonersDilemmaFile::save(Strategy *strategy)
+void PrisonersDilemmaFile::save(const Strategy * const strategy) const
 {
-	H5::Group strategiesGroup = this->getStrategiesGroup();
-	H5::Group thisStrategyGroup = strategiesGroup.createGroup(strategy->name);
+	const H5::Group strategiesGroup = this->getStrategiesGroup();
+	const H5::Group thisStrategyGroup = strategiesGroup.createGroup(strategy->name);
 	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "name",        strategy->name       );
 	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "shortName",   strategy->shortName  );
 	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "description", strategy->description);
-	thisStrategyGroup.close();
-	strategiesGroup.close();
 }
 
-void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
+void PrisonersDilemmaFile::save(const H5::Group & championshipGroup, const Player & player) const
 {
-	H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
+	const H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
 	if (!this->exists(PrisonersDilemmaFile::strategiesGroupName))
 		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroupName + " group does not exists.");
 	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroupName + player.strategy->name, "strategy");
-	for(size_t match=0 ; match<player.partners.size() ; ++match)
+	for(size_t match=0u ; match<player.partners.size() ; ++match)
 		this->savePlayerData(
 			championshipGroup,
 			playerGroup,
@@ -59,113 +56,95 @@ void PrisonersDilemmaFile::save(H5::Group & championshipGroup, Player & player)
 			player.payoff.at(match),
 			player.partners.at(match)
 		);
-	playerGroup.close();
 	return;
 }
 
 // TODO: remove the championship group from the arguments
 void PrisonersDilemmaFile::savePlayerData(
-	H5::Group championshipGroup,
-	H5::Group playerGroup,
-	std::vector<Decision> decision,
-	std::vector<Payoff> payoff,
-	Strategy * partnerStrategy
-){
-	H5::Group partnerGroup = playerGroup.createGroup(partnerStrategy->name);
+	const H5::Group             & championshipGroup,
+	const H5::Group             & playerGroup,
+	const std::vector<Decision> & decision,
+	const std::vector<Payoff>   & payoff,
+	const Strategy * const        partnerStrategy
+) const {
+	const H5::Group partnerGroup = playerGroup.createGroup(partnerStrategy->name);
 	partnerGroup.link(H5L_TYPE_SOFT, championshipGroup.getObjName()+"/"+partnerStrategy->name, partnerStrategy->name);
+	// TODO: improve this implementation. Perhaps create two functions.
 	{
 		// Decision dataset
-		H5std_string  datasetName = "decisions";
+		const H5std_string  datasetName = "decisions";
 		const hsize_t dims[] = {decision.size()};
-		H5::DataType fileType(H5::PredType::STD_U8LE);
-		H5::DataType memType (H5::PredType::NATIVE_UCHAR);
-		H5::DataSpace dataspace(1, dims);
-		H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
+		const H5::DataType fileType(H5::PredType::STD_U8LE);
+		const H5::DataType memType (H5::PredType::NATIVE_UCHAR);
+		const H5::DataSpace dataspace(1, dims);
+		const H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
 		dataset.write(decision.data(), memType);
-		fileType.close();
-		memType.close();
-		dataspace.close();
-		dataset.close();
 	}
 	{
 		// payoff dataset
-		H5std_string  datasetName = "payoff";
+		const H5std_string  datasetName = "payoff";
 		const hsize_t dims[] = {payoff.size()};
-		H5::DataType fileType(H5::PredType::STD_U8LE);
-		H5::DataType memType (H5::PredType::NATIVE_UINT);
-		H5::DataSpace dataspace(1, dims);
-		H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
+		const H5::DataType fileType(H5::PredType::STD_U8LE);
+		const H5::DataType memType (H5::PredType::NATIVE_UINT);
+		const H5::DataSpace dataspace(1, dims);
+		const H5::DataSet dataset = partnerGroup.createDataSet(datasetName, fileType, dataspace);
 		dataset.write(payoff.data(), memType);
-		fileType.close();
-		memType.close();
-		dataspace.close();
-		dataset.close();
 	}
-	partnerGroup.close();
 	return;
 }
 
-H5::Group PrisonersDilemmaFile::getStrategiesGroup(void)
+H5::Group PrisonersDilemmaFile::getStrategiesGroup(void) const
 {
-	// TODO: add try/catch
-	H5::Group strategiesGroup;
-	if (this->exists("Strategies"))
-		strategiesGroup = this->openGroup(PrisonersDilemmaFile::strategiesGroupName);
-	else
-		strategiesGroup = this->createGroup(PrisonersDilemmaFile::strategiesGroupName);
-	return strategiesGroup;
+	return (this->exists     (PrisonersDilemmaFile::strategiesGroupName)) ?
+		    this->openGroup  (PrisonersDilemmaFile::strategiesGroupName)  :
+		    this->createGroup(PrisonersDilemmaFile::strategiesGroupName)  ;
 }
 
 void PrisonersDilemmaFile::saveAttribute(
-	H5::Group   group,
-	std::string attributeName,
-	std::string attributeData
+	const H5::Group   & group,
+	const std::string & attributeName,
+	const std::string & attributeData
 ){
-	H5::StrType dtype(H5::PredType::C_S1);
+	const H5::StrType dtype(H5::PredType::C_S1);
 	dtype.setCset(H5T_CSET_UTF8);
 	dtype.setSize(H5T_VARIABLE);
-	H5::DataSpace dataspace(H5S_SCALAR);
-	H5::Attribute attribute = group.createAttribute(attributeName, dtype, dataspace);
+	const H5::DataSpace dataspace(H5S_SCALAR);
+	const H5::Attribute attribute = group.createAttribute(attributeName, dtype, dataspace);
 	attribute.write(dtype, attributeData); 
-	dtype.close();
-	dataspace.close();
-	attribute.close();
 	return;
 }
 
 void PrisonersDilemmaFile::saveAttribute(
-	H5::Group   group,
-	std::string attributeName,
-	unsigned    attributeValue
+	const H5::Group   & group,
+	const std::string & attributeName,
+	const unsigned    & attributeValue
 ){
-	H5::DataSpace dataspace(H5S_SCALAR);
-	H5::Attribute attribute = group.createAttribute(attributeName.c_str(), H5::PredType::STD_U32LE, dataspace);
+	const H5::DataSpace dataspace(H5S_SCALAR);
+	const H5::Attribute attribute = group.createAttribute(attributeName.c_str(), H5::PredType::STD_U32LE, dataspace);
 	attribute.write(H5::PredType::NATIVE_UINT, &attributeValue); 
-	dataspace.close();
-	attribute.close();
 	return;
 }
 
+// TODO: implement the two functions below using
+// some sort of "smart template" to bind
+// std::string <-> H5::PredType::C_S1
+// unsigned    <-> H5::PredType::NATIVE_UINT
 std::string PrisonersDilemmaFile::loadStrAttribute(
-	H5::Group group,
-	std::string attributeName
+	const H5::Group   & group,
+	const std::string & attributeName
 ){
 	std::string attrData;
-	H5::Attribute attribute;
-	attribute = group.openAttribute(attributeName);
+	const H5::Attribute attribute = group.openAttribute(attributeName);
 	attribute.read(attribute.getStrType(), attrData);
-	attribute.close();
 	return attrData;
 }
 
 unsigned PrisonersDilemmaFile::loadUnsignedAttribute(
-	H5::Group group,
-	std::string attributeName
+	const H5::Group   & group,
+	const std::string & attributeName
 ){
 	unsigned attrData;
-	H5::Attribute attribute;
-	attribute = group.openAttribute(attributeName);
+	const H5::Attribute attribute = group.openAttribute(attributeName);
 	attribute.read(H5::PredType::NATIVE_UINT, &attrData);
-	attribute.close();
 	return attrData;
 }
