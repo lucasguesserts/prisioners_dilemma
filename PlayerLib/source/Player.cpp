@@ -5,16 +5,16 @@
 #include "Strategy.hpp"
 #include "Player.hpp"
 
-Player::Player(Strategy& strategy)
+Player::Player(const Strategy& strategy)
 	: strategy(&strategy)
 {
 	return;
 }
 
 void Player::saveMatch(
-	std::vector<Decision> decisions,
-	std::vector<Payoff> payoff,
-	Strategy* partner)
+	const std::vector<Decision> & decisions,
+	const std::vector<Payoff> &   payoff,
+	const Strategy * const        partner)
 {
 	this->partners.push_back(partner);
 	this->decisions.push_back(decisions);
@@ -22,13 +22,13 @@ void Player::saveMatch(
 	return;
 }
 
-unsigned Player::score(void)
+unsigned Player::score(void) const
 {
-	auto sumPayoffVector = [](std::vector<Payoff> payoff) -> unsigned { return std::accumulate(payoff.cbegin(), payoff.cend(), 0u); };
+	auto sumPayoffVector = [](const std::vector<Payoff> & payoff) -> unsigned { return std::accumulate(payoff.cbegin(), payoff.cend(), 0u); };
 	return std::accumulate(
 		this->payoff.cbegin(),
 		this->payoff.cend(),
 		0u,
-		[&sumPayoffVector](unsigned init, std::vector<Payoff> payoff) -> unsigned { return init + sumPayoffVector(payoff); }
+		[&sumPayoffVector](const unsigned & init, const std::vector<Payoff> & payoff) -> unsigned { return init + sumPayoffVector(payoff); }
 		);
 }

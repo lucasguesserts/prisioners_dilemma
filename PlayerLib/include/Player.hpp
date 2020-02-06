@@ -9,14 +9,20 @@
 class Player
 {
 	public:
-		Strategy *                           strategy;
+		const Strategy * const               strategy;
+		// Make those members private
 		std::vector< std::vector<Decision> > decisions;
 		std::vector< std::vector<Payoff> >   payoff;
-		std::vector<Strategy*>               partners;
+		std::vector<const Strategy *>        partners;
 
-		Player(Strategy& strategy);
-		void saveMatch(std::vector<Decision> decisions, std::vector<Payoff> payoff, Strategy* partner);
-		unsigned score(void);
+		Player(const Strategy& strategy);
+		void saveMatch(
+			const std::vector<Decision> & decisions,
+			const std::vector<Payoff> &   payoff,
+			const Strategy * const        partner);
+		unsigned score(void) const;
+	private:
+
 };
 
 #endif
