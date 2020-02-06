@@ -16,11 +16,15 @@
 #define requireNoThrow REQUIRE_NOTHROW
 #define checkNoThrow CHECK_NOTHROW
 
-#define checkDiscreteProbability(val, prob, func)\
-   check( probability(val, func) == Approx(prob).epsilon(0.05) )
+template <typename Val, typename Prob, typename Func>
+void checkDiscreteProbability(Val val, Prob prob, Func func)
+{
+   check( probability(val, func) == Approx(prob).epsilon(0.05) );
+   return;
+}
 
 template <typename Val, typename RandomClass>
-double probability(Val val, RandomClass func)
+double probability(const Val & val, RandomClass func)
 {
 	const unsigned N_repetitions = 1E+5;
 	unsigned counter = 0;
