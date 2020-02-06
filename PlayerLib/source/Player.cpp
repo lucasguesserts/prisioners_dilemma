@@ -7,9 +7,7 @@
 
 Player::Player(const Strategy& strategy)
 	: strategy(&strategy)
-{
-	return;
-}
+{}
 
 void Player::saveMatch(
 	const std::vector<Decision> & decisions,

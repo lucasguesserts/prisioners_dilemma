@@ -9,7 +9,7 @@
 class Player
 {
 	public:
-		const Strategy * const               strategy;
+		const Strategy *                     strategy;
 		// Make those members private
 		std::vector< std::vector<Decision> > decisions;
 		std::vector< std::vector<Payoff> >   payoff;
