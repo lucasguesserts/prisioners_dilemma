@@ -7,15 +7,15 @@
 #include "Strategies.hpp"
 
 void checkDecisionHistory(
-	std::vector<Decision> strategyDecisions,
-	std::vector<Decision> partnerDecisions,
-	Strategy & strategy
+	const std::vector<Decision> strategyDecisions,
+	const std::vector<Decision> partnerDecisions,
+	const Strategy & strategy
 );
 
 void checkDecisionHistory(
-	std::vector<Decision> strategyDecisions,
-	std::vector<Decision> partnerDecisions,
-	Strategy & strategy
+	const std::vector<Decision> strategyDecisions,
+	const std::vector<Decision> partnerDecisions,
+	const Strategy & strategy
 )
 {
 	check( strategyDecisions.size() == partnerDecisions.size() );

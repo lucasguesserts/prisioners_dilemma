@@ -32,7 +32,7 @@ HardTitForTat                    htft;
 AdaptativeTitForTat              atft;
 MetaRegulatedAdaptativeTitForTat mratft;
 
-std::vector<Strategy *> allStrategies =
+const std::vector<const Strategy *> allStrategies =
 {
 	& allC,
 	& allD,
@@ -58,12 +58,12 @@ std::vector<Strategy *> allStrategies =
 	& mratft,
 };
 
-Strategy * findStrategy(
+const Strategy * findStrategy(
 	std::string name,
 	std::string shortName,
 	std::string description
 ){
-	Strategy * found = nullptr;
+	const Strategy * found = nullptr;
 	for(auto strategy: allStrategies)
 	{
 		if ( (strategy->name == name) &&\

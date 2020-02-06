@@ -2,9 +2,9 @@
 #include "Strategy.hpp"
 
 extern void checkDecisionHistory(
-	std::vector<Decision> strategyDecisions,
-	std::vector<Decision> partnerDecisions,
-	Strategy & strategy
+	const std::vector<Decision> strategyDecisions,
+	const std::vector<Decision> partnerDecisions,
+	const Strategy & strategy
 );
 
 class TestStrategy: public Strategy
@@ -61,7 +61,7 @@ class TestHistoryStrategy: public Strategy
 
 TestCase("Decisions history", "[Strategy]")
 {
-	TestHistoryStrategy strategy;
+	const TestHistoryStrategy strategy;
 	checkDecisionHistory(
 		{
 			Decision::cooperate,

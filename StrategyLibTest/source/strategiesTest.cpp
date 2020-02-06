@@ -4,19 +4,19 @@
 #include "Strategy.hpp"
 #include "Strategies.hpp"
 
-std::vector<Decision> emptyDecisions = {};
-std::vector<Decision> startCooperating = {Decision::cooperate};
-std::vector<Decision> startDefecting   = {Decision::defect   };
+const std::vector<Decision> emptyDecisions   = {};
+const std::vector<Decision> startCooperating = {Decision::cooperate};
+const std::vector<Decision> startDefecting   = {Decision::defect   };
 
 extern void checkDecisionHistory(
-	std::vector<Decision> strategyDecisions,
-	std::vector<Decision> partnerDecisions,
-	Strategy & strategy
+	const std::vector<Decision> strategyDecisions,
+	const std::vector<Decision> partnerDecisions,
+	const Strategy & strategy
 );
 
 TestCase("Polimorphism", "[Strategy]")
 {
-	Strategy * strategy = &allD;
+	const Strategy * const strategy = &allD;
 	require( strategy->name        == "Always Defect"  );
 	require( strategy->shortName   == "AllD"           );
 	require( strategy->description == "Always defect." );
@@ -31,7 +31,7 @@ TestCase("Polimorphism", "[Strategy]")
 
 TestCase("All strategies", "[Strategies]")
 {
-	std::vector<Strategy *> testAllStrategies =
+	const std::vector<const Strategy *> testAllStrategies =
 	{
 		& allC,
 		& allD,
@@ -120,7 +120,7 @@ TestCase("Lunatic", "[Strategies]")
 	require( moon.shortName   == "Moon"    );
 	for(auto i=0 ; i<20 ; ++i)
 	{
-		auto decision = moon.makeDecision(emptyDecisions, emptyDecisions);
+		const auto decision = moon.makeDecision(emptyDecisions, emptyDecisions);
 		check( ((decision==Decision::cooperate) || (decision==Decision::defect)) );
 	}
 	auto randomDecision = []{return moon.makeDecision(emptyDecisions, emptyDecisions);};
@@ -539,7 +539,6 @@ TestCase("Two Tits For Tat", "[Strategies]")
 
 TestCase("Naive Prober", "[Strategies]")
 {
-	std::vector<Decision> npDecisions, partnerDecisions;
 	require( np.name      == "Naive Prober" );
 	require( np.shortName == "NP"           );
 	section("initial decisions")
@@ -549,15 +548,15 @@ TestCase("Naive Prober", "[Strategies]")
 	}
 	section("tit For tat cooperate")
 	{
-		npDecisions      = {Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::cooperate};
+		const std::vector<Decision> npDecisions      = {Decision::defect   , Decision::cooperate};
+		const std::vector<Decision> partnerDecisions = {Decision::cooperate, Decision::cooperate};
 		checkDiscreteProbability(Decision::cooperate, 0.90, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
 		checkDiscreteProbability(Decision::defect   , 0.10, [&](){return np.makeDecision(npDecisions, partnerDecisions);});
 	}
 	section("tit For tat defect")
 	{
-		npDecisions      = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		const std::vector<Decision> npDecisions      = {Decision::cooperate, Decision::cooperate};
+		const std::vector<Decision> partnerDecisions = {Decision::cooperate, Decision::defect   };
 		check( np.makeDecision(npDecisions, partnerDecisions) == Decision::defect );
 	}
 	return;
@@ -565,7 +564,6 @@ TestCase("Naive Prober", "[Strategies]")
 
 TestCase("Remorseful Prober", "[Strategies]")
 {
-	std::vector<Decision> rpDecisions, partnerDecisions;
 	require( rp.name      == "Remorseful Prober" );
 	require( rp.shortName == "RP"                );
 	section("initial decision")
@@ -579,14 +577,14 @@ TestCase("Remorseful Prober", "[Strategies]")
 	}
 	section("remorse because of probing behavior")
 	{
-		rpDecisions      = {Decision::cooperate, Decision::defect   , Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
+		const std::vector<Decision> rpDecisions      = {Decision::cooperate, Decision::defect   , Decision::cooperate};
+		const std::vector<Decision> partnerDecisions = {Decision::cooperate, Decision::cooperate, Decision::defect   };
 		check( rp.makeDecision(rpDecisions, partnerDecisions) == Decision::cooperate );
 	}
 	section("answer to defections")
 	{
-		rpDecisions      = {Decision::cooperate, Decision::cooperate};
-		partnerDecisions = {Decision::cooperate, Decision::defect   };
+		const std::vector<Decision> rpDecisions      = {Decision::cooperate, Decision::cooperate};
+		const std::vector<Decision> partnerDecisions = {Decision::cooperate, Decision::defect   };
 		check( rp.makeDecision(rpDecisions,    partnerDecisions) == Decision::defect );
 		check( rp.makeDecision(startCooperating, startDefecting) == Decision::defect );
 	}
