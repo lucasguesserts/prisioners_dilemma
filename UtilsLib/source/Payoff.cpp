@@ -18,7 +18,7 @@ unsigned operator+(const unsigned& lhs, const Payoff& rhs)
 	return lhs + static_cast<unsigned>(rhs);
 }
 
-std::tuple<Payoff, Payoff> PayoffComputer::compute(Decision leftDecision, Decision rightDecision)
+std::tuple<Payoff, Payoff> PayoffComputer::compute(const Decision& leftDecision, const Decision& rightDecision)
 {
 	std::tuple<Payoff, Payoff> payoff;
 	if      ((leftDecision==Decision::cooperate) && (rightDecision==Decision::cooperate))
@@ -34,12 +34,12 @@ std::tuple<Payoff, Payoff> PayoffComputer::compute(Decision leftDecision, Decisi
 	return payoff;
 }
 
-Payoff PayoffComputer::left(Decision leftDecision, Decision rightDecision)
+Payoff PayoffComputer::left(const Decision& leftDecision, const Decision& rightDecision)
 {
 	return std::get<0>(PayoffComputer::compute(leftDecision, rightDecision));
 }
 
-Payoff PayoffComputer::right(Decision leftDecision, Decision rightDecision)
+Payoff PayoffComputer::right(const Decision& leftDecision, const Decision& rightDecision)
 {
 	return std::get<1>(PayoffComputer::compute(leftDecision, rightDecision));
 }

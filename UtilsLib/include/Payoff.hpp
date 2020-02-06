@@ -28,10 +28,10 @@ unsigned operator+(const unsigned& lhs, const Payoff&   rhs);
 class PayoffComputer
 {
 	public:
-		static Payoff left (Decision leftDecision, Decision rightDecision);
-		static Payoff right(Decision leftDecision, Decision rightDecision);
+		static Payoff left (const Decision& leftDecision, const Decision& rightDecision);
+		static Payoff right(const Decision& leftDecision, const Decision& rightDecision);
 	private:
-		static std::tuple<Payoff, Payoff> compute(Decision leftDecision, Decision rightDecision);
+		static std::tuple<Payoff, Payoff> compute(const Decision& leftDecision, const Decision& rightDecision);
 };
 
 #endif
