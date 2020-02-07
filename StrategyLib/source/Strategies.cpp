@@ -183,7 +183,7 @@ std::vector<std::tuple<size_t,size_t>> Gradual::findTriggles(
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
 			const size_t countUntil = turn + 1;
-			const size_t numberOfDefects = static_cast<size_t>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+countUntil, Decision::defect));
+			const size_t numberOfDefects = static_cast<size_t>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+static_cast<ptrdiff_t>(countUntil), Decision::defect));
 			triggles.push_back({turn, numberOfDefects});
 			turn += numberOfDefects + Gradual::numberOfCooperationsAfterDefecting;
 		}
