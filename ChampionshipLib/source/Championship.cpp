@@ -13,7 +13,7 @@
 Championship::Championship(
 	const std::string &                   name,
 	const std::string &                   description,
-	const unsigned &                      numberOfTurns,
+	const unsigned                        numberOfTurns,
 	const std::vector<const Strategy *> & strategies)
 	: name(name),
 	  description(description),
@@ -28,9 +28,8 @@ Championship::Championship(
 
 void Championship::compete(void)
 {
-	size_t left, right;
-	for(left=0u ; left<this->players.size() ; ++left)
-		for(right=left ; right<this->players.size() ; ++right)
+	for(size_t left=0u ; left<this->players.size() ; ++left)
+		for(size_t right=left ; right<this->players.size() ; ++right)
 			Match(this->players[left], this->players[right], this->numberOfTurns);
 	return;
 }

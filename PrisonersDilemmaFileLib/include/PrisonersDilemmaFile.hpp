@@ -14,7 +14,7 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(const std::string & filePath, const unsigned & flags=H5F_ACC_TRUNC);
+		PrisonersDilemmaFile(const std::string & filePath, const unsigned flags=H5F_ACC_TRUNC);
 
 		void save(const Championship &                  ) const;
 		void save(const Strategy * const                ) const;
@@ -28,7 +28,7 @@ class PrisonersDilemmaFile: public H5::H5File
 		void savePlayerData(const H5::Group & championshipGroup, const H5::Group & playerGroup, const std::vector<Decision> & decision, const std::vector<Payoff> & payoff, const Strategy * const partnerStrategy) const;
 		H5::Group getStrategiesGroup(void) const;
 		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const std::string & attributeData);
-		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const unsigned & attributeValue  );
+		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const unsigned attributeValue  );
 		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
 		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
 };

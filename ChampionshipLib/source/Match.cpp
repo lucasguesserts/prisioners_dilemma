@@ -5,7 +5,7 @@
 #include "Strategy.hpp"
 #include "Match.hpp"
 
-Match::Match(Player& left, Player& right, const unsigned & numberOfTurns)
+Match::Match(Player& left, Player& right, const unsigned numberOfTurns)
 	: leftPlayer(left),
 	  rightPlayer(right),
 	  numberOfTurns(numberOfTurns)

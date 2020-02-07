@@ -89,7 +89,7 @@ class Gradual: public Strategy
 	private:
 		static const size_t numberOfCooperationsAfterDefecting;
 		static std::vector<std::tuple<size_t,size_t>> findTriggles(const std::vector<Decision> & partnerDecision);
-		static bool timeToDefect(const size_t & turn, const std::vector<std::tuple<size_t,size_t>> & triggles);
+		static bool timeToDefect(const size_t turn, const std::vector<std::tuple<size_t,size_t>> & triggles);
 };
 
 class SoftMajority: public Strategy
@@ -131,8 +131,8 @@ class SoftGrudger: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		std::vector<size_t> findTriggles(const std::vector<Decision> & partnerDecision) const;
-		bool                  timeToDefect(const size_t & turn, const std::vector<size_t> & triggles) const;
+		std::vector<size_t>   findTriggles(const std::vector<Decision> & partnerDecision) const;
+		bool                  timeToDefect(const size_t turn, const std::vector<size_t> & triggles) const;
 };
 
 class Prober: public Strategy
@@ -147,7 +147,7 @@ class Prober: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		Decision initialDecision(const size_t & turn) const;
+		Decision initialDecision  (const size_t turn) const;
 		bool     defectionBehavior(const std::vector<Decision> & partnerDecision) const;
 };
 
@@ -284,7 +284,7 @@ class ReverseTitForTat: public Strategy
 class AdaptativeTitForTat: public Strategy
 {
 	public:
-		AdaptativeTitForTat(const double & worldZero = 0.50, const double & adaptationRate = 0.20);
+		AdaptativeTitForTat(const double worldZero = 0.50, const double adaptationRate = 0.20);
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
@@ -298,13 +298,13 @@ class MetaRegulatedAdaptativeTitForTat: public Strategy
 {
 	public:
 		MetaRegulatedAdaptativeTitForTat(
-			const double   & worldZero                     = 0.50000001,
-			const double   & adaptationRateCooperationZero = 0.2,
-			const double   & adaptationRateDefectionZero   = 0.2,
-			const double   & adaptationRateMinimum         = 0.1,
-			const double   & adaptationRateMaximum         = 0.3,
-			const size_t & adaptationWindow            = 10,
-			const size_t & adaptationThreshold         = 2);
+			const double worldZero                     = 0.50,
+			const double adaptationRateCooperationZero = 0.20,
+			const double adaptationRateDefectionZero   = 0.20,
+			const double adaptationRateMinimum         = 0.10,
+			const double adaptationRateMaximum         = 0.30,
+			const size_t adaptationWindow              = 10,
+			const size_t adaptationThreshold           = 2);
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
@@ -322,20 +322,20 @@ class MetaRegulatedAdaptativeTitForTat: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const;
 		void updateAdaptationRate(
-			const size_t & turn,
-			const size_t & thresholdCount,
+			const size_t turn,
+			const size_t thresholdCount,
 			double &  adaptationRateCooperation,
 			double &  adaptationRateDefection) const;
 		void updateThresholdCount(
-			const size_t & turn,
+			const size_t turn,
 			size_t & thresholdCount,
 			const Decision & thisDecision,
 			const Decision & partnerDecision) const;
 		double updateWorld(
-			double   world,
+			double           world,
 			const Decision & partnerDecision,
-			const double &   adaptationRateCooperation,
-			const double &   adaptationRateDefection) const;
+			const double     adaptationRateCooperation,
+			const double     adaptationRateDefection) const;
 };
 
 extern AlwaysCooperate                  allC;

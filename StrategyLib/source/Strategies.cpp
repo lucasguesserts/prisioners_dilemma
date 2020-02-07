@@ -191,7 +191,7 @@ std::vector<std::tuple<size_t,size_t>> Gradual::findTriggles(
 	return triggles;
 }
 
-bool Gradual::timeToDefect(const size_t & turn, const std::vector<std::tuple<size_t,size_t>> & triggles)
+bool Gradual::timeToDefect(const size_t turn, const std::vector<std::tuple<size_t,size_t>> & triggles)
 {
 	bool defect = false;
 	for (auto & triggle: triggles)
@@ -255,12 +255,12 @@ std::vector<size_t> SoftGrudger::findTriggles(const std::vector<Decision> & part
 	return triggles;
 }
 
-bool SoftGrudger::timeToDefect(const size_t & turn, const std::vector<size_t> & triggles) const
+bool SoftGrudger::timeToDefect(const size_t turn, const std::vector<size_t> & triggles) const
 {
 	return std::any_of(
 		triggles.cbegin(),
 		triggles.cend(),
-		[&turn](const size_t & triggleTurn){
+		[&turn](const size_t triggleTurn){
 			return (turn > triggleTurn) && (turn <= triggleTurn + 4);
 		});
 }
@@ -284,7 +284,7 @@ Decision Prober::makeDecision(
 	return decision;
 }
 
-Decision Prober::initialDecision(const size_t & turn) const
+Decision Prober::initialDecision(const size_t turn) const
 {
 	static const std::vector<Decision> & initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
 	return initialDecisions.at(turn);
@@ -541,7 +541,7 @@ Decision ReverseTitForTat::makeDecision(
 	return decision;
 }
 
-AdaptativeTitForTat::AdaptativeTitForTat(const double & worldZero, const double & adaptationRate)
+AdaptativeTitForTat::AdaptativeTitForTat(const double worldZero, const double adaptationRate)
 	: Strategy(
 		"Adaptative Tit For Tat",
 		"ATFT",
@@ -580,13 +580,13 @@ double AdaptativeTitForTat::computeWorld(const std::vector<Decision> & partnerDe
 }
 
 MetaRegulatedAdaptativeTitForTat::MetaRegulatedAdaptativeTitForTat(
-	const double   & worldZero                    ,
-	const double   & adaptationRateCooperationZero,
-	const double   & adaptationRateDefectionZero  ,
-	const double   & adaptationRateMinimum        ,
-	const double   & adaptationRateMaximum        ,
-	const size_t & adaptationWindow           ,
-	const size_t & adaptationThreshold
+	const double worldZero                    ,
+	const double adaptationRateCooperationZero,
+	const double adaptationRateDefectionZero  ,
+	const double adaptationRateMinimum        ,
+	const double adaptationRateMaximum        ,
+	const size_t adaptationWindow           ,
+	const size_t adaptationThreshold
 )
 	: Strategy(
 		"Meta-Regulated Adaptative Tit For Tat",
@@ -630,12 +630,11 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 	const std::vector<Decision> & partnerDecision
 ) const
 {
-	double   world                     = this->worldZero;
-	double   adaptationRateCooperation = this->adaptationRateCooperationZero;
-	double   adaptationRateDefection   = this->adaptationRateDefectionZero;
+	double world                     = this->worldZero;
+	double adaptationRateCooperation = this->adaptationRateCooperationZero;
+	double adaptationRateDefection   = this->adaptationRateDefectionZero;
 	size_t thresholdCount            = 0;
-	size_t turn = 0u;
-	for (turn=0u ; turn<partnerDecision.size() ; ++turn)
+	for (size_t turn=0u ; turn<partnerDecision.size() ; ++turn)
 	{
 		this->updateAdaptationRate(turn, thresholdCount, adaptationRateCooperation, adaptationRateDefection);
 		this->updateThresholdCount(turn, thresholdCount, thisDecision.at(turn), partnerDecision.at(turn));
@@ -645,10 +644,10 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
-	const size_t & turn,
-	const size_t & thresholdCount,
-	double &  adaptationRateCooperation,
-	double &  adaptationRateDefection
+	const size_t turn,
+	const size_t thresholdCount,
+	double &     adaptationRateCooperation,
+	double &     adaptationRateDefection
 ) const
 {
 	if (turn!=0u) // It is annoying, the case `turn = 0` has to be excluded.
@@ -671,8 +670,8 @@ void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
-	const size_t & turn,
-	size_t & thresholdCount,
+	const size_t     turn,
+	size_t &         thresholdCount,
 	const Decision & thisDecision,
 	const Decision & partnerDecision
 ) const
@@ -685,10 +684,10 @@ void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
 }
 
 double MetaRegulatedAdaptativeTitForTat::updateWorld(
-	double   world,
+	double           world,
 	const Decision & partnerDecision,
-	const double &   adaptationRateCooperation,
-	const double &   adaptationRateDefection
+	const double     adaptationRateCooperation,
+	const double     adaptationRateDefection
 ) const
 {
 	if (partnerDecision == Decision::cooperate)

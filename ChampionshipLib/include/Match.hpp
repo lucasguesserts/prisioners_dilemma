@@ -9,7 +9,7 @@
 class Match
 {
 	public:
-		Match(Player& left, Player& right, const unsigned & numberOfTurns);
+		Match(Player& left, Player& right, const unsigned numberOfTurns);
 
 		Player &leftPlayer, &rightPlayer;
 		const unsigned numberOfTurns;

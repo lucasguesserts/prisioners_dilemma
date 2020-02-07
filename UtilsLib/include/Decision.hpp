@@ -3,6 +3,6 @@
 
 enum class Decision : unsigned char { cooperate, defect };
 
-Decision operator!(const Decision &d);
+Decision operator!(const Decision & d);
 
 #endif

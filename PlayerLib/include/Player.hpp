@@ -21,8 +21,6 @@ class Player
 			const std::vector<Payoff> &   payoff,
 			const Strategy * const        partner);
 		unsigned score(void) const;
-	private:
-
 };
 
 #endif

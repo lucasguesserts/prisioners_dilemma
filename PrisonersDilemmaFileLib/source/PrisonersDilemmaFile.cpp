@@ -15,7 +15,7 @@ const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
 
 PrisonersDilemmaFile::PrisonersDilemmaFile(
 		const std::string & filePath,
-		const unsigned & flags)
+		const unsigned      flags)
 	: H5::H5File(filePath, flags)
 {}
 
@@ -117,7 +117,7 @@ void PrisonersDilemmaFile::saveAttribute(
 void PrisonersDilemmaFile::saveAttribute(
 	const H5::Group   & group,
 	const std::string & attributeName,
-	const unsigned    & attributeValue
+	const unsigned      attributeValue
 ){
 	const H5::DataSpace dataspace(H5S_SCALAR);
 	const H5::Attribute attribute = group.createAttribute(attributeName.c_str(), H5::PredType::STD_U32LE, dataspace);

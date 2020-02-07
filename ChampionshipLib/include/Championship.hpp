@@ -10,6 +10,7 @@
 
 class Championship
 {
+	// TODO: change 'numberOfTurns' to size_t without breaking PrisonersDilemmaFile
 	public:
 		const std::string         name;
 		const std::string         description;
@@ -19,7 +20,7 @@ class Championship
 		Championship(
 			const std::string &                   name,
 			const std::string &                   description,
-			const unsigned &                      numberOfTurns,
+			const unsigned                        numberOfTurns,
 			const std::vector<const Strategy *> & strategies);
 
 		void compete(void);
