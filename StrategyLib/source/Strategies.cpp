@@ -122,7 +122,7 @@ Decision Lunatic::makeDecision(
 ) const
 {
 	static std::default_random_engine randomGenerator;
-	static std::uniform_int_distribution<unsigned> uniformDistribution(0, 1);
+	static std::uniform_int_distribution<size_t> uniformDistribution(0, 1);
 	return static_cast<Decision>( uniformDistribution(randomGenerator) );
 }
 
@@ -158,6 +158,8 @@ Decision Pavlov::makeDecision(
 	return decision;
 }
 
+const size_t Gradual::numberOfCooperationsAfterDefecting = 2;
+
 Decision Gradual::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & thisDecision,
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
@@ -172,23 +174,24 @@ Decision Gradual::makeDecision(
 	return decision;
 }
 
-std::vector<std::tuple<unsigned,unsigned>> Gradual::findTriggles(
+std::vector<std::tuple<size_t,size_t>> Gradual::findTriggles(
 	const std::vector<Decision> & partnerDecision)
 {
-	std::vector<std::tuple<unsigned,unsigned>> triggles;
-	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
+	std::vector<std::tuple<size_t,size_t>> triggles;
+	for (size_t turn=0 ; turn<partnerDecision.size() ; ++turn)
 	{
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
-			const unsigned numberOfDefects = static_cast<unsigned>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+turn+1, Decision::defect));
+			const size_t countUntil = turn + 1;
+			const size_t numberOfDefects = static_cast<size_t>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+countUntil, Decision::defect));
 			triggles.push_back({turn, numberOfDefects});
-			turn += numberOfDefects + 2;
+			turn += numberOfDefects + Gradual::numberOfCooperationsAfterDefecting;
 		}
 	}
 	return triggles;
 }
 
-bool Gradual::timeToDefect(const size_t & turn, const std::vector<std::tuple<unsigned,unsigned>> & triggles)
+bool Gradual::timeToDefect(const size_t & turn, const std::vector<std::tuple<size_t,size_t>> & triggles)
 {
 	bool defect = false;
 	for (auto & triggle: triggles)
@@ -238,10 +241,10 @@ Decision SoftGrudger::makeDecision(
 	return decision;
 }
 
-std::vector<unsigned> SoftGrudger::findTriggles(const std::vector<Decision> & partnerDecision) const
+std::vector<size_t> SoftGrudger::findTriggles(const std::vector<Decision> & partnerDecision) const
 {
-	std::vector<unsigned> triggles;
-	for (unsigned turn=0 ; turn<partnerDecision.size() ; ++turn)
+	std::vector<size_t> triggles;
+	for (size_t turn=0 ; turn<partnerDecision.size() ; ++turn)
 	{
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
@@ -252,12 +255,12 @@ std::vector<unsigned> SoftGrudger::findTriggles(const std::vector<Decision> & pa
 	return triggles;
 }
 
-bool SoftGrudger::timeToDefect(const size_t & turn, const std::vector<unsigned> & triggles) const
+bool SoftGrudger::timeToDefect(const size_t & turn, const std::vector<size_t> & triggles) const
 {
 	return std::any_of(
 		triggles.cbegin(),
 		triggles.cend(),
-		[&turn](const unsigned & triggleTurn){
+		[&turn](const size_t & triggleTurn){
 			return (turn > triggleTurn) && (turn <= triggleTurn + 4);
 		});
 }
@@ -268,7 +271,7 @@ Decision Prober::makeDecision(
 ) const
 {
 	Decision decision;
-	auto turn = thisDecision.size();
+	size_t turn = thisDecision.size();
 	if (turn<=2)
 		decision = Prober::initialDecision(turn); // Start with D,C,C
 	else
@@ -438,16 +441,18 @@ bool RemorsefulProber::wasProbing(
 ) const
 {
 	bool wasProbing = false;
-	Decision probationDecision, partnerAnswerToProbation, partnerAnswerPriorToProbation;
 	if (thisDecision.size()>=2)
 	{
-		probationDecision             = *(thisDecision.crbegin() + 1);
-		partnerAnswerPriorToProbation = *(partnerDecision.crbegin() + 1);
-		partnerAnswerToProbation      = *partnerDecision.crbegin();
+		const Decision probationDecision             = *(thisDecision.crbegin() + 1);
+		const Decision partnerAnswerPriorToProbation = *(partnerDecision.crbegin() + 1);
+		const Decision partnerAnswerToProbation      = *partnerDecision.crbegin();
 		// Situation:
 		// this::    {D, *}
 		// partner:: {C, D}
-		if ((probationDecision==Decision::defect) && (partnerAnswerToProbation==Decision::defect) && (partnerAnswerPriorToProbation==Decision::cooperate))
+		if ((probationDecision             == Decision::defect   ) &&
+			(partnerAnswerToProbation      == Decision::defect   ) &&
+			(partnerAnswerPriorToProbation == Decision::cooperate)
+		   )
 			wasProbing = true;
 	}
 	return wasProbing;
@@ -536,19 +541,19 @@ Decision ReverseTitForTat::makeDecision(
 	return decision;
 }
 
-AdaptativeTitForTat::AdaptativeTitForTat(double worldZero, double adaptationRate)
+AdaptativeTitForTat::AdaptativeTitForTat(const double & worldZero, const double & adaptationRate)
 	: Strategy(
 		"Adaptative Tit For Tat",
 		"ATFT",
 		"Check the paper 'Toward Adaptive Cooperative Behavior' of the author 'Elpida S. Tzafestas'."
-	  )
+	  ),
+	  worldZero(worldZero),
+	  adaptationRate(adaptationRate)
 {
-	if ((worldZero>1) || (worldZero<0))
+	if ((this->worldZero>1) || (this->worldZero<0))
 		throw std::domain_error("World Zero in Adaptative Tit For Tat must be in the interval [0,1].");
-	if ((adaptationRate>1) || (adaptationRate<0))
+	if ((this->adaptationRate>1) || (this->adaptationRate<0))
 		throw std::domain_error("Adaptation Rate in Adaptative Tit For Tat must be in the interval [0,1].");
-	this->worldZero      = worldZero;
-	this->adaptationRate = adaptationRate;
 	return;
 }
 
@@ -557,8 +562,9 @@ Decision AdaptativeTitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
+	static const double worldCutoffValue = 0.50;
 	double world = AdaptativeTitForTat::computeWorld(partnerDecision);
-	return (world>=0.5) ? Decision::cooperate : Decision::defect;
+	return (world>=worldCutoffValue) ? Decision::cooperate : Decision::defect;
 }
 
 double AdaptativeTitForTat::computeWorld(const std::vector<Decision> & partnerDecision) const
@@ -566,10 +572,9 @@ double AdaptativeTitForTat::computeWorld(const std::vector<Decision> & partnerDe
 	double world = this->worldZero;
 	for (auto decision: partnerDecision)
 	{
-		if (decision == Decision::cooperate)
-			world = world + adaptationRate * (1 - world);
-		else
-			world = world + adaptationRate * (0 - world);
+		world = (decision == Decision::cooperate) ?
+			    world + this->adaptationRate * (1 - world) :
+			    world + this->adaptationRate * (0 - world) ;
 	}
 	return world;
 }
@@ -580,34 +585,34 @@ MetaRegulatedAdaptativeTitForTat::MetaRegulatedAdaptativeTitForTat(
 	const double   & adaptationRateDefectionZero  ,
 	const double   & adaptationRateMinimum        ,
 	const double   & adaptationRateMaximum        ,
-	const unsigned & adaptationWindow           ,
-	const unsigned & adaptationThreshold
+	const size_t & adaptationWindow           ,
+	const size_t & adaptationThreshold
 )
 	: Strategy(
 		"Meta-Regulated Adaptative Tit For Tat",
 		"MRATFT",
 		"Check the paper 'Toward Adaptive Cooperative Behavior' of the author 'Elpida S. Tzafestas'."
-	  )
+	  ),
+	  worldZero                     (worldZero                    ),
+	  adaptationRateCooperationZero (adaptationRateCooperationZero),
+	  adaptationRateDefectionZero   (adaptationRateDefectionZero  ),
+	  adaptationRateMinimum         (adaptationRateMinimum        ),
+	  adaptationRateMaximum         (adaptationRateMaximum        ),
+	  adaptationWindow              (adaptationWindow             ),
+	  adaptationThreshold           (adaptationThreshold          )
 {
-	if ((worldZero>1) || (worldZero<0))
+	if ((this->worldZero                    >1) || (this->worldZero                     <0))
 		throw std::domain_error("World Zero in Adaptative Tit For Tat must be in the interval [0,1].");
-	if ((adaptationRateCooperationZero>1) || (adaptationRateCooperationZero<0))
+	if ((this->adaptationRateCooperationZero>1) || (this->adaptationRateCooperationZero <0))
 		throw std::domain_error("Cooperative Adaptation Rate Zero in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
-	if ((adaptationRateDefectionZero>1) || (adaptationRateDefectionZero<0))
+	if ((this->adaptationRateDefectionZero  >1) || (this->adaptationRateDefectionZero   <0))
 		throw std::domain_error("Defection Adaptation Rate Zero in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
-	if ((adaptationRateMinimum>1) || (adaptationRateMinimum<0))
+	if ((this->adaptationRateMinimum        >1) || (this->adaptationRateMinimum         <0))
 		throw std::domain_error("Defection Adaptation Rate Minimum in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
-	if ((adaptationRateMaximum>1) || (adaptationRateMaximum<0))
+	if ((this->adaptationRateMaximum        >1) || (this->adaptationRateMaximum         <0))
 		throw std::domain_error("Defection Adaptation Rate Maximum in Meta-Regulated Adaptative Tit For Tat must be in the interval [0,1].");
-	if (adaptationThreshold > adaptationWindow)
+	if (this->adaptationThreshold           > this->adaptationWindow)
 		throw std::domain_error("Adaptation Threshold has to be smaller of equals to Adaptation Window.");
-	this->worldZero                     = worldZero                    ;
-	this->adaptationRateCooperationZero = adaptationRateCooperationZero;
-	this->adaptationRateDefectionZero   = adaptationRateDefectionZero  ;
-	this->adaptationRateMinimum         = adaptationRateMinimum        ;
-	this->adaptationRateMaximum         = adaptationRateMaximum        ;
-	this->adaptationWindow              = adaptationWindow             ;
-	this->adaptationThreshold           = adaptationThreshold          ;
 	return;
 }
 
@@ -628,8 +633,8 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 	double   world                     = this->worldZero;
 	double   adaptationRateCooperation = this->adaptationRateCooperationZero;
 	double   adaptationRateDefection   = this->adaptationRateDefectionZero;
-	unsigned thresholdCount            = 0;
-	unsigned turn = 0u;
+	size_t thresholdCount            = 0;
+	size_t turn = 0u;
 	for (turn=0u ; turn<partnerDecision.size() ; ++turn)
 	{
 		this->updateAdaptationRate(turn, thresholdCount, adaptationRateCooperation, adaptationRateDefection);
@@ -640,8 +645,8 @@ double MetaRegulatedAdaptativeTitForTat::computeWorld(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
-	const unsigned & turn,
-	const unsigned & thresholdCount,
+	const size_t & turn,
+	const size_t & thresholdCount,
 	double &  adaptationRateCooperation,
 	double &  adaptationRateDefection
 ) const
@@ -666,8 +671,8 @@ void MetaRegulatedAdaptativeTitForTat::updateAdaptationRate(
 }
 
 void MetaRegulatedAdaptativeTitForTat::updateThresholdCount(
-	const unsigned & turn,
-	unsigned & thresholdCount,
+	const size_t & turn,
+	size_t & thresholdCount,
 	const Decision & thisDecision,
 	const Decision & partnerDecision
 ) const
