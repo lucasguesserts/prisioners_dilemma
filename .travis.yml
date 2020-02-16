@@ -1,0 +1,22 @@
+language: cpp
+compiler: gcc
+dist: bionic
+
+git:
+    quiet: true
+
+before_install:
+    - sudo apt update -qq
+
+install: 
+    - sudo apt install gcc g++ make cmake -qq
+    - sudo apt install libhdf5-dev -qq
+
+before_script:
+    - mkdir build
+    - cd build
+
+script:
+    - cmake ..
+    - make
+    - make test
