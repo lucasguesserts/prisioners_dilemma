@@ -647,9 +647,7 @@ double MetaRegulatedAdaptativeTitForTat::updateWorld(
 	const double     adaptationRateDefection
 ) const
 {
-	if (partnerDecision == Decision::cooperate)
-		world = world + adaptationRateCooperation * (1 - world);
-	else
-		world = world + adaptationRateDefection   * (0 - world);
-	return world;
+	return (partnerDecision == Decision::cooperate)
+		? world + adaptationRateCooperation * (1 - world)
+		: world + adaptationRateDefection   * (0 - world);
 }
