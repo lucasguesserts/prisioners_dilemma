@@ -28,9 +28,9 @@ Championship::Championship(
 
 void Championship::compete(void)
 {
-	for(size_t left=0u ; left<this->players.size() ; ++left)
-		for(size_t right=left ; right<this->players.size() ; ++right)
-			Match(this->players[left], this->players[right], this->numberOfTurns);
+	for(auto leftPlayer=this->players.begin() ; leftPlayer!=this->players.end() ; ++leftPlayer)
+		for(auto rightPlayer=leftPlayer ; rightPlayer!=this->players.end() ; ++rightPlayer)
+			Match(*leftPlayer, *rightPlayer, this->numberOfTurns);
 	return;
 }
 

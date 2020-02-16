@@ -20,18 +20,18 @@ unsigned operator+(const unsigned& lhs, const Payoff& rhs)
 
 std::tuple<Payoff, Payoff> PayoffComputer::compute(const Decision& leftDecision, const Decision& rightDecision)
 {
-	std::tuple<Payoff, Payoff> payoff;
+	std::tuple<Payoff, Payoff> result;
 	if      ((leftDecision==Decision::cooperate) && (rightDecision==Decision::cooperate))
-		payoff = {Payoff::reward, Payoff::reward};
+		result = {Payoff::reward, Payoff::reward};
 	else if ((leftDecision==Decision::cooperate) && (rightDecision==Decision::defect))
-		payoff = {Payoff::suckers, Payoff::temptation};
+		result = {Payoff::suckers, Payoff::temptation};
 	else if ((leftDecision==Decision::defect)    && (rightDecision==Decision::cooperate))
-		payoff = {Payoff::temptation, Payoff::suckers};
+		result = {Payoff::temptation, Payoff::suckers};
 	else if ((leftDecision==Decision::defect)    && (rightDecision==Decision::defect))
-		payoff = {Payoff::punishment, Payoff::punishment};
+		result = {Payoff::punishment, Payoff::punishment};
 	else
 		throw std::logic_error("Decisions made by players are invalid!");
-	return payoff;
+	return result;
 }
 
 Payoff PayoffComputer::left(const Decision& leftDecision, const Decision& rightDecision)

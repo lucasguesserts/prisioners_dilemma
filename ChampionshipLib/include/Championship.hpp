@@ -15,7 +15,7 @@ class Championship
 		const std::string         name;
 		const std::string         description;
 		const unsigned            numberOfTurns;
-		std::vector<Player> players;
+		std::vector<Player>       players;
 
 		Championship(
 			const std::string &                   name,

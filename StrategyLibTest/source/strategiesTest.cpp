@@ -1,3 +1,17 @@
+// TODO: the tests are good but not complete.
+// There are situations which may arise and
+// were not tested here. Be biggest issue is
+// that each specialization of the class
+// Strategy has to be carefully studied in
+// order to determine which cases those are.
+//
+// 1. Throwing an error when building an
+//    Strategy object.
+//
+// 2. Specific actions of the partner which
+//    must trigge a specific reaction from
+//    the makeDecision method.
+
 #include <vector>
 #include "Test.hpp"
 #include "Decision.hpp"
@@ -308,7 +322,6 @@ TestCase("Soft Grudger", "[Strategies]")
 			Decision::defect   ,
 			Decision::cooperate,
 			Decision::cooperate,
-			Decision::cooperate,
 			Decision::defect   ,
 			Decision::defect   ,
 			Decision::defect   ,
@@ -324,7 +337,6 @@ TestCase("Soft Grudger", "[Strategies]")
 			Decision::cooperate,
 			Decision::defect   ,
 			Decision::defect   ,
-			Decision::cooperate,
 			Decision::cooperate,
 			Decision::cooperate,
 			Decision::defect   ,

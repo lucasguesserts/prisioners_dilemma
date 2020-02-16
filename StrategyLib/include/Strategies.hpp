@@ -4,8 +4,8 @@
 // Based on http://www.prisoners-dilemma.com/strategies.html
 
 #include <cstddef>
+#include <utility>
 #include <vector>
-#include <tuple>
 #include <string>
 #include "Strategy.hpp"
 #include "Decision.hpp"
@@ -73,6 +73,10 @@ class Pavlov: public Strategy
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
+	private:
+		static Decision decideBasedOnPayoff(
+			const Decision & thisLastDecision,
+			const Decision & partnerLastDecision);
 };
 
 class Gradual: public Strategy
@@ -87,9 +91,9 @@ class Gradual: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		static const size_t numberOfCooperationsAfterDefecting;
-		static std::vector<std::tuple<size_t,size_t>> findTriggles(const std::vector<Decision> & partnerDecision);
-		static bool timeToDefect(const size_t turn, const std::vector<std::tuple<size_t,size_t>> & triggles);
+		static std::pair<size_t,size_t> lastTurnsWhenDefectionTriggedReaction(const std::vector<Decision> & partnerDecision);
+		static size_t                   countDefectsUntil(const size_t turn, const std::vector<Decision> & partnerDecision);
+		static bool                     isTimeToDefect(const size_t currentTurn, const std::pair<size_t,size_t> & turnAndDefectionCount);
 };
 
 class SoftMajority: public Strategy
@@ -99,7 +103,7 @@ class SoftMajority: public Strategy
 			: Strategy(
 					"Soft Majority",
 					"SM",
-					"Cooperates as long as the number of defections of the partner is not greater than the number of cooperations."){}
+					"Cooperates as long as the number of cooperations of the partner is greater or equals to the number of defections."){}
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
@@ -112,7 +116,7 @@ class HardMajority: public Strategy
 			: Strategy(
 					"Hard Majority",
 					"HM",
-					"Defects as long as the number of cooperations of the partner is not greater than the number of defections."){}
+					"Defects as long as the number of defections of the partner is greater than or equals to the number of cooperations."){}
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
@@ -131,8 +135,9 @@ class SoftGrudger: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		std::vector<size_t>   findTriggles(const std::vector<Decision> & partnerDecision) const;
-		bool                  timeToDefect(const size_t turn, const std::vector<size_t> & triggles) const;
+		static const std::vector<Decision> reactionToDefection;
+		static size_t                      lastTurnsWhenDefectionTriggedReaction(const std::vector<Decision> & partnerDecision);
+		static bool                        isTimeToReact(const size_t currentTurn, const size_t lastTurnsOfReactionTrigged);
 };
 
 class Prober: public Strategy
@@ -147,8 +152,9 @@ class Prober: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		Decision initialDecision  (const size_t turn) const;
-		bool     defectionBehavior(const std::vector<Decision> & partnerDecision) const;
+		static bool     isTurnOfInitialDecision(const size_t turn);
+		static bool     defectionBehavior(const std::vector<Decision> & partnerDecision);
+		static const std::vector<Decision> initialDecisions; 
 };
 
 class FirmButFair: public Strategy
@@ -162,6 +168,8 @@ class FirmButFair: public Strategy
 		Decision makeDecision(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
+	private:
+		static bool gotAsuckers(const Decision & thisLastDecision, const Decision & partnerLastDecision);
 };
 
 class TitForTat: public Strategy
@@ -211,8 +219,8 @@ class NaiveProber: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		double probabilityOfDefecting;
-		bool randomlyDefect(void) const;
+		const double probabilityOfDefecting;
+		bool decidedRandomlyToDefect(void) const;
 };
 
 class RemorsefulProber: public Strategy
@@ -223,7 +231,7 @@ class RemorsefulProber: public Strategy
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
-		double probabilityOfProbing;
+		const double probabilityOfProbing;
 		bool wasProbing(
 			const std::vector<Decision> & thisDecision,
 			const std::vector<Decision> & partnerDecision) const;
@@ -239,7 +247,7 @@ class GenerousTitForTat: public Strategy
 			const std::vector<Decision> & partnerDecision) const override final;
 	private:
 		double probabilityOfCooperating;
-		bool cooperateAfterDefection(void) const;
+		bool decidedRandomlyToCooperate(void) const;
 };
 
 class SuspiciousTitForTat: public Strategy

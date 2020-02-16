@@ -1,9 +1,14 @@
+// TODO: add more `return` statements
+// when it makes sense to do so.
+
 #include <cstddef>
 #include <random>
+#include <iterator>
+#include <utility>
+#include <limits>
 #include <algorithm>
 #include <stdexcept>
 #include <vector>
-#include <tuple>
 #include <string>
 #include "Strategies.hpp"
 #include "Decision.hpp"
@@ -63,19 +68,15 @@ const Strategy * findStrategy(
 	std::string shortName,
 	std::string description
 ){
-	const Strategy * found = nullptr;
-	for(auto strategy: allStrategies)
-	{
-		if ( (strategy->name == name) &&\
-		     (strategy->shortName == shortName) &&\
-		     (strategy->description == description)
-		)
-		{
-			found = strategy;
-			break;
-		}
-	}
-	return found;
+	auto isDesiredStrategy = [&](const Strategy * const strategy) -> bool
+		{ return ( (strategy->name        == name)        &&\
+		           (strategy->shortName   == shortName)   &&\
+		           (strategy->description == description) ); };
+	auto foundStrategy = std::find_if(
+		allStrategies.cbegin(),
+		allStrategies.cend(),
+		isDesiredStrategy);
+	return (foundStrategy!=allStrategies.cend()) ? *foundStrategy : nullptr;
 }
 
 // [Instructions for how to implement a ]
@@ -131,12 +132,9 @@ Decision GrimTrigger::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if ( std::any_of(partnerDecision.begin(), partnerDecision.end(), [](Decision d){return d==Decision::defect;}) )
-		decision = Decision::defect;
-	else
-		decision = Decision::cooperate;
-	return decision;
+	return std::any_of(partnerDecision.cbegin(), partnerDecision.cend(), [](const Decision d){return d==Decision::defect;})
+		? Decision::defect
+		: Decision::cooperate ;
 }
 
 Decision Pavlov::makeDecision(
@@ -144,67 +142,67 @@ Decision Pavlov::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.empty())
-		decision = Decision::cooperate;
-	else
-	{
-		Payoff lastPayoff = PayoffComputer::left(thisDecision.back(), partnerDecision.back());
-		if( (lastPayoff==Payoff::reward) || (lastPayoff==Payoff::temptation ) )
-			decision = thisDecision.back();
-		else
-			decision = !thisDecision.back();
-	}
-	return decision;
+	if(thisDecision.empty()) return Decision::cooperate;
+	return Pavlov::decideBasedOnPayoff(thisDecision.back(), partnerDecision.back());
 }
 
-const size_t Gradual::numberOfCooperationsAfterDefecting = 2;
+Decision Pavlov::decideBasedOnPayoff(
+	const Decision & thisLastDecision,
+	const Decision & partnerLastDecision
+)
+{
+	const Payoff lastPayoff = PayoffComputer::left(thisLastDecision, partnerLastDecision);
+	return ((lastPayoff==Payoff::temptation) || (lastPayoff==Payoff::reward ))
+		? thisLastDecision
+		: !thisLastDecision;
+}
+
 
 Decision Gradual::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & thisDecision,
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	auto triggles = Gradual::findTriggles(partnerDecision);
-	if (Gradual::timeToDefect(thisDecision.size(), triggles))
-		decision = Decision::defect;
-	else // time to cooperate incorporated in 'findTrigges' algorithm.
-		decision = Decision::cooperate;
-	return decision;
+	const size_t currentTurn = thisDecision.size();
+	return
+		Gradual::isTimeToDefect(currentTurn, Gradual::lastTurnsWhenDefectionTriggedReaction(partnerDecision))
+		? Decision::defect
+		: Decision::cooperate;
 }
 
-std::vector<std::tuple<size_t,size_t>> Gradual::findTriggles(
-	const std::vector<Decision> & partnerDecision)
+std::pair<size_t,size_t> Gradual::lastTurnsWhenDefectionTriggedReaction(const std::vector<Decision> & partnerDecision)
 {
-	std::vector<std::tuple<size_t,size_t>> triggles;
+	size_t lastTurnsOfReactionTrigged               = 0;
+	size_t numberOfDefectionsWhenReactionWasTrigged = 0;
 	for (size_t turn=0 ; turn<partnerDecision.size() ; ++turn)
 	{
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
-			const size_t countUntil = turn + 1;
-			const size_t numberOfDefects = static_cast<size_t>(std::count(partnerDecision.cbegin(), partnerDecision.cbegin()+static_cast<ptrdiff_t>(countUntil), Decision::defect));
-			triggles.push_back({turn, numberOfDefects});
-			turn += numberOfDefects + Gradual::numberOfCooperationsAfterDefecting;
+			lastTurnsOfReactionTrigged                     = turn;
+			numberOfDefectionsWhenReactionWasTrigged       = Gradual::countDefectsUntil(turn, partnerDecision);
+			const size_t numberOfCooperationsAfterDefecting = 2;
+			turn += numberOfDefectionsWhenReactionWasTrigged + numberOfCooperationsAfterDefecting;
 		}
 	}
-	return triggles;
+	return std::pair(lastTurnsOfReactionTrigged,numberOfDefectionsWhenReactionWasTrigged);
 }
 
-bool Gradual::timeToDefect(const size_t turn, const std::vector<std::tuple<size_t,size_t>> & triggles)
+size_t Gradual::countDefectsUntil(const size_t turn, const std::vector<Decision> & partnerDecision)
 {
-	bool defect = false;
-	for (auto & triggle: triggles)
-	{
-		auto triggleTurn = std::get<0>(triggle);
-		auto numberOfDefects = std::get<1>(triggle);
-		if ( (turn > triggleTurn) && (turn <= triggleTurn + numberOfDefects) )
-		{
-			defect = true;
-			break;
-		}
-	}
-	return defect;
+	return static_cast<size_t>( std::count(
+		partnerDecision.cbegin(),
+		std::next(partnerDecision.cbegin(), static_cast<ptrdiff_t>(turn + 1)),
+		Decision::defect
+	));
+}
+
+bool Gradual::isTimeToDefect(const size_t currentTurn, const std::pair<size_t,size_t> & turnAndDefectionCount)
+{
+	auto [lastTurnsOfReactionTrigged, numberOfDefectionsWhenReactionWasTrigged] = turnAndDefectionCount;
+	return
+		((currentTurn > lastTurnsOfReactionTrigged) && (currentTurn <= (lastTurnsOfReactionTrigged + numberOfDefectionsWhenReactionWasTrigged)) )
+		? true
+		: false;
 }
 
 Decision SoftMajority::makeDecision(
@@ -214,7 +212,7 @@ Decision SoftMajority::makeDecision(
 {
 	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
-	return (numberOfDefects > numberOfCooperates) ? Decision::defect : Decision::cooperate;
+	return (numberOfCooperates >= numberOfDefects) ? Decision::cooperate : Decision::defect;
 }
 
 Decision HardMajority::makeDecision(
@@ -224,76 +222,76 @@ Decision HardMajority::makeDecision(
 {
 	auto numberOfDefects    = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::defect   );
 	auto numberOfCooperates = std::count(partnerDecision.cbegin(), partnerDecision.cend(), Decision::cooperate);
-	return (numberOfCooperates > numberOfDefects) ? Decision::cooperate : Decision::defect;
+	return (numberOfDefects >= numberOfCooperates) ? Decision::defect : Decision::cooperate;
 }
+
+const std::vector<Decision> SoftGrudger::reactionToDefection = {
+	Decision::defect   ,
+	Decision::defect   ,
+	Decision::defect   ,
+	Decision::defect   ,
+	Decision::cooperate,
+	Decision::cooperate
+};
 
 Decision SoftGrudger::makeDecision(
-	const std::vector<Decision> & thisDecision,
-	const std::vector<Decision> & partnerDecision
+	[[maybe_unused]] const std::vector<Decision> & thisDecision,
+	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	auto triggles = SoftGrudger::findTriggles(partnerDecision);
-	if (SoftGrudger::timeToDefect(thisDecision.size(), triggles))
-		decision = Decision::defect;
-	else // time to cooperate incorporated in 'findTrigges' algorithm.
-		decision = Decision::cooperate;
-	return decision;
+	const size_t currentTurn = partnerDecision.size();
+	const size_t lastTurnsOfReactionTrigged = SoftGrudger::lastTurnsWhenDefectionTriggedReaction(partnerDecision);
+	return SoftGrudger::isTimeToReact(currentTurn, lastTurnsOfReactionTrigged)
+		? SoftGrudger::reactionToDefection.at(currentTurn - lastTurnsOfReactionTrigged - 1)
+		: Decision::cooperate;
 }
 
-std::vector<size_t> SoftGrudger::findTriggles(const std::vector<Decision> & partnerDecision) const
+size_t SoftGrudger::lastTurnsWhenDefectionTriggedReaction(const std::vector<Decision> & partnerDecision)
 {
-	std::vector<size_t> triggles;
+	size_t lastTurnsOfReactionTrigged = std::numeric_limits<size_t>::max();
 	for (size_t turn=0 ; turn<partnerDecision.size() ; ++turn)
 	{
 		if (partnerDecision.at(turn) == Decision::defect)
 		{
-			triggles.push_back(turn);
-			turn += 6;
+			lastTurnsOfReactionTrigged = turn;
+			turn += SoftGrudger::reactionToDefection.size() - 1;
+			// the `-1` is because of the `++turn`.
 		}
 	}
-	return triggles;
+	return lastTurnsOfReactionTrigged;
 }
 
-bool SoftGrudger::timeToDefect(const size_t turn, const std::vector<size_t> & triggles) const
+bool SoftGrudger::isTimeToReact(const size_t currentTurn, const size_t lastTurnsOfReactionTrigged)
 {
-	return std::any_of(
-		triggles.cbegin(),
-		triggles.cend(),
-		[&turn](const size_t triggleTurn){
-			return (turn > triggleTurn) && (turn <= triggleTurn + 4);
-		});
+	return ((currentTurn > lastTurnsOfReactionTrigged) &&
+	       (currentTurn <= (lastTurnsOfReactionTrigged + SoftGrudger::reactionToDefection.size())) )
+	       ? true
+	       : false;
 }
 
+const std::vector<Decision> Prober::initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
+
+// TODO: reduce the size of this implementation.
 Decision Prober::makeDecision(
 	const std::vector<Decision> & thisDecision,
 	const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	size_t turn = thisDecision.size();
-	if (turn<=2)
-		decision = Prober::initialDecision(turn); // Start with D,C,C
-	else
-	{
-		if (Prober::defectionBehavior(partnerDecision))
-			decision = Decision::defect; // defection behavior
-		else
-			decision = partnerDecision.back(); // tit for tat behavior
-	}
-	return decision;
+	const size_t currentTurn = thisDecision.size();
+	if      ( Prober::isTurnOfInitialDecision(currentTurn) ) return Prober::initialDecisions.at(currentTurn);
+	else if (Prober::defectionBehavior(partnerDecision))     return Decision::defect;
+	else                                                     return partnerDecision.back(); // Tit for tat behavior
 }
 
-Decision Prober::initialDecision(const size_t turn) const
+bool Prober::isTurnOfInitialDecision(const size_t turn)
 {
-	static const std::vector<Decision> & initialDecisions = {Decision::defect, Decision::cooperate, Decision::cooperate};
-	return initialDecisions.at(turn);
+	return turn <= (Prober::initialDecisions.size() - 1);
 }
 
-bool Prober::defectionBehavior(const std::vector<Decision> & partnerDecision) const
+bool Prober::defectionBehavior(const std::vector<Decision> & partnerDecision)
 {
-	auto secondDecision = *(partnerDecision.cbegin() + 1);
-	auto thirdDecision  = *(partnerDecision.cbegin() + 2);
+	const auto secondDecision = partnerDecision.at(1);
+	const auto thirdDecision  = partnerDecision.at(2);
 	return (secondDecision==Decision::cooperate) && (thirdDecision==Decision::cooperate);
 }
 
@@ -302,14 +300,14 @@ Decision FirmButFair::makeDecision(
 	const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.empty())
-		decision = Decision::cooperate;
-	else if (PayoffComputer::left(thisDecision.back(), partnerDecision.back()) == Payoff::suckers)
-		decision = Decision::defect;
-	else
-		decision = Decision::cooperate;
-	return decision;
+	if (partnerDecision.empty())                                               return Decision::cooperate;
+	if (FirmButFair::gotAsuckers(thisDecision.back(), partnerDecision.back())) return Decision::defect;
+	else                                                                       return Decision::cooperate;
+}
+
+bool FirmButFair::gotAsuckers(const Decision & thisLastDecision, const Decision & partnerLastDecision)
+{
+	return PayoffComputer::left(thisLastDecision, partnerLastDecision) == Payoff::suckers;
 }
 
 Decision TitForTat::makeDecision(
@@ -317,12 +315,8 @@ Decision TitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.size()==0)
-		decision = Decision::cooperate;
-	else
-		decision = partnerDecision.back();
-	return decision;
+	if (partnerDecision.empty()) return Decision::cooperate;
+	return partnerDecision.back();
 }
 
 Decision TitForTwoTats::makeDecision(
@@ -330,17 +324,13 @@ Decision TitForTwoTats::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (partnerDecision.size()<2)
-		decision = Decision::cooperate;
-	else
-	{
-		if ( (*(partnerDecision.crbegin())==Decision::defect) && (*(partnerDecision.crbegin()+1)==Decision::defect) )
-			decision = Decision::defect;
-		else
-			decision = Decision::cooperate;
-	}
-	return decision;
+	const size_t currentTurn = partnerDecision.size();
+	const size_t requiredDefectionsInARow = 2;
+	if ((currentTurn < requiredDefectionsInARow)) return Decision::cooperate;
+	auto isDefection = [](const Decision & d) -> bool {return d==Decision::defect;};
+	return std::all_of(partnerDecision.cend()-requiredDefectionsInARow, partnerDecision.cend(), isDefection)
+		? Decision::defect
+		: Decision::cooperate;
 }
 
 Decision TwoTitsForTat::makeDecision(
@@ -348,27 +338,25 @@ Decision TwoTitsForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-2);
+	const size_t currentTurn = partnerDecision.size();
+	const size_t numberOfPreviousDecisionsToLookForADefection = 2;
+	auto start = partnerDecision.cend() - static_cast<ptrdiff_t>(std::min(currentTurn, numberOfPreviousDecisionsToLookForADefection));
 	auto end   = partnerDecision.cend();
-	if (partnerDecision.empty())
-		decision = Decision::cooperate;
-	else if (std::any_of(start, end, [](Decision d){return d==Decision::defect;}))
-		decision = Decision::defect;
-	else
-		decision = Decision::cooperate;
-	return decision;
+	auto isDefection = [](const Decision & d) -> bool {return d==Decision::defect;};
+	return std::any_of(start, end, isDefection)
+		? Decision::defect
+		: Decision::cooperate;
 }
 
 NaiveProber::NaiveProber(double probabilityOfDefecting)
 	: Strategy(
 			"Naive Prober",
 			"NP",
-			"Like Tit for Tat, but ocasionally defects with a small probability.")
+			"Like Tit for Tat, but ocasionally defects with a small probability."),
+	  probabilityOfDefecting(probabilityOfDefecting)
 {
-	if ((probabilityOfDefecting < 0.0) || (1.0 < probabilityOfDefecting))
+	if ((this->probabilityOfDefecting < 0.0) || (1.0 < this->probabilityOfDefecting))
 		throw std::domain_error("Probability of defecting in Naive Prober has to be between 0.0 and 1.0.");
-	this->probabilityOfDefecting = probabilityOfDefecting;
 }
 
 Decision NaiveProber::makeDecision(
@@ -376,20 +364,12 @@ Decision NaiveProber::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (this->randomlyDefect())
-		decision = Decision::defect;
-	else
-	{
-		if (partnerDecision.size()==0)
-			decision = Decision::cooperate;
-		else
-			decision = partnerDecision.back();
-	}
-	return decision;
+	if      (this->decidedRandomlyToDefect()) return Decision::defect      ;
+	else if (partnerDecision.empty())         return Decision::cooperate   ;
+	else                                      return partnerDecision.back();
 }
 
-bool NaiveProber::randomlyDefect(void) const
+bool NaiveProber::decidedRandomlyToDefect(void) const
 {
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
@@ -400,11 +380,11 @@ RemorsefulProber::RemorsefulProber(double probabilityOfProbing)
 	: Strategy(
 			"Remorseful Prober",
 			"RP",
-			"If the partner cooperates, prober it with a certain probability. If the partner defects, cooperates if that was caused by a probation, defects otherwise.")
+			"If the partner cooperates, prober it with a certain probability. If the partner defects, cooperates if that was caused by a probation, defects otherwise."),
+	  probabilityOfProbing(probabilityOfProbing)
 {
-	if ((probabilityOfProbing < 0.0) || (1.0 < probabilityOfProbing))
+	if ((this->probabilityOfProbing < 0.0) || (1.0 < this->probabilityOfProbing))
 		throw std::domain_error("Probability of probing in Remorseful Prober has to be between 0.0 and 1.0.");
-	this->probabilityOfProbing = probabilityOfProbing;
 }
 
 Decision RemorsefulProber::makeDecision(
@@ -412,27 +392,20 @@ Decision RemorsefulProber::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
 	if (thisDecision.empty())
-		decision = Decision::cooperate;
-	else
+		return Decision::cooperate;
+	if (partnerDecision.back() == Decision::defect)
 	{
-		if (partnerDecision.back() == Decision::defect)
-		{
-			if (RemorsefulProber::wasProbing(thisDecision, partnerDecision))
-				decision = Decision::cooperate;
-			else
-				decision = Decision::defect;
-		}
-		else // partnerDecision.back() == Decision::cooperate
-		{
-			if (this->probePartner())
-				decision = Decision::defect;
-			else
-				decision = Decision::cooperate;
-		}
+		return RemorsefulProber::wasProbing(thisDecision, partnerDecision)
+			? Decision::cooperate
+			: Decision::defect;
 	}
-	return decision;
+	else // partnerDecision.back() == Decision::cooperate
+	{
+		return this->probePartner()
+			? Decision::defect
+			: Decision::cooperate;
+	}
 }
 
 bool RemorsefulProber::wasProbing(
@@ -440,12 +413,11 @@ bool RemorsefulProber::wasProbing(
 	const std::vector<Decision> & partnerDecision
 ) const
 {
-	bool wasProbing = false;
 	if (thisDecision.size()>=2)
 	{
-		const Decision probationDecision             = *(thisDecision.crbegin() + 1);
-		const Decision partnerAnswerPriorToProbation = *(partnerDecision.crbegin() + 1);
-		const Decision partnerAnswerToProbation      = *partnerDecision.crbegin();
+		const Decision probationDecision             = *(thisDecision.cend()    - 2);
+		const Decision partnerAnswerPriorToProbation = *(partnerDecision.cend() - 2);
+		const Decision partnerAnswerToProbation      = *(partnerDecision.cend() - 1);
 		// Situation:
 		// this::    {D, *}
 		// partner:: {C, D}
@@ -453,9 +425,9 @@ bool RemorsefulProber::wasProbing(
 			(partnerAnswerToProbation      == Decision::defect   ) &&
 			(partnerAnswerPriorToProbation == Decision::cooperate)
 		   )
-			wasProbing = true;
+			return true;
 	}
-	return wasProbing;
+	return false;
 }
 
 bool RemorsefulProber::probePartner(void) const
@@ -470,11 +442,11 @@ GenerousTitForTat::GenerousTitForTat(double probabilityOfCooperating)
 		"Generous Tit For Tat",
 		"GTFT",
 		"Like Tit for Tat, but after the partner defects, it cooperates with a small probability."
-	  )
+	  ),
+	  probabilityOfCooperating(probabilityOfCooperating)
 {
-	if ((probabilityOfCooperating < 0.0) || (1.0 < probabilityOfCooperating))
+	if ((this->probabilityOfCooperating < 0.0) || (1.0 < this->probabilityOfCooperating))
 		throw std::domain_error("Probability of cooperating in Generous Tit for Tat has to be between 0.0 and 1.0.");
-	this->probabilityOfCooperating = probabilityOfCooperating;
 }
 
 Decision GenerousTitForTat::makeDecision(
@@ -482,17 +454,12 @@ Decision GenerousTitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.size()==0)
-		decision = Decision::cooperate;
-	else if (this->cooperateAfterDefection())
-		decision = Decision::cooperate; // Cooperate no matter what
-	else
-		decision = partnerDecision.back(); // Like Tit for Tat
-	return decision;
+	if      (partnerDecision.empty())            return Decision::cooperate   ;
+	else if (this->decidedRandomlyToCooperate()) return Decision::cooperate   ;
+	else                                         return partnerDecision.back();
 }
 
-bool GenerousTitForTat::cooperateAfterDefection(void) const {
+bool GenerousTitForTat::decidedRandomlyToCooperate(void) const {
 	static std::default_random_engine generator;
 	static std::uniform_real_distribution<double> distribution(0.0,1.0);
 	return distribution(generator) < this->probabilityOfCooperating;
@@ -503,12 +470,8 @@ Decision SuspiciousTitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.size()==0)
-		decision = Decision::defect;
-	else
-		decision = partnerDecision.back();
-	return decision;
+	if (partnerDecision.empty()) return Decision::defect;
+	return partnerDecision.back();
 }
 
 Decision HardTitForTat::makeDecision(
@@ -516,16 +479,14 @@ Decision HardTitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	auto start = std::max(partnerDecision.cbegin(), partnerDecision.cend()-3); // beginning or the third from the end to the beginning
+	const size_t currentTurn = partnerDecision.size();
+	const size_t numberOfPreviousDecisionsToLookForADefection = 3;
+	auto start = partnerDecision.cend() - static_cast<ptrdiff_t>(std::min(currentTurn, numberOfPreviousDecisionsToLookForADefection));
 	auto end   = partnerDecision.cend();
-	if (thisDecision.size()==0)
-		decision = Decision::cooperate;
-	else if (std::any_of(start, end, [](Decision d){return d==Decision::defect;}))
-		decision = Decision::defect;
-	else
-		decision = Decision::cooperate;
-	return decision;
+	auto isDefection = [](const Decision & d) -> bool {return d==Decision::defect;};
+	return std::any_of(start, end, isDefection)
+		? Decision::defect
+		: Decision::cooperate;
 }
 
 Decision ReverseTitForTat::makeDecision(
@@ -533,12 +494,8 @@ Decision ReverseTitForTat::makeDecision(
 	[[maybe_unused]] const std::vector<Decision> & partnerDecision
 ) const
 {
-	Decision decision;
-	if (thisDecision.size()==0)
-		decision = Decision::defect;
-	else
-		decision = ! partnerDecision.back();
-	return decision;
+	if (partnerDecision.empty()) return Decision::defect;
+	return !partnerDecision.back();
 }
 
 AdaptativeTitForTat::AdaptativeTitForTat(const double worldZero, const double adaptationRate)
