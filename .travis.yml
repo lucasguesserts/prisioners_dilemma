@@ -6,11 +6,11 @@ git:
     quiet: true
 
 before_install:
-    - sudo apt update -qq
+    - sudo apt update -qq > /dev/null
 
 install: 
-    - sudo apt install gcc g++ make cmake -qq
-    - sudo apt install libhdf5-dev -qq
+    - sudo apt install gcc g++ make cmake -qq > /dev/null
+    - sudo apt install libhdf5-serial-dev -qq > /dev/null
 
 before_script:
     - mkdir build
