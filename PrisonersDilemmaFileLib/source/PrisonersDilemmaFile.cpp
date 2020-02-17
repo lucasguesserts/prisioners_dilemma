@@ -45,7 +45,7 @@ void PrisonersDilemmaFile::save(const Strategy * const strategy) const
 void PrisonersDilemmaFile::save(const H5::Group & championshipGroup, const Player & player) const
 {
 	const H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
-	if (!this->exists(PrisonersDilemmaFile::strategiesGroupName))
+	if (!this->nameExists(PrisonersDilemmaFile::strategiesGroupName))
 		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroupName + " group does not exists.");
 	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroupName + player.strategy->name, "strategy");
 	for(size_t match=0u ; match<player.partners.size() ; ++match)
