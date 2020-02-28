@@ -2,6 +2,8 @@ language: cpp
 compiler: gcc
 dist: bionic
 
+if: branch = master OR branch = develop
+
 git:
     quiet: true
 
@@ -9,11 +11,9 @@ before_install:
     - sudo apt update -qq > /dev/null
 
 install: 
-    - sudo apt install gcc g++ make cmake -qq > /dev/null
-    - sudo apt install libhdf5-serial-dev -qq > /dev/null
+    - ./install_hdf5.sh
 
 before_script:
-    - ./install_hdf5.sh
     - mkdir build
     - cd build
 
