@@ -13,6 +13,7 @@ install:
     - sudo apt install libhdf5-serial-dev -qq > /dev/null
 
 before_script:
+    - ./install_hdf5.sh
     - mkdir build
     - cd build
 

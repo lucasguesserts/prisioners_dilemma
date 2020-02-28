@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+cmake_policy(SET CMP0074 NEW)
 
 set(CMAKE_CXX_COMPILER "g++")
 
@@ -36,7 +37,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) 
 
 # External Packages
-find_package(HDF5 REQUIRED COMPONENTS CXX)                             
+set(HDF5_VERSION "1.10.3")
+set(HDF5_ROOT "$ENV{HOME}/libs/hdf5-${HDF5_VERSION}/")
+find_package(HDF5 ${HDF5_VERSION} EXACT REQUIRED COMPONENTS CXX)                             
 
 # Testing
 enable_testing()
