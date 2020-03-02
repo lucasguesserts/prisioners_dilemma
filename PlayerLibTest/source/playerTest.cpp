@@ -14,7 +14,7 @@ TestCase("Always cooperate player", "[Player]")
 
 TestCase("Save match", "[Player]")
 {
-	Player                alwaysCooperate(allC);
+	Player alwaysCooperate(allC);
 	const std::vector<Decision> decisions = {Decision::cooperate, Decision::cooperate};
 	const std::vector<Payoff>   payoff    = {Payoff::reward, Payoff::reward};
 	const Strategy * const      partner   = &allC;
