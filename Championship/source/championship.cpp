@@ -49,8 +49,7 @@ int main()
 	std::cout << championship;
 
 	//Save result in file
-	PrisonersDilemmaFile file("all_strategies.prisonersdilemma", H5F_ACC_TRUNC);
-	file.save(championship);
+	PrisonersDilemmaFile file("all_strategies.prisonersdilemma", championship);
 	
 	return 0;
 }

@@ -14,10 +14,19 @@
 const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
 
 PrisonersDilemmaFile::PrisonersDilemmaFile(
-		const std::string & filePath,
-		const unsigned      flags)
-	: H5::H5File(filePath, flags)
+	const std::string & filePath)
+	: H5::H5File(filePath, H5F_ACC_RDONLY)
 {}
+
+PrisonersDilemmaFile::PrisonersDilemmaFile(
+	const std::string  & filePath,
+	const Championship & championship)
+	: H5::H5File(filePath, H5F_ACC_TRUNC)
+{
+	this->save(championship);
+	this->close();
+	return;
+}
 
 void PrisonersDilemmaFile::save(const Championship & championship) const
 {

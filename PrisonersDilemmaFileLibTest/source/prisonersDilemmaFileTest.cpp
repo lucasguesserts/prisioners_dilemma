@@ -11,10 +11,23 @@
 #include "Championship.hpp"
 #include "PrisonersDilemmaFile.hpp"
 
-TestCase("Create file", "[PrisonersDilemmaFile]")
+class ChampionshipFixture
+{
+	public:
+		const unsigned numberOfTurns = 5;
+		Championship championship;
+		ChampionshipFixture(void)
+			: championship("Test Championship","For test.", numberOfTurns, {&allC,	&allD, &tft})
+		{
+			this->championship.compete();
+			return;
+		}
+};
+
+TestCaseMethod(ChampionshipFixture, "Create file", "[PrisonersDilemmaFile]")
 {
 	std::string filePath = ".PrisonersDilemmaFileTest_Create_file.h5";
-	PrisonersDilemmaFile file(filePath);
+	PrisonersDilemmaFile file(filePath, championship);
 	file.close();
 	check( std::filesystem::exists(filePath) );
 	std::filesystem::remove(filePath);
@@ -22,29 +35,15 @@ TestCase("Create file", "[PrisonersDilemmaFile]")
 	return;
 }
 
-TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save championship basic data", "[PrisonersDilemmaFile]")
 {
-	const unsigned numberOfTurns = 5;
-	Championship championship(
-		"Save Championship - Basic",
-		"Save Championship basic data.",
-		numberOfTurns,
-		{
-			&allC,
-			&allD,
-			&tft
-		}
-	);
 	// Create file
 	std::string filePath = ".PrisonersDilemmaFileTest_save_championship_basic_data.h5";
-	PrisonersDilemmaFile file(filePath);
-	requireNoThrow( file.save(championship) );
-	requireNoThrow( file.close() );
+	PrisonersDilemmaFile file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// open file
-	H5::H5File roFile;
+	PrisonersDilemmaFile roFile(filePath);
 	H5::Group group;
-	requireNoThrow( roFile.openFile(filePath, H5F_ACC_RDONLY)   );
 	requireNoThrow( group = roFile.openGroup(championship.name) );
 	section("name")
 	{
@@ -123,28 +122,14 @@ TestCase("Save championship basic data", "[PrisonersDilemmaFile]")
 	return;
 }
 
-TestCase("Save player basic description", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save player basic description", "[PrisonersDilemmaFile]")
 {
-	const unsigned numberOfTurns = 5;
-	Championship championship(
-		"Save Championship - Basic",
-		"Save Championship basic data.",
-		numberOfTurns,
-		{
-			&allC,
-			&allD,
-			&tft
-		}
-	);
-	championship.compete();
 	// Create file
 	std::string filePath = ".PrisonersDilemmaFileTest_save_player_basic_data.h5";
-	PrisonersDilemmaFile file(filePath);
-	requireNoThrow( file.save(championship) );
-	requireNoThrow( file.close() );
+	PrisonersDilemmaFile file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// Load file
-	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
+	PrisonersDilemmaFile roFile(filePath);
 	section("always cooperate player")
 	{
 		H5::Group playerGroup, strategyGroup;
@@ -193,28 +178,14 @@ TestCase("Save player basic description", "[PrisonersDilemmaFile]")
 	return;
 }
 
-TestCase("Save player competitions", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilemmaFile]")
 {
-	const unsigned numberOfTurns = 5;
-	Championship championship(
-		"Save Championship - Basic",
-		"Save Championship basic data.",
-		numberOfTurns,
-		{
-			&allC,
-			&allD,
-			&tft
-		}
-	);
-	championship.compete();
 	// Create file
 	std::string filePath = ".PrisonersDilemmaFileTest_save_player_competition_result.h5";
-	PrisonersDilemmaFile file(filePath);
-	requireNoThrow( file.save(championship) );
-	requireNoThrow( file.close() );
+	PrisonersDilemmaFile file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// Load file
-	PrisonersDilemmaFile roFile(filePath, H5F_ACC_RDONLY);
+	PrisonersDilemmaFile roFile(filePath);
 	section("always cooperate player")
 	{
 		H5::Group playerGroup;

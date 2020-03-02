@@ -3,8 +3,10 @@
 
 #include "catch.hpp"
 
+#define TestCaseMethod TEST_CASE_METHOD
 #define TestCase TEST_CASE
 #define section SECTION
+
 
 #define check CHECK
 #define checkFalse CHECK_FALSE
