@@ -23,23 +23,23 @@ class PrisonersDilemmaFile: public H5::H5File
 
 		static const std::string strategiesGroupName;
 
+	private:
+		// TODO: those functions receive a lot of parameters and
+		// they do a lot of things. Correct it.
+		H5::Group getStrategiesGroup(void) const;
+		void        savePlayerData(const H5::Group & championshipGroup, const H5::Group & playerGroup, const std::vector<Decision> & decision, const std::vector<Payoff> & payoff, const Strategy * const partnerStrategy) const;
+		static void saveAttribute (const H5::Group & group, const std::string & attributeName, const std::string & attributeData);
+		static void saveAttribute (const H5::Group & group, const std::string & attributeName, const unsigned attributeValue  );
+
 #ifdef PUBLIC_TEST_METHODS
 	public:
 #else
 	private:
 #endif
-		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
-		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
-		static std::vector<Decision> loadDecisions(const H5::Group & group, const unsigned numberOfTurns);
-		static std::vector<Payoff> loadPayoff(const H5::Group & group, const unsigned numberOfTurns);
-
-	private:
-		// TODO: those functions receive a lot of parameters and
-		// they do a lot of things. Correct it.
-		void savePlayerData(const H5::Group & championshipGroup, const H5::Group & playerGroup, const std::vector<Decision> & decision, const std::vector<Payoff> & payoff, const Strategy * const partnerStrategy) const;
-		H5::Group getStrategiesGroup(void) const;
-		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const std::string & attributeData);
-		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const unsigned attributeValue  );
+		static std::string           loadStrAttribute     (const H5::Group & group, const std::string & attributeName);
+		static unsigned              loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
+		static std::vector<Decision> loadDecisions        (const H5::Group & group, const unsigned      numberOfTurns);
+		static std::vector<Payoff>   loadPayoff           (const H5::Group & group, const unsigned      numberOfTurns);
 };
 
 #endif

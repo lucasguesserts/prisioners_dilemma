@@ -69,6 +69,13 @@ void PrisonersDilemmaFile::save(const H5::Group & championshipGroup, const Playe
 	return;
 }
 
+H5::Group PrisonersDilemmaFile::getStrategiesGroup(void) const
+{
+	return (this->exists     (PrisonersDilemmaFile::strategiesGroupName)) ?
+		    this->openGroup  (PrisonersDilemmaFile::strategiesGroupName)  :
+		    this->createGroup(PrisonersDilemmaFile::strategiesGroupName)  ;
+}
+
 // TODO: remove the championship group from the arguments
 void PrisonersDilemmaFile::savePlayerData(
 	const H5::Group             & championshipGroup,
@@ -101,13 +108,6 @@ void PrisonersDilemmaFile::savePlayerData(
 		dataset.write(payoff.data(), memType);
 	}
 	return;
-}
-
-H5::Group PrisonersDilemmaFile::getStrategiesGroup(void) const
-{
-	return (this->exists     (PrisonersDilemmaFile::strategiesGroupName)) ?
-		    this->openGroup  (PrisonersDilemmaFile::strategiesGroupName)  :
-		    this->createGroup(PrisonersDilemmaFile::strategiesGroupName)  ;
 }
 
 void PrisonersDilemmaFile::saveAttribute(
