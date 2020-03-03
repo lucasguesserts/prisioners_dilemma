@@ -14,7 +14,7 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
-		PrisonersDilemmaFile(const std::string & filePath); // Read only
+		PrisonersDilemmaFile(const std::string & filePath, const unsigned flags=H5F_ACC_RDONLY);
 		PrisonersDilemmaFile(const std::string & filePath, const Championship & championship);
 
 		void save(const Championship &                  ) const;

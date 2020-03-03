@@ -14,8 +14,9 @@
 const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
 
 PrisonersDilemmaFile::PrisonersDilemmaFile(
-	const std::string & filePath)
-	: H5::H5File(filePath, H5F_ACC_RDONLY)
+		const std::string & filePath,
+		const unsigned      flags)
+	: H5::H5File(filePath, flags)
 {}
 
 PrisonersDilemmaFile::PrisonersDilemmaFile(
