@@ -1,4 +1,5 @@
 #include "Decision.hpp"
+using namespace PrisonersDilemma;
 
 Decision operator!(const Decision & d)
 {

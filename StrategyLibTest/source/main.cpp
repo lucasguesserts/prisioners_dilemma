@@ -5,6 +5,7 @@
 #include "Decision.hpp"
 #include "Strategy.hpp"
 #include "Strategies.hpp"
+using namespace PrisonersDilemma;
 
 void checkDecisionHistory(
 	const std::vector<Decision> strategyDecisions,

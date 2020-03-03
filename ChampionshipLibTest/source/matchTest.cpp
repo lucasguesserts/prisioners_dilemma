@@ -6,6 +6,7 @@
 #include "Strategies.hpp"
 #include "Player.hpp"
 #include "Match.hpp"
+using namespace PrisonersDilemma;
 
 TestCase("Simple Match", "[Match]")
 {

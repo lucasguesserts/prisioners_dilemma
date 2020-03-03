@@ -4,6 +4,7 @@
 #include "Payoff.hpp"
 #include "Strategy.hpp"
 #include "Player.hpp"
+using namespace PrisonersDilemma;
 
 Player::Player(const Strategy& strategy)
 	: strategy(&strategy)

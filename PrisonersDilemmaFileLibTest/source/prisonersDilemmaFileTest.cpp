@@ -10,6 +10,7 @@
 #include "Player.hpp"
 #include "Championship.hpp"
 #include "PrisonersDilemmaFile.hpp"
+using namespace PrisonersDilemma;
 
 class ChampionshipFixture
 {
@@ -24,10 +25,10 @@ class ChampionshipFixture
 		}
 };
 
-TestCaseMethod(ChampionshipFixture, "Create file", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Create file", "[File]")
 {
-	std::string filePath = ".PrisonersDilemmaFileTest_Create_file.h5";
-	PrisonersDilemmaFile file(filePath, championship);
+	std::string filePath = ".FileTest_Create_file.h5";
+	File file(filePath, championship);
 	file.close();
 	check( std::filesystem::exists(filePath) );
 	std::filesystem::remove(filePath);
@@ -35,31 +36,31 @@ TestCaseMethod(ChampionshipFixture, "Create file", "[PrisonersDilemmaFile]")
 	return;
 }
 
-TestCaseMethod(ChampionshipFixture, "Save championship basic data", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save championship basic data", "[File]")
 {
 	// Create file
-	std::string filePath = ".PrisonersDilemmaFileTest_save_championship_basic_data.h5";
-	PrisonersDilemmaFile file(filePath, championship);
+	std::string filePath = ".FileTest_save_championship_basic_data.h5";
+	File file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// open file
-	PrisonersDilemmaFile roFile(filePath);
+	File roFile(filePath);
 	H5::Group group;
 	requireNoThrow( group = roFile.openGroup(championship.name) );
-	check( PrisonersDilemmaFile::loadStrAttribute     (group, "name")          == championship.name          );
-	check( PrisonersDilemmaFile::loadStrAttribute     (group, "description")   == championship.description   );
-	check( PrisonersDilemmaFile::loadUnsignedAttribute(group, "numberOfTurns") == championship.numberOfTurns );
+	check( File::loadStrAttribute     (group, "name")          == championship.name          );
+	check( File::loadStrAttribute     (group, "description")   == championship.description   );
+	check( File::loadUnsignedAttribute(group, "numberOfTurns") == championship.numberOfTurns );
 	section("strategies")
 	{
 		H5::Group strategiesGroup;
-		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroupName) );
+		requireNoThrow( strategiesGroup = roFile.openGroup(File::strategiesGroupName) );
 		// TODO: add more strategies
 		section("Always cooperate")
 		{
 			H5::Group thisStrategyGroup;
 			requireNoThrow( thisStrategyGroup = strategiesGroup.openGroup(allC.name) );
-			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "name")        == allC.name        );
-			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "shortName")   == allC.shortName   );
-			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "description") == allC.description );
+			check( File::loadStrAttribute(thisStrategyGroup, "name")        == allC.name        );
+			check( File::loadStrAttribute(thisStrategyGroup, "shortName")   == allC.shortName   );
+			check( File::loadStrAttribute(thisStrategyGroup, "description") == allC.description );
 			requireNoThrow( thisStrategyGroup.close() );
 		}
 		requireNoThrow( strategiesGroup.close() );
@@ -71,14 +72,14 @@ TestCaseMethod(ChampionshipFixture, "Save championship basic data", "[PrisonersD
 	return;
 }
 
-TestCaseMethod(ChampionshipFixture, "Save player basic description", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save player basic description", "[File]")
 {
 	// Create file
-	std::string filePath = ".PrisonersDilemmaFileTest_save_player_basic_data.h5";
-	PrisonersDilemmaFile file(filePath, championship);
+	std::string filePath = ".FileTest_save_player_basic_data.h5";
+	File file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// Load file
-	PrisonersDilemmaFile roFile(filePath);
+	File roFile(filePath);
 	// TODO: add more players
 	section("always cooperate player")
 	{
@@ -88,9 +89,9 @@ TestCaseMethod(ChampionshipFixture, "Save player basic description", "[Prisoners
 		requireNoThrow( playerGroup = roFile.openGroup(playerGroupPath) );
 		check( playerGroup.exists("strategy") );
 		requireNoThrow( strategyGroup = roFile.openGroup(strategyPath) );
-		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "name")        == allC.name        );
-		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "shortName")   == allC.shortName   );
-		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "description") == allC.description );
+		check( File::loadStrAttribute(strategyGroup, "name")        == allC.name        );
+		check( File::loadStrAttribute(strategyGroup, "shortName")   == allC.shortName   );
+		check( File::loadStrAttribute(strategyGroup, "description") == allC.description );
 		requireNoThrow( strategyGroup.close() );
 		requireNoThrow( playerGroup.close() );
 	}
@@ -101,14 +102,14 @@ TestCaseMethod(ChampionshipFixture, "Save player basic description", "[Prisoners
 	return;
 }
 
-TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilemmaFile]")
+TestCaseMethod(ChampionshipFixture, "Save player competitions", "[File]")
 {
 	// Create file
-	std::string filePath = ".PrisonersDilemmaFileTest_save_player_competition_result.h5";
-	PrisonersDilemmaFile file(filePath, championship);
+	std::string filePath = ".FileTest_save_player_competition_result.h5";
+	File file(filePath, championship);
 	check( std::filesystem::exists(filePath) );
 	// Load file
-	PrisonersDilemmaFile roFile(filePath);
+	File roFile(filePath);
 	section("always cooperate player")
 	{
 		H5::Group playerGroup;
@@ -123,12 +124,12 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 			section("decisions")
 			{
 				std::vector<Decision> correctDatasetData(numberOfTurns, Decision::cooperate);
-				check( PrisonersDilemmaFile::loadDecisions(partnerGroup,numberOfTurns) == correctDatasetData );
+				check( File::loadDecisions(partnerGroup,numberOfTurns) == correctDatasetData );
 			}
 			section("payoff")
 			{
 				std::vector<Payoff> correctDatasetData(numberOfTurns, Payoff::suckers);
-				check( PrisonersDilemmaFile::loadPayoff(partnerGroup,numberOfTurns) == correctDatasetData );
+				check( File::loadPayoff(partnerGroup,numberOfTurns) == correctDatasetData );
 			}
 			section("partner player link and its strategy")
 			{
@@ -137,9 +138,9 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 				H5::Group partnerStrategyGroup;
 				std::string partnerStrategyGroupPath = partnerGroupPath + "Always Defect" + "/" + "strategy" + "/";
 				requireNoThrow( partnerStrategyGroup = roFile.openGroup(partnerStrategyGroupPath) );
-				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "name")        == allD.name        );
-				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "shortName")   == allD.shortName   );
-				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "description") == allD.description );
+				check( File::loadStrAttribute(partnerStrategyGroup, "name")        == allD.name        );
+				check( File::loadStrAttribute(partnerStrategyGroup, "shortName")   == allD.shortName   );
+				check( File::loadStrAttribute(partnerStrategyGroup, "description") == allD.description );
 				requireNoThrow( partnerStrategyGroup.close() );
 			}
 			requireNoThrow( partnerGroup.close() );

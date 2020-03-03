@@ -1,5 +1,6 @@
 #include "Test.hpp"
 #include "Strategy.hpp"
+using namespace PrisonersDilemma;
 
 extern void checkDecisionHistory(
 	const std::vector<Decision> strategyDecisions,

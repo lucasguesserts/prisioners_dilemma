@@ -10,16 +10,17 @@
 #include "Player.hpp"
 #include "Championship.hpp"
 #include "PrisonersDilemmaFile.hpp"
+using namespace PrisonersDilemma;
 
-const std::string PrisonersDilemmaFile::strategiesGroupName = "/Strategies/";
+const std::string File::strategiesGroupName = "/Strategies/";
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(
+File::File(
 		const std::string & filePath,
 		const unsigned      flags)
 	: H5::H5File(filePath, flags)
 {}
 
-PrisonersDilemmaFile::PrisonersDilemmaFile(
+File::File(
 	const std::string  & filePath,
 	const Championship & championship,
 	const unsigned       flags)
@@ -30,13 +31,13 @@ PrisonersDilemmaFile::PrisonersDilemmaFile(
 	return;
 }
 
-void PrisonersDilemmaFile::save(const Championship & championship) const
+void File::save(const Championship & championship) const
 {
 	// TODO: add try/catch
 	const H5::Group group = this->createGroup(championship.name);
-	PrisonersDilemmaFile::saveAttribute(group, "name"         , championship.name          );
-	PrisonersDilemmaFile::saveAttribute(group, "description"  , championship.description   );
-	PrisonersDilemmaFile::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
+	File::saveAttribute(group, "name"         , championship.name          );
+	File::saveAttribute(group, "description"  , championship.description   );
+	File::saveAttribute(group, "numberOfTurns", championship.numberOfTurns );
 	for(const auto& player: championship.players)
 		this->save(player.strategy);
 	for(const auto& player: championship.players)
@@ -44,21 +45,21 @@ void PrisonersDilemmaFile::save(const Championship & championship) const
 	return;
 }
 
-void PrisonersDilemmaFile::save(const Strategy * const strategy) const
+void File::save(const Strategy * const strategy) const
 {
 	const H5::Group strategiesGroup = this->getStrategiesGroup();
 	const H5::Group thisStrategyGroup = strategiesGroup.createGroup(strategy->name);
-	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "name",        strategy->name       );
-	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "shortName",   strategy->shortName  );
-	PrisonersDilemmaFile::saveAttribute(thisStrategyGroup, "description", strategy->description);
+	File::saveAttribute(thisStrategyGroup, "name",        strategy->name       );
+	File::saveAttribute(thisStrategyGroup, "shortName",   strategy->shortName  );
+	File::saveAttribute(thisStrategyGroup, "description", strategy->description);
 }
 
-void PrisonersDilemmaFile::save(const H5::Group & championshipGroup, const Player & player) const
+void File::save(const H5::Group & championshipGroup, const Player & player) const
 {
 	const H5::Group playerGroup = championshipGroup.createGroup(player.strategy->name);
-	if (!this->nameExists(PrisonersDilemmaFile::strategiesGroupName))
-		throw std::runtime_error(PrisonersDilemmaFile::strategiesGroupName + " group does not exists.");
-	playerGroup.link(H5L_TYPE_HARD, PrisonersDilemmaFile::strategiesGroupName + player.strategy->name, "strategy");
+	if (!this->nameExists(File::strategiesGroupName))
+		throw std::runtime_error(File::strategiesGroupName + " group does not exists.");
+	playerGroup.link(H5L_TYPE_HARD, File::strategiesGroupName + player.strategy->name, "strategy");
 	for(size_t match=0u ; match<player.partners.size() ; ++match)
 		this->savePlayerData(
 			championshipGroup,
@@ -70,15 +71,15 @@ void PrisonersDilemmaFile::save(const H5::Group & championshipGroup, const Playe
 	return;
 }
 
-H5::Group PrisonersDilemmaFile::getStrategiesGroup(void) const
+H5::Group File::getStrategiesGroup(void) const
 {
-	return (this->exists     (PrisonersDilemmaFile::strategiesGroupName)) ?
-		    this->openGroup  (PrisonersDilemmaFile::strategiesGroupName)  :
-		    this->createGroup(PrisonersDilemmaFile::strategiesGroupName)  ;
+	return (this->exists     (File::strategiesGroupName)) ?
+		    this->openGroup  (File::strategiesGroupName)  :
+		    this->createGroup(File::strategiesGroupName)  ;
 }
 
 // TODO: remove the championship group from the arguments
-void PrisonersDilemmaFile::savePlayerData(
+void File::savePlayerData(
 	const H5::Group             & championshipGroup,
 	const H5::Group             & playerGroup,
 	const std::vector<Decision> & decision,
@@ -111,7 +112,7 @@ void PrisonersDilemmaFile::savePlayerData(
 	return;
 }
 
-void PrisonersDilemmaFile::saveAttribute(
+void File::saveAttribute(
 	const H5::Group   & group,
 	const std::string & attributeName,
 	const std::string & attributeData
@@ -125,7 +126,7 @@ void PrisonersDilemmaFile::saveAttribute(
 	return;
 }
 
-void PrisonersDilemmaFile::saveAttribute(
+void File::saveAttribute(
 	const H5::Group   & group,
 	const std::string & attributeName,
 	const unsigned      attributeValue
@@ -140,7 +141,7 @@ void PrisonersDilemmaFile::saveAttribute(
 // some sort of "smart template" to bind
 // std::string <-> H5::PredType::C_S1
 // unsigned    <-> H5::PredType::NATIVE_UINT
-std::string PrisonersDilemmaFile::loadStrAttribute(
+std::string File::loadStrAttribute(
 	const H5::Group   & group,
 	const std::string & attributeName
 ){
@@ -150,7 +151,7 @@ std::string PrisonersDilemmaFile::loadStrAttribute(
 	return attrData;
 }
 
-unsigned PrisonersDilemmaFile::loadUnsignedAttribute(
+unsigned File::loadUnsignedAttribute(
 	const H5::Group   & group,
 	const std::string & attributeName
 ){
@@ -160,7 +161,7 @@ unsigned PrisonersDilemmaFile::loadUnsignedAttribute(
 	return attrData;
 }
 
-std::vector<Decision> PrisonersDilemmaFile::loadDecisions(const H5::Group & group, const unsigned numberOfTurns)
+std::vector<Decision> File::loadDecisions(const H5::Group & group, const unsigned numberOfTurns)
 {
 	// TODO: add method to read number of turns
 	std::string datasetName = "decisions";
@@ -173,7 +174,7 @@ std::vector<Decision> PrisonersDilemmaFile::loadDecisions(const H5::Group & grou
 	return datasetData;
 }
 
-std::vector<Payoff> PrisonersDilemmaFile::loadPayoff(const H5::Group & group, const unsigned numberOfTurns)
+std::vector<Payoff> File::loadPayoff(const H5::Group & group, const unsigned numberOfTurns)
 {
 	// TODO: add method to read number of turns
 	std::string datasetName = "payoff";

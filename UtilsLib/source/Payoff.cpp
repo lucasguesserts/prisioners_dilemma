@@ -2,18 +2,19 @@
 #include <tuple>
 #include "Decision.hpp"
 #include "Payoff.hpp"
+using namespace PrisonersDilemma;
 
-unsigned operator+(const Payoff& lhs, const Payoff& rhs)
+unsigned PrisonersDilemma::operator+(const Payoff& lhs, const Payoff& rhs)
 {
 	return static_cast<unsigned>(lhs) + static_cast<unsigned>(rhs);
 }
 
-unsigned operator+(const Payoff& lhs, const unsigned& rhs)
+unsigned PrisonersDilemma::operator+(const Payoff& lhs, const unsigned& rhs)
 {
 	return static_cast<unsigned>(lhs) + rhs;
 }
 
-unsigned operator+(const unsigned& lhs, const Payoff& rhs)
+unsigned PrisonersDilemma::operator+(const unsigned& lhs, const Payoff& rhs)
 {
 	return lhs + static_cast<unsigned>(rhs);
 }

@@ -6,6 +6,7 @@
 #include "Strategies.hpp"
 #include "Player.hpp"
 #include "Championship.hpp"
+using namespace PrisonersDilemma;
 
 TestCase("Three players chapionship", "[Championship]")
 {

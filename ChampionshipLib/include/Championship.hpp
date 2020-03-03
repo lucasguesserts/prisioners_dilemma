@@ -8,25 +8,30 @@
 #include "Player.hpp"
 #include "Match.hpp"
 
-class Championship
+namespace PrisonersDilemma
 {
-	// TODO: change 'numberOfTurns' to size_t without breaking PrisonersDilemmaFile
-	public:
-		const std::string         name;
-		const std::string         description;
-		const unsigned            numberOfTurns;
-		std::vector<Player>       players;
 
-		Championship(
-			const std::string &                   name,
-			const std::string &                   description,
-			const unsigned                        numberOfTurns,
-			const std::vector<const Strategy *> & strategies);
+	class Championship
+	{
+		// TODO: change 'numberOfTurns' to size_t without breaking PrisonersDilemmaFile
+		public:
+			const std::string         name;
+			const std::string         description;
+			const unsigned            numberOfTurns;
+			std::vector<Player>       players;
 
-		void compete(void);
-		void rank(void);
-};
+			Championship(
+				const std::string &                   name,
+				const std::string &                   description,
+				const unsigned                        numberOfTurns,
+				const std::vector<const Strategy *> & strategies);
 
-std::ostream& operator<<(std::ostream& os, Championship& championship);
+			void compete(void);
+			void rank(void);
+	};
+
+	std::ostream& operator<<(std::ostream& os, Championship& championship);
+
+}
 
 #endif

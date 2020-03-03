@@ -9,6 +9,7 @@
 #include "Player.hpp"
 #include "Match.hpp"
 #include "Championship.hpp"
+using namespace PrisonersDilemma;
 
 Championship::Championship(
 	const std::string &                   name,
@@ -41,7 +42,7 @@ void Championship::rank(void)
 	return;
 }
 
-std::ostream& operator<<(std::ostream& os, Championship& championship)
+std::ostream& PrisonersDilemma::operator<<(std::ostream& os, Championship& championship)
 {
 	// This is how it is going to look like:
 	//

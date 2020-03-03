@@ -4,6 +4,7 @@
 #include "Payoff.hpp"
 #include "Strategies.hpp"
 #include "Player.hpp"
+using namespace PrisonersDilemma;
 
 TestCase("Always cooperate player", "[Player]")
 {

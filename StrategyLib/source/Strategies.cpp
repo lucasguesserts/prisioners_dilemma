@@ -13,57 +13,62 @@
 #include "Strategies.hpp"
 #include "Decision.hpp"
 #include "Payoff.hpp"
+using namespace PrisonersDilemma;
 
-AlwaysCooperate                  allC;
-AlwaysDefect                     allD;
-Lunatic                          moon;
-GrimTrigger                      grim;
-Pavlov                           pvl;
-Gradual                          gradual;
-SoftMajority                     sm;
-HardMajority                     hm;
-NaiveProber                      np;
-RemorsefulProber                 rp;
-SoftGrudger                      sg;
-Prober                           pb;
-FirmButFair                      fbf;
-TitForTat                        tft;
-TitForTwoTats                    tftt;
-TwoTitsForTat                    ttft;
-ReverseTitForTat                 rtft;
-GenerousTitForTat                gtft;
-SuspiciousTitForTat              stft;
-HardTitForTat                    htft;
-AdaptativeTitForTat              atft;
-MetaRegulatedAdaptativeTitForTat mratft;
-
-const std::vector<const Strategy *> allStrategies =
+namespace PrisonersDilemma
 {
-	& allC,
-	& allD,
-	& moon,
-	& grim,
-	& pvl,
-	& gradual,
-	& sm,
-	& hm,
-	& np,
-	& rp,
-	& sg,
-	& pb,
-	& fbf,
-	& tft,
-	& tftt,
-	& ttft,
-	& rtft,
-	& gtft,
-	& stft,
-	& htft,
-	& atft,
-	& mratft,
-};
+	AlwaysCooperate                  allC;
+	AlwaysDefect                     allD;
+	Lunatic                          moon;
+	GrimTrigger                      grim;
+	Pavlov                           pvl;
+	Gradual                          gradual;
+	SoftMajority                     sm;
+	HardMajority                     hm;
+	NaiveProber                      np;
+	RemorsefulProber                 rp;
+	SoftGrudger                      sg;
+	Prober                           pb;
+	FirmButFair                      fbf;
+	TitForTat                        tft;
+	TitForTwoTats                    tftt;
+	TwoTitsForTat                    ttft;
+	ReverseTitForTat                 rtft;
+	GenerousTitForTat                gtft;
+	SuspiciousTitForTat              stft;
+	HardTitForTat                    htft;
+	AdaptativeTitForTat              atft;
+	MetaRegulatedAdaptativeTitForTat mratft;
 
-const Strategy * findStrategy(
+	const std::vector<const Strategy *> allStrategies =
+	{
+		& allC,
+		& allD,
+		& moon,
+		& grim,
+		& pvl,
+		& gradual,
+		& sm,
+		& hm,
+		& np,
+		& rp,
+		& sg,
+		& pb,
+		& fbf,
+		& tft,
+		& tftt,
+		& ttft,
+		& rtft,
+		& gtft,
+		& stft,
+		& htft,
+		& atft,
+		& mratft,
+	};
+
+}
+
+const Strategy * PrisonersDilemma::findStrategy(
 	std::string name,
 	std::string shortName,
 	std::string description

@@ -6,20 +6,25 @@
 #include "Payoff.hpp"
 #include "Player.hpp"
 
-class Match
+namespace PrisonersDilemma
 {
-	public:
-		Match(Player& left, Player& right, const unsigned numberOfTurns);
 
-		Player &leftPlayer, &rightPlayer;
-		const unsigned numberOfTurns;
-		std::vector<Decision> leftDecisions, rightDecisions;
-		std::vector<Payoff>   leftPayoff,    rightPayoff;
-	
-	private:
-		void reserveMemory(void);
-		void computeDecisionsAndPayoff(void);
-		void saveMatch(void);
-};
+	class Match
+	{
+		public:
+			Match(Player& left, Player& right, const unsigned numberOfTurns);
+
+			Player &leftPlayer, &rightPlayer;
+			const unsigned numberOfTurns;
+			std::vector<Decision> leftDecisions, rightDecisions;
+			std::vector<Payoff>   leftPayoff,    rightPayoff;
+		
+		private:
+			void reserveMemory(void);
+			void computeDecisionsAndPayoff(void);
+			void saveMatch(void);
+	};
+
+}
 
 #endif

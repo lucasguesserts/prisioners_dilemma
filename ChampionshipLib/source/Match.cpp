@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "Strategy.hpp"
 #include "Match.hpp"
+using namespace PrisonersDilemma;
 
 Match::Match(Player& left, Player& right, const unsigned numberOfTurns)
 	: leftPlayer(left),

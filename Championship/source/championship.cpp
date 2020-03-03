@@ -15,33 +15,33 @@ int main()
 
 	// Championship
 	const unsigned numberOfTurns = 50;
-	Championship championship(
+	PrisonersDilemma::Championship championship(
 		"All strategies",
 		"Competition among all strategies.",
 		numberOfTurns,
 		{
-			&allC   ,
-			&allD   ,
-			&moon   ,
-			&grim   ,
-			&pvl    ,
-			&gradual,
-			&sm     ,
-			&hm     ,
-			&np     ,
-			&rp     ,
-			&sg     ,
-			&pb     ,
-			&fbf    ,
-			&tft    ,
-			&tftt   ,
-			&ttft   ,
-			&rtft   ,
-			&gtft   ,
-			&stft   ,
-			&htft   ,
-			&atft   ,
-			&mratft ,
+			&PrisonersDilemma::allC   ,
+			&PrisonersDilemma::allD   ,
+			&PrisonersDilemma::moon   ,
+			&PrisonersDilemma::grim   ,
+			&PrisonersDilemma::pvl    ,
+			&PrisonersDilemma::gradual,
+			&PrisonersDilemma::sm     ,
+			&PrisonersDilemma::hm     ,
+			&PrisonersDilemma::np     ,
+			&PrisonersDilemma::rp     ,
+			&PrisonersDilemma::sg     ,
+			&PrisonersDilemma::pb     ,
+			&PrisonersDilemma::fbf    ,
+			&PrisonersDilemma::tft    ,
+			&PrisonersDilemma::tftt   ,
+			&PrisonersDilemma::ttft   ,
+			&PrisonersDilemma::rtft   ,
+			&PrisonersDilemma::gtft   ,
+			&PrisonersDilemma::stft   ,
+			&PrisonersDilemma::htft   ,
+			&PrisonersDilemma::atft   ,
+			&PrisonersDilemma::mratft ,
 		}
 	);
 	championship.compete();
@@ -49,7 +49,7 @@ int main()
 	std::cout << championship;
 
 	//Save result in file
-	PrisonersDilemmaFile file("all_strategies.prisonersdilemma", championship);
+	PrisonersDilemma::File file("all_strategies.prisonersdilemma", championship);
 	
 	return 0;
 }

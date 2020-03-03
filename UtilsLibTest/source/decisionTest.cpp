@@ -1,5 +1,6 @@
 #include "Test.hpp"
 #include "Decision.hpp"
+using namespace PrisonersDilemma;
 
 TestCase("decision", "[Decision]")
 {

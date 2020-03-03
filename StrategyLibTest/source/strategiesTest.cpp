@@ -17,6 +17,7 @@
 #include "Decision.hpp"
 #include "Strategy.hpp"
 #include "Strategies.hpp"
+using namespace PrisonersDilemma;
 
 const std::vector<Decision> emptyDecisions   = {};
 const std::vector<Decision> startCooperating = {Decision::cooperate};
