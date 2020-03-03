@@ -23,4 +23,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE PUBLIC_TEST_METHODS)
+
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

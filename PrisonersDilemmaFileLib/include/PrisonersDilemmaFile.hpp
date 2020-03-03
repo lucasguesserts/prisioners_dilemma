@@ -23,6 +23,14 @@ class PrisonersDilemmaFile: public H5::H5File
 
 		static const std::string strategiesGroupName;
 
+#ifdef PUBLIC_TEST_METHODS
+	public:
+#else
+	private:
+#endif
+		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
+		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
+
 	private:
 		// TODO: those functions receive a lot of parameters and
 		// they do a lot of things. Correct it.
@@ -30,8 +38,6 @@ class PrisonersDilemmaFile: public H5::H5File
 		H5::Group getStrategiesGroup(void) const;
 		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const std::string & attributeData);
 		static void saveAttribute(const H5::Group & group, const std::string & attributeName, const unsigned attributeValue  );
-		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
-		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
 };
 
 #endif

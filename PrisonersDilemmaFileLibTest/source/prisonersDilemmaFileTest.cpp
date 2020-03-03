@@ -45,72 +45,21 @@ TestCaseMethod(ChampionshipFixture, "Save championship basic data", "[PrisonersD
 	PrisonersDilemmaFile roFile(filePath);
 	H5::Group group;
 	requireNoThrow( group = roFile.openGroup(championship.name) );
-	section("name")
-	{
-		std::string attrData;
-		H5::Attribute attribute;
-		requireNoThrow( attribute = group.openAttribute("name") );
-		requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-		requireNoThrow( attribute.close() );
-		check( attrData == championship.name );
-	}
-	section("description")
-	{
-		std::string attrData;
-		H5::Attribute attribute;
-		requireNoThrow( attribute = group.openAttribute("description") );
-		requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-		requireNoThrow( attribute.close() );
-		check( attrData == championship.description );
-	}
-	section("number of turns")
-	{
-		unsigned attrData;
-		H5::Attribute attribute;
-		requireNoThrow( attribute = group.openAttribute("numberOfTurns") );
-		requireNoThrow( attribute.read(H5::PredType::NATIVE_UINT, &attrData) );
-		requireNoThrow( attribute.close() );
-		check( attrData == championship.numberOfTurns );
-	}
+	check( PrisonersDilemmaFile::loadStrAttribute     (group, "name")          == championship.name          );
+	check( PrisonersDilemmaFile::loadStrAttribute     (group, "description")   == championship.description   );
+	check( PrisonersDilemmaFile::loadUnsignedAttribute(group, "numberOfTurns") == championship.numberOfTurns );
 	section("strategies")
 	{
 		H5::Group strategiesGroup;
 		requireNoThrow( strategiesGroup = roFile.openGroup(PrisonersDilemmaFile::strategiesGroupName) );
-		// TODO: Add sections testing more strategies
+		// TODO: add more strategies
 		section("Always cooperate")
 		{
 			H5::Group thisStrategyGroup;
 			requireNoThrow( thisStrategyGroup = strategiesGroup.openGroup(allC.name) );
-			section("name")
-			{
-				std::string attrName = "name";
-				std::string attrData;
-				H5::Attribute attribute;
-				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
-				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-				requireNoThrow( attribute.close() );
-				check( attrData == allC.name );
-			}
-			section("short name")
-			{
-				std::string attrName = "shortName";
-				std::string attrData;
-				H5::Attribute attribute;
-				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
-				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-				requireNoThrow( attribute.close() );
-				check( attrData == allC.shortName );
-			}
-			section("description")
-			{
-				std::string attrName = "description";
-				std::string attrData;
-				H5::Attribute attribute;
-				requireNoThrow( attribute = thisStrategyGroup.openAttribute(attrName) );
-				requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-				requireNoThrow( attribute.close() );
-				check( attrData == allC.description );
-			}
+			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "name")        == allC.name        );
+			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "shortName")   == allC.shortName   );
+			check( PrisonersDilemmaFile::loadStrAttribute(thisStrategyGroup, "description") == allC.description );
 			requireNoThrow( thisStrategyGroup.close() );
 		}
 		requireNoThrow( strategiesGroup.close() );
@@ -130,6 +79,7 @@ TestCaseMethod(ChampionshipFixture, "Save player basic description", "[Prisoners
 	check( std::filesystem::exists(filePath) );
 	// Load file
 	PrisonersDilemmaFile roFile(filePath);
+	// TODO: add more players
 	section("always cooperate player")
 	{
 		H5::Group playerGroup, strategyGroup;
@@ -138,36 +88,9 @@ TestCaseMethod(ChampionshipFixture, "Save player basic description", "[Prisoners
 		requireNoThrow( playerGroup = roFile.openGroup(playerGroupPath) );
 		check( playerGroup.exists("strategy") );
 		requireNoThrow( strategyGroup = roFile.openGroup(strategyPath) );
-		section("name")
-		{
-			std::string attrName = "name";
-			std::string attrData;
-			H5::Attribute attribute;
-			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
-			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-			requireNoThrow( attribute.close() );
-			check( attrData == allC.name );
-		}
-		section("short name")
-		{
-			std::string attrName = "shortName";
-			std::string attrData;
-			H5::Attribute attribute;
-			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
-			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-			requireNoThrow( attribute.close() );
-			check( attrData == allC.shortName );
-		}
-		section("description")
-		{
-			std::string attrName = "description";
-			std::string attrData;
-			H5::Attribute attribute;
-			requireNoThrow( attribute = strategyGroup.openAttribute(attrName) );
-			requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-			requireNoThrow( attribute.close() );
-			check( attrData == allC.description );
-		}
+		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "name")        == allC.name        );
+		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "shortName")   == allC.shortName   );
+		check( PrisonersDilemmaFile::loadStrAttribute(strategyGroup, "description") == allC.description );
 		requireNoThrow( strategyGroup.close() );
 		requireNoThrow( playerGroup.close() );
 	}
@@ -220,6 +143,7 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 				check( datasetData == correctDatasetData );
 				requireNoThrow( dataset.close() );
 			}
+			// TODO: add more partners
 			section("partner player link and its strategy")
 			{
 				check( partnerGroup.exists("Always Defect") );
@@ -227,36 +151,9 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 				H5::Group partnerStrategyGroup;
 				std::string partnerStrategyGroupPath = partnerGroupPath + "Always Defect" + "/" + "strategy" + "/";
 				requireNoThrow( partnerStrategyGroup = roFile.openGroup(partnerStrategyGroupPath) );
-				section("name")
-				{
-					std::string attrName = "name";
-					std::string attrData;
-					H5::Attribute attribute;
-					requireNoThrow( attribute = partnerStrategyGroup.openAttribute(attrName) );
-					requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-					requireNoThrow( attribute.close() );
-					check( attrData == allD.name );
-				}
-				section("short name")
-				{
-					std::string attrName = "shortName";
-					std::string attrData;
-					H5::Attribute attribute;
-					requireNoThrow( attribute = partnerStrategyGroup.openAttribute(attrName) );
-					requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-					requireNoThrow( attribute.close() );
-					check( attrData == allD.shortName );
-				}
-				section("description")
-				{
-					std::string attrName = "description";
-					std::string attrData;
-					H5::Attribute attribute;
-					requireNoThrow( attribute = partnerStrategyGroup.openAttribute(attrName) );
-					requireNoThrow( attribute.read(attribute.getStrType(), attrData) );
-					requireNoThrow( attribute.close() );
-					check( attrData == allD.description );
-				}
+				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "name")        == allD.name        );
+				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "shortName")   == allD.shortName   );
+				check( PrisonersDilemmaFile::loadStrAttribute(partnerStrategyGroup, "description") == allD.description );
 				requireNoThrow( partnerStrategyGroup.close() );
 			}
 			requireNoThrow( partnerGroup.close() );
