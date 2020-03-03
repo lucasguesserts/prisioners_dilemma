@@ -21,14 +21,13 @@ class PrisonersDilemmaFile: public H5::H5File
 		// Fix it!
 		PrisonersDilemmaFile(const std::string & filePath, const unsigned flags=H5F_ACC_RDONLY);
 		PrisonersDilemmaFile(const std::string & filePath, const Championship & championship, const unsigned flags=H5F_ACC_TRUNC);
+		static const std::string strategiesGroupName;
 
+	private:
 		void save(const Championship &                  ) const;
 		void save(const Strategy * const                ) const;
 		void save(const H5::Group &     , const Player &) const;
 
-		static const std::string strategiesGroupName;
-
-	private:
 		// TODO: those functions receive a lot of parameters and
 		// they do a lot of things. Correct it.
 		H5::Group getStrategiesGroup(void) const;
