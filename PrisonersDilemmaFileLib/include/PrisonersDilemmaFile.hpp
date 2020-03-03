@@ -14,8 +14,13 @@
 class PrisonersDilemmaFile: public H5::H5File
 {
 	public:
+		// TODO: fix error, when 'flags' is not included in the
+		// parameters, there will be an error:
+		//     error while loading shared libraries: libhdf5.so.103:
+		//     cannot open shared object file: No such file or directory
+		// Fix it!
 		PrisonersDilemmaFile(const std::string & filePath, const unsigned flags=H5F_ACC_RDONLY);
-		PrisonersDilemmaFile(const std::string & filePath, const Championship & championship);
+		PrisonersDilemmaFile(const std::string & filePath, const Championship & championship, const unsigned flags=H5F_ACC_TRUNC);
 
 		void save(const Championship &                  ) const;
 		void save(const Strategy * const                ) const;

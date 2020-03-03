@@ -21,8 +21,9 @@ PrisonersDilemmaFile::PrisonersDilemmaFile(
 
 PrisonersDilemmaFile::PrisonersDilemmaFile(
 	const std::string  & filePath,
-	const Championship & championship)
-	: H5::H5File(filePath, H5F_ACC_TRUNC)
+	const Championship & championship,
+	const unsigned       flags)
+	: H5::H5File(filePath, flags)
 {
 	this->save(championship);
 	this->close();
