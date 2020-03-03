@@ -114,6 +114,7 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 		H5::Group playerGroup;
 		std::string playerGroupPath = "/" + championship.name + "/" + "Always Cooperate" + "/";
 		requireNoThrow( playerGroup = roFile.openGroup(playerGroupPath) );
+		// TODO: add more partners
 		section("competition with always defect")
 		{
 			H5::Group partnerGroup;
@@ -121,29 +122,14 @@ TestCaseMethod(ChampionshipFixture, "Save player competitions", "[PrisonersDilem
 			requireNoThrow( partnerGroup = roFile.openGroup(partnerGroupPath) );
 			section("decisions")
 			{
-				std::string datasetName = "decisions";
-				H5::DataSet dataset;
-				requireNoThrow(dataset = partnerGroup.openDataSet(datasetName) );
-				std::vector<Decision> datasetData;
-				datasetData.resize(numberOfTurns);
-				requireNoThrow( dataset.read(datasetData.data(), H5::PredType::NATIVE_UCHAR) );
 				std::vector<Decision> correctDatasetData(numberOfTurns, Decision::cooperate);
-				check( datasetData == correctDatasetData );
-				requireNoThrow( dataset.close() );
+				check( PrisonersDilemmaFile::loadDecisions(partnerGroup,numberOfTurns) == correctDatasetData );
 			}
 			section("payoff")
 			{
-				std::string datasetName = "payoff";
-				H5::DataSet dataset;
-				requireNoThrow(dataset = partnerGroup.openDataSet(datasetName) );
-				std::vector<Payoff> datasetData;
-				datasetData.resize(numberOfTurns);
-				requireNoThrow( dataset.read(datasetData.data(), H5::PredType::NATIVE_UINT) );
 				std::vector<Payoff> correctDatasetData(numberOfTurns, Payoff::suckers);
-				check( datasetData == correctDatasetData );
-				requireNoThrow( dataset.close() );
+				check( PrisonersDilemmaFile::loadPayoff(partnerGroup,numberOfTurns) == correctDatasetData );
 			}
-			// TODO: add more partners
 			section("partner player link and its strategy")
 			{
 				check( partnerGroup.exists("Always Defect") );

@@ -30,6 +30,8 @@ class PrisonersDilemmaFile: public H5::H5File
 #endif
 		static std::string loadStrAttribute(const H5::Group & group, const std::string & attributeName);
 		static unsigned loadUnsignedAttribute(const H5::Group & group, const std::string & attributeName);
+		static std::vector<Decision> loadDecisions(const H5::Group & group, const unsigned numberOfTurns);
+		static std::vector<Payoff> loadPayoff(const H5::Group & group, const unsigned numberOfTurns);
 
 	private:
 		// TODO: those functions receive a lot of parameters and

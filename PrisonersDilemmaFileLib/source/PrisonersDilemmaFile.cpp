@@ -158,3 +158,29 @@ unsigned PrisonersDilemmaFile::loadUnsignedAttribute(
 	attribute.read(H5::PredType::NATIVE_UINT, &attrData);
 	return attrData;
 }
+
+std::vector<Decision> PrisonersDilemmaFile::loadDecisions(const H5::Group & group, const unsigned numberOfTurns)
+{
+	// TODO: add method to read number of turns
+	std::string datasetName = "decisions";
+	H5::DataSet dataset;
+	dataset = group.openDataSet(datasetName);
+	std::vector<Decision> datasetData;
+	datasetData.resize(numberOfTurns);
+	dataset.read(datasetData.data(), H5::PredType::NATIVE_UCHAR);
+	dataset.close();
+	return datasetData;
+}
+
+std::vector<Payoff> PrisonersDilemmaFile::loadPayoff(const H5::Group & group, const unsigned numberOfTurns)
+{
+	// TODO: add method to read number of turns
+	std::string datasetName = "payoff";
+	H5::DataSet dataset;
+	dataset = group.openDataSet(datasetName);
+	std::vector<Payoff> datasetData;
+	datasetData.resize(numberOfTurns);
+	dataset.read(datasetData.data(), H5::PredType::NATIVE_UINT);
+	dataset.close();
+	return datasetData;
+}
