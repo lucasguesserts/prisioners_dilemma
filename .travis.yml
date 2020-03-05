@@ -12,7 +12,7 @@ before_install:
 
 install: 
     - sudo apt install valgrind -qq > /dev/null
-    - ./install_hdf5.sh
+    - ./install_hdf5.sh > /dev/null
 
 script:
     - mkdir build
