@@ -11,13 +11,18 @@ before_install:
     - sudo apt update -qq > /dev/null
 
 install: 
+    - sudo apt install valgrind -qq > /dev/null
     - ./install_hdf5.sh
 
-before_script:
+script:
     - mkdir build
     - cd build
-
-script:
     - cmake ..
-    - make
+    - make -j `nproc --all`
     - make test
+    - cd bin
+    - for TEST in `ls`;
+      do
+          echo -e "\n\n$TEST\n----------------------------------------\n";
+          valgrind --leak-check=yes --track-origins=yes --error-exitcode=1 ./$TEST;
+      done
