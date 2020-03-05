@@ -65,7 +65,6 @@ namespace PrisonersDilemma
 		& atft,
 		& mratft,
 	};
-
 }
 
 const Strategy * PrisonersDilemma::findStrategy(

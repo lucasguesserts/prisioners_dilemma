@@ -4,8 +4,9 @@
 namespace PrisonersDilemma
 {
 	enum class Decision : unsigned char { cooperate, defect };
+
+	PrisonersDilemma::Decision operator!(const PrisonersDilemma::Decision & d);
 }
 
-PrisonersDilemma::Decision operator!(const PrisonersDilemma::Decision & d);
 
 #endif
