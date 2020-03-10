@@ -12,9 +12,11 @@ TestCase("Three players chapionship", "[Championship]")
 {
 	const unsigned numberOfTurns = 5;
 	Championship championship(
-		"Simple Test",
-		"Use three strategies to test the Championship class.",
-		numberOfTurns,
+		{
+			"Simple Test",
+			"Use three strategies to test the Championship class.",
+			numberOfTurns
+		},
 		{
 			&allC,
 			&allD,

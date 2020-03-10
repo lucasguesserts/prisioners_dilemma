@@ -11,19 +11,23 @@
 #include "Championship.hpp"
 using namespace PrisonersDilemma;
 
-Championship::Championship(
-	const std::string &                   name,
-	const std::string &                   description,
-	const unsigned                        numberOfTurns,
-	const std::vector<const Strategy *> & strategies)
+ChampionshipDescription::ChampionshipDescription(
+	const std::string & name,
+	const std::string & description,
+	const unsigned      numberOfTurns)
 	: name(name),
 	  description(description),
 	  numberOfTurns(numberOfTurns)
+{}
+
+
+Championship::Championship(
+	const ChampionshipDescription &       fullDescription,
+	const std::vector<const Strategy *> & strategies)
+	: ChampionshipDescription(fullDescription)
 {
 	for(auto strategy: strategies)
-	{
 		this->players.emplace_back(*strategy);
-	}
 	return;
 }
 
@@ -42,7 +46,7 @@ void Championship::rank(void)
 	return;
 }
 
-std::ostream& PrisonersDilemma::operator<<(std::ostream& os, Championship& championship)
+std::ostream& PrisonersDilemma::operator<<(std::ostream& os, const Championship& championship)
 {
 	// This is how it is going to look like:
 	//
@@ -52,18 +56,33 @@ std::ostream& PrisonersDilemma::operator<<(std::ostream& os, Championship& champ
 	//     1 :   1201 : Gradual
 	//     2 :   1265 : Generous Tit For Tat
 	//     3 :   1283 : Adaptative Tit For Tat
-	os << std::endl << "Strategies rank:" << std::endl;
+	using std::endl;
+	const std::string tab = "\t";
+	os << static_cast<ChampionshipDescription>(championship);
+	os << tab << "Strategies rank:" << endl;
 	auto divisor = " : ";
-	os << "Place" << divisor << " Score" << divisor << "Strategy" << std::endl;
+	os << tab << tab << "Place" << divisor << " Score" << divisor << "Strategy" << endl;
+	os << tab << tab << "-----" << divisor << " -----" << divisor << "--------" << endl;
 	for(size_t place=0u ; place<championship.players.size() ; place++)
 	{
 		const Player& player = championship.players.at(place);
-		os << \
+		os << tab << tab << \
 			std::setw( 5) << std::right << place                   << divisor << \
 			std::setw( 6) << std::right << player.score()          << divisor << \
 			std::setw(40) << std::left  << player.strategy->name   << \
-			std::endl;
+			endl;
 	}
-	os << std::endl;
+	os << endl;
+	return os;
+}
+
+std::ostream& PrisonersDilemma::operator<<(std::ostream& os, const ChampionshipDescription& championshipDescription)
+{
+	using std::endl;
+	const std::string tab = "\t";
+	os << championshipDescription.name << " Championship" << endl;
+	os << "----------------------------------------" << endl;
+	os << tab << "Description: " << championshipDescription.description << endl;
+	os << tab << "Number of Turns: " << championshipDescription.numberOfTurns << endl;
 	return os;
 }

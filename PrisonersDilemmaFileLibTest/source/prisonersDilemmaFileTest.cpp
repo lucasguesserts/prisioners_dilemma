@@ -18,7 +18,7 @@ class ChampionshipFixture
 		const unsigned numberOfTurns = 5;
 		Championship championship;
 		ChampionshipFixture(void)
-			: championship("Test Championship","For test.", numberOfTurns, {&allC,	&allD, &tft})
+			: championship({"Test Championship","For test.", numberOfTurns}, {&allC, &allD, &tft})
 		{
 			this->championship.compete();
 			return;

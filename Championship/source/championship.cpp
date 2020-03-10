@@ -16,9 +16,11 @@ int main()
 	// Championship
 	const unsigned numberOfTurns = 50;
 	PrisonersDilemma::Championship championship(
-		"All strategies",
-		"Competition among all strategies.",
-		numberOfTurns,
+		{
+			"All strategies",
+			"Competition among all strategies.",
+			numberOfTurns
+		},
 		{
 			&PrisonersDilemma::allC   ,
 			&PrisonersDilemma::allD   ,

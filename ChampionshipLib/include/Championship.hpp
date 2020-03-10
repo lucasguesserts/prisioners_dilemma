@@ -11,26 +11,35 @@
 namespace PrisonersDilemma
 {
 
-	class Championship
+	struct ChampionshipDescription
+	{
+		const std::string name;
+		const std::string description;
+		const unsigned    numberOfTurns;
+
+		ChampionshipDescription(
+			const std::string & name,
+			const std::string & description,
+			const unsigned      numberOfTurns
+		);
+	};
+
+	class Championship: public ChampionshipDescription
 	{
 		// TODO: change 'numberOfTurns' to size_t without breaking PrisonersDilemmaFile
 		public:
-			const std::string         name;
-			const std::string         description;
-			const unsigned            numberOfTurns;
 			std::vector<Player>       players;
 
 			Championship(
-				const std::string &                   name,
-				const std::string &                   description,
-				const unsigned                        numberOfTurns,
+				const ChampionshipDescription &       fullDescription,
 				const std::vector<const Strategy *> & strategies);
 
 			void compete(void);
 			void rank(void);
 	};
 
-	std::ostream& operator<<(std::ostream& os, Championship& championship);
+	std::ostream& operator<<(std::ostream& os, const ChampionshipDescription& championshipDescription);
+	std::ostream& operator<<(std::ostream& os, const Championship& championship);
 
 }
 
