@@ -1,7 +1,7 @@
 #ifndef UTILS_TEST_H
 #define UTILS_TEST_H
 
-#include "catch.hpp"
+#include "catch2/catch.hpp"
 
 #define TestCaseMethod TEST_CASE_METHOD
 #define TestCase TEST_CASE

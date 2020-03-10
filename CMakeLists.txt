@@ -37,9 +37,17 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) 
 
 # External Packages
+## Catch2
+set(CATCH2_VERSION "2.11.1")
+set(Catch2_DIR "$ENV{HOME}/libs/catch2-${CATCH2_VERSION}/lib/cmake/Catch2/")
+find_package(Catch2 ${CATCH2_VERSION} REQUIRED)
+if(Catch2_FOUND)
+	message("-- Found Catch2: version ${Catch2_VERSION}")
+endif()
+## HDF5
 set(HDF5_VERSION "1.10.3")
 set(HDF5_ROOT "$ENV{HOME}/libs/hdf5-${HDF5_VERSION}/")
-find_package(HDF5 ${HDF5_VERSION} EXACT REQUIRED COMPONENTS CXX)                             
+find_package(HDF5 ${HDF5_VERSION} EXACT REQUIRED COMPONENTS CXX)
 
 # Testing
 enable_testing()
@@ -68,10 +76,14 @@ message("Homepage         = ${PROJECT_HOMEPAGE_URL}")
 message("C++ compiler	 = ${CMAKE_CXX_COMPILER}")
 message("Compiler flags	 = ${CMAKE_CXX_FLAGS}")
 message("Compiler version = ${CMAKE_CXX_COMPILER_VERSION}")
-if(HDF5_FOUND)                                                     
+if(Catch2_FOUND)
+	message("Catch2 version   = ${Catch2_VERSION}")
+else()
+	message("Catch2 not found")
+endif()
+if(HDF5_FOUND)
 	message("HDF5 version     = ${HDF5_VERSION}")
-else()                                                          
+else()
 	message("HDF5 not found")
-endif()                                                                                                                                            
+endif()
 message("\n")
-
