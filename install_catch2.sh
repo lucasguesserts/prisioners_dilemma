@@ -24,6 +24,8 @@ cmake -DCMAKE_INSTALL_PREFIX=$HOME/libs/catch2-$SPECIFIC_VERSION/ ..
 # Build
 NUMBER_OF_PROCESSSORS=`nproc --all`
 make -j $NUMBER_OF_PROCESSORS
+make test
+if [ $? -ne 0 ] ; then exit 1 ; fi
 make install
 
 # Delete
