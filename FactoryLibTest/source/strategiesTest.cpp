@@ -104,7 +104,7 @@ TestCase("Naive Prober", "[Strategies]")
 	}
 	section("tit for tat defect")
 	{
-		check( np->makeDecision(Decision::defect) == Decision::defect );
+		checkDiscreteProbability(Decision::defect   , 1.0                         , [&](){return np->makeDecision(Decision::defect);});
 	}
 	return;
 }
