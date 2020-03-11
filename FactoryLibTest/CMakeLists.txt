@@ -1,0 +1,18 @@
+project(FactoryLibTest)
+
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+	${CMAKE_SOURCE_DIR}/UtilsLib/include
+	${CMAKE_SOURCE_DIR}/FactoryLib/include)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+	Catch2::Catch2
+	UtilsLib
+	FactoryLib)
+
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
+
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
