@@ -14,36 +14,46 @@ extern void checkDecisionHistory(
 class TestStrategy: public Strategy
 {
 	public:
-		TestStrategy(void)
+		TestStrategy(const Decision & decision = Decision::cooperate)
 			: Strategy(
 				{
 					"Test Strategy",
 					"TestS",
 					"Class implemented just to make the following test case."
-				}){}
+				}),
+			  decision(decision) {}
 		Decision makeInitialDecision(void) final override
 		{
-			return Decision::cooperate;
+			return this->decision;
 		}
-		Decision makeDecision(const Decision & partnerLastDecision) final override
+		Decision makeDecision([[maybe_unused]] const Decision & partnerLastDecision) final override
 		{
-			return partnerLastDecision;
+			return this->decision;
 		}
+		// This method requires that there is a constructor which receives no
+		// parameter: TestStrategy(void).
+		// It was accomplished by defining a default value to the constructor.
 		static std::unique_ptr<Strategy> create(void)
 		{
 			return static_cast<std::unique_ptr<Strategy>>(std::make_unique<TestStrategy>());
 		}
-		static std::function<std::unique_ptr<Strategy>(void)> creator(void)
+		// The method receives the same parameters as the constructor does.
+		// It might be annoying to always define this function as receiving
+		// the same parameters, capturing it and then giving it to 'make_unique'.
+		static std::function<std::unique_ptr<Strategy>(void)> creator(const Decision & decision)
 		{
-			return [](){ return static_cast<std::unique_ptr<Strategy>>(std::make_unique<TestStrategy>()); };
+			return [&decision](){ return static_cast<std::unique_ptr<Strategy>>(std::make_unique<TestStrategy>(decision)); };
 		}
+	private:
+		const Decision decision;
+
 };
 
 TestCase("strategy implementation", "[Strategy]")
 {
-	// auto strategyCreator = TestStrategy::creator();
-	// auto strategy = strategyCreator();
-	auto strategy = TestStrategy::create();
+	auto strategyCreate = TestStrategy::creator(Decision::cooperate);
+	auto strategy = strategyCreate();
+	// auto strategy = TestStrategy::create();
 	section("description")
 	{
 		check( strategy->name        == "Test Strategy" );
@@ -59,12 +69,12 @@ TestCase("strategy implementation", "[Strategy]")
 		checkDecisionHistory(
 			{
 				Decision::cooperate,
-				Decision::defect   ,
 				Decision::cooperate,
 				Decision::cooperate,
 				Decision::cooperate,
-				Decision::defect   ,
-				Decision::defect   ,
+				Decision::cooperate,
+				Decision::cooperate,
+				Decision::cooperate,
 				Decision::cooperate,
 			},
 			{
