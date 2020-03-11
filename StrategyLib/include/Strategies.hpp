@@ -13,7 +13,24 @@
 namespace PrisonersDilemma
 {
 
-	class AlwaysCooperate: public Strategy
+	// TODO: this solution works but might not
+	// be the best one. Check how to correctly
+	// implement a factory class in C++
+	template <class Class, class Interface>
+	class Factory
+	{
+		public:
+				static std::unique_ptr<Interface> create(void){
+					// TODO: allow passing arguments to the function
+					// or define the function already with its
+					// arguments when passing to a player.
+					return std::move(Class::createInternal());
+				}
+	};
+
+	class AlwaysCooperate:
+		public Factory<AlwaysCooperate, Strategy>,
+		public Strategy
 	{
 		public:
 			AlwaysCooperate(void)
@@ -24,9 +41,16 @@ namespace PrisonersDilemma
 			Decision makeDecision(
 				const std::vector<Decision> & thisDecision,
 				const std::vector<Decision> & partnerDecision) const override final;
+			static std::unique_ptr<Strategy> createInternal(void)
+			{
+				// TODO: I get and error with std::make_unique. Correct it.
+				return std::unique_ptr<Strategy>(new AlwaysCooperate);
+			}
 	};
 
-	class AlwaysDefect: public Strategy
+	class AlwaysDefect:
+		public Factory<AlwaysDefect, Strategy>,
+		public Strategy
 	{
 		public:
 			AlwaysDefect(void)
@@ -37,6 +61,10 @@ namespace PrisonersDilemma
 			Decision makeDecision(
 				const std::vector<Decision> & thisDecision,
 				const std::vector<Decision> & partnerDecision) const override final;
+			static std::unique_ptr<Strategy> createInternal(void)
+			{
+				return std::unique_ptr<Strategy>(new AlwaysDefect);
+			}
 	};
 
 	class Lunatic: public Strategy
@@ -175,7 +203,9 @@ namespace PrisonersDilemma
 			static bool gotAsuckers(const Decision & thisLastDecision, const Decision & partnerLastDecision);
 	};
 
-	class TitForTat: public Strategy
+	class TitForTat:
+		public Factory<TitForTat, Strategy>,
+		public Strategy
 	{
 		public:
 			TitForTat(void)
@@ -186,6 +216,10 @@ namespace PrisonersDilemma
 			Decision makeDecision(
 				const std::vector<Decision> & thisDecision,
 				const std::vector<Decision> & partnerDecision) const override final;
+			static std::unique_ptr<Strategy> createInternal(void)
+			{
+				return std::unique_ptr<Strategy>(new TitForTat);
+			}
 	};
 
 	class TitForTwoTats: public Strategy

@@ -45,3 +45,20 @@ TestCase("Player score", "[Player]")
 	check(alwaysCooperate.score() == 12u );
 	return;
 }
+
+TestCase("Player score - Factory Method", "[Player]")
+{
+	Player alwaysCooperate(AlwaysCooperate::create);
+	alwaysCooperate.saveMatch(
+		{ Decision::cooperate, Decision::cooperate, Decision::cooperate },
+		{ Payoff::reward,      Payoff::suckers,     Payoff::reward },
+		&moon
+	);
+	alwaysCooperate.saveMatch(
+		{ Decision::cooperate, Decision::cooperate, Decision::cooperate },
+		{ Payoff::suckers,     Payoff::reward,      Payoff::suckers     },
+		&moon
+	);
+	check(alwaysCooperate.score() == 12u );
+	return;
+}

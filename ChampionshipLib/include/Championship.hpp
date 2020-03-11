@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <functional>
+#include <memory>
 #include <iostream>
 #include "Strategy.hpp"
 #include "Player.hpp"
@@ -33,6 +35,16 @@ namespace PrisonersDilemma
 			Championship(
 				const ChampionshipDescription &       fullDescription,
 				const std::vector<const Strategy *> & strategies);
+
+			Championship(
+				const ChampionshipDescription &       fullDescription,
+				const std::vector<std::function<std::unique_ptr<Strategy>(void)>> & strategyCreators)
+				: ChampionshipDescription(fullDescription)
+			{
+				for(auto strategyCreator: strategyCreators)
+					this->players.emplace_back(strategyCreator);
+				return;
+			}
 
 			void compete(void);
 			void rank(void);

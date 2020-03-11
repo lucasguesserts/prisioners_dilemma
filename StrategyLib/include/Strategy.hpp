@@ -1,6 +1,7 @@
 #ifndef STRATEGY_HPP
 #define STRATEGY_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 #include "Decision.hpp"

@@ -102,3 +102,21 @@ TestCase("Three players chapionship", "[Championship]")
 	}
 	return;
 }
+
+TestCase("Three players chapionship - Factory Method", "[Championship]")
+{
+	const unsigned numberOfTurns = 5;
+	Championship championship(
+		{
+			"Simple Test",
+			"Use three strategies to test the Championship class.",
+			numberOfTurns
+		},
+		{
+			AlwaysCooperate::create,
+			AlwaysDefect::create,
+			TitForTat::create
+		}
+	);
+	return;
+}

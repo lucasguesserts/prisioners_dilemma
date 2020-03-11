@@ -910,3 +910,25 @@ TestCase("Meta-Regulated Adaptative Tit For Tat", "[Strategies]")
 	);
 	return;
 }
+
+TestCase("Factory method", "[Factory]")
+{
+	section("always cooperate")
+	{
+		auto strategy = AlwaysCooperate::create();
+		check( strategy->makeDecision(emptyDecisions, emptyDecisions)     == Decision::cooperate );
+	}
+	section("always defect")
+	{
+		auto strategy = AlwaysDefect::create();
+		check( strategy->makeDecision(emptyDecisions, emptyDecisions)     == Decision::defect    );
+	}
+	section("tit for tat")
+	{
+		auto strategy = TitForTat::create();
+		check( strategy->makeDecision(emptyDecisions,   emptyDecisions)   == Decision::cooperate );
+		check( strategy->makeDecision(startCooperating, startCooperating) == Decision::cooperate );
+		check( strategy->makeDecision(startDefecting,   startDefecting)   == Decision::defect    );
+	}
+	return;
+}
