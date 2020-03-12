@@ -1,4 +1,3 @@
-#include <string>
 #include "Strategy.hpp"
 using namespace PrisonersDilemma;
 

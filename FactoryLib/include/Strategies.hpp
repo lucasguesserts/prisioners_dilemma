@@ -3,15 +3,14 @@
 
 // Based on http://www.prisoners-dilemma.com/strategies.html
 
-#include <cstddef>
 #include <functional>
-#include <vector>
-#include <string>
 #include "Strategy.hpp"
 #include "Decision.hpp"
 
 namespace PrisonersDilemma
 {
+
+	using StrategyCreator = std::function<StrategyPtr(void)>;
 
 	class AlwaysCooperate: public Strategy
 	{
@@ -19,7 +18,7 @@ namespace PrisonersDilemma
 			AlwaysCooperate(void);
 			Decision makeInitialDecision(void) final override;
 			Decision makeDecision(const Decision & partnerLastDecision) final override;
-			static std::function<std::unique_ptr<Strategy>(void)> creator(void);
+			static StrategyCreator creator(void);
 	};
 
 	class AlwaysDefect: public Strategy
@@ -28,7 +27,7 @@ namespace PrisonersDilemma
 			AlwaysDefect(void);
 			Decision makeInitialDecision(void) final override;
 			Decision makeDecision(const Decision & partnerLastDecision) final override;
-			static std::function<std::unique_ptr<Strategy>(void)> creator(void);
+			static StrategyCreator creator(void);
 	};
 
 	class TitForTat: public Strategy
@@ -37,7 +36,7 @@ namespace PrisonersDilemma
 			TitForTat(void);
 			Decision makeInitialDecision(void) final override;
 			Decision makeDecision(const Decision & partnerLastDecision) final override;
-			static std::function<std::unique_ptr<Strategy>(void)> creator(void);
+			static StrategyCreator creator(void);
 	};
 
 	class NaiveProber: public Strategy
@@ -46,7 +45,7 @@ namespace PrisonersDilemma
 			NaiveProber(double probabilityOfDefecting = 0.10);
 			Decision makeInitialDecision(void) final override;
 			Decision makeDecision(const Decision & partnerLastDecision) final override;
-			static std::function<std::unique_ptr<Strategy>(void)> creator(double probabilityOfDefecting);
+			static StrategyCreator creator(double probabilityOfDefecting);
 		private:
 			const double probabilityOfDefecting;
 			bool decidedRandomlyToDefect(void) const;

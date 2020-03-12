@@ -15,7 +15,7 @@
 #include "Payoff.hpp"
 using namespace PrisonersDilemma;
 
-// ------------------ Always Cooperate -----------------------
+// ------------------ Always Cooperate ------------------
 
 AlwaysCooperate::AlwaysCooperate(void)
 : Strategy(
@@ -36,12 +36,12 @@ Decision AlwaysCooperate::makeDecision([[maybe_unused]] const Decision & partner
 	return Decision::cooperate;
 }
 
-std::function<std::unique_ptr<Strategy>(void)> AlwaysCooperate::creator(void)
+StrategyCreator AlwaysCooperate::creator(void)
 {
-	return [](){ return static_cast<std::unique_ptr<Strategy>> (std::make_unique<AlwaysCooperate>()); };
+	return [](){ return static_cast<StrategyPtr> (std::make_unique<AlwaysCooperate>()); };
 }
 
-// ------------------ Always Defect -----------------------
+// ------------------ Always Defect ------------------
 
 AlwaysDefect::AlwaysDefect(void)
 : Strategy(
@@ -62,12 +62,12 @@ Decision AlwaysDefect::makeDecision([[maybe_unused]] const Decision & partnerLas
 	return Decision::defect;
 }
 
-std::function<std::unique_ptr<Strategy>(void)> AlwaysDefect::creator(void)
+StrategyCreator AlwaysDefect::creator(void)
 {
-	return [](){ return static_cast<std::unique_ptr<Strategy>> (std::make_unique<AlwaysDefect>()); };
+	return [](){ return static_cast<StrategyPtr> (std::make_unique<AlwaysDefect>()); };
 }
 
-// ------------------ Tit For Tat -----------------------
+// ------------------ Tit For Tat ------------------
 
 TitForTat::TitForTat(void)
 : Strategy(
@@ -88,12 +88,12 @@ Decision TitForTat::makeDecision(const Decision & partnerLastDecision)
 	return partnerLastDecision;
 }
 
-std::function<std::unique_ptr<Strategy>(void)> TitForTat::creator(void)
+StrategyCreator TitForTat::creator(void)
 {
-	return [](){ return static_cast<std::unique_ptr<Strategy>> (std::make_unique<TitForTat>()); };
+	return [](){ return static_cast<StrategyPtr> (std::make_unique<TitForTat>()); };
 }
 
-// ------------------ Tit For Tat -----------------------
+// ------------------ Tit For Tat ------------------
 
 NaiveProber::NaiveProber(double probabilityOfDefecting)
 : Strategy(
@@ -121,10 +121,10 @@ Decision NaiveProber::makeDecision(const Decision & partnerLastDecision)
 	else                                   return partnerLastDecision;
 }
 
-std::function<std::unique_ptr<Strategy>(void)> NaiveProber::creator(double probabilityOfDefecting)
+StrategyCreator NaiveProber::creator(double probabilityOfDefecting)
 {
 	return [probabilityOfDefecting](){
-		return static_cast<std::unique_ptr<Strategy>>(
+		return static_cast<StrategyPtr>(
 				std::make_unique<NaiveProber>(
 					probabilityOfDefecting
 				)
