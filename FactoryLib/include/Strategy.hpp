@@ -9,22 +9,18 @@
 namespace PrisonersDilemma
 {
 
-	struct StrategyDescription
+	struct StrategyInformation
 	{
-		const std::string name;
-		const std::string shortName;
-		const std::string description;
-		StrategyDescription(
-			const std::string & name,
-			const std::string & shortName,
-			const std::string & description);
+		const std::string name        = "";
+		const std::string shortName   = "";
+		const std::string description = "";
 	};
 
 	class Strategy
-	: public StrategyDescription
+	: public StrategyInformation
 	{
 		public:
-			Strategy(const StrategyDescription & fullDescription);
+			Strategy(const StrategyInformation & fullInformation);
 			virtual Decision makeInitialDecision(void) = 0;
 			virtual Decision makeDecision(const Decision & partnerLastDecision) = 0;
 	};

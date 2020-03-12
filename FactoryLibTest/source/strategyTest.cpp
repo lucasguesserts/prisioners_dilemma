@@ -11,6 +11,39 @@ extern void checkDecisionHistory(
 	const std::unique_ptr<Strategy> & strategy
 );
 
+TestCase("strategy information construction", "[StrategyInformation]")
+{
+	section("three values")
+	{
+		StrategyInformation info = {"name", "short name", "description"};
+		check( info.name        == "name"        );
+		check( info.shortName   == "short name"  );
+		check( info.description == "description" );
+	}
+	section("two values")
+	{
+		StrategyInformation info = {"name", "short name"};
+		check( info.name        == "name"        );
+		check( info.shortName   == "short name"  );
+		check( info.description == ""            );
+	}
+	section("one value")
+	{
+		StrategyInformation info = {"name"};
+		check( info.name        == "name"        );
+		check( info.shortName   == ""            );
+		check( info.description == ""            );
+	}
+	section("none value")
+	{
+		StrategyInformation info;
+		check( info.name        == ""            );
+		check( info.shortName   == ""            );
+		check( info.description == ""            );
+	}
+	return;
+}
+
 class TestStrategy: public Strategy
 {
 	public:
