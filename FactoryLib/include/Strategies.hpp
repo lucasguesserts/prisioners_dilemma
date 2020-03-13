@@ -3,14 +3,11 @@
 
 // Based on http://www.prisoners-dilemma.com/strategies.html
 
-#include <functional>
 #include "Strategy.hpp"
 #include "Decision.hpp"
 
 namespace PrisonersDilemma
 {
-
-	using StrategyCreator = std::function<StrategyPtr(void)>;
 
 	class AlwaysCooperate: public Strategy
 	{

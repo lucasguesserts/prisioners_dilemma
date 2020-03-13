@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <functional>
 #include "Decision.hpp"
 
 namespace PrisonersDilemma
@@ -24,7 +25,9 @@ namespace PrisonersDilemma
 			virtual Decision makeDecision(const Decision & partnerLastDecision) = 0;
 	};
 
-	using StrategyPtr = std::unique_ptr<Strategy>;
+	using StrategyPtr     = std::unique_ptr<Strategy>;
+	using StrategyCreator = const std::function<StrategyPtr(void)>;
+
 
 }
 
