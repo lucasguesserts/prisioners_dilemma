@@ -1,7 +1,3 @@
-// TODO: define a way of retrieving the player data
-// TODO: remove the define directive below
-#define private public
-
 #include <vector>
 #include "Test.hpp"
 #include "Decision.hpp"
@@ -23,16 +19,13 @@ TestCase("Always cooperate player", "[Player]")
 TestCase("Save match", "[Player]")
 {
 	Player alwaysCooperate(0u, AlwaysCooperate::creator());
-	const std::vector<Decision> decisions = {Decision::cooperate, Decision::cooperate};
-	const std::vector<Payoff>   payoff    = {Payoff::reward, Payoff::reward};
-	const Identifier            partner   = 5u;
-
-	alwaysCooperate.saveMatch(decisions, payoff, partner);
-	alwaysCooperate.saveMatch(decisions, payoff, partner);
-
-	check( alwaysCooperate.decisions == std::vector<std::vector<Decision>> {decisions, decisions} );
-	check( alwaysCooperate.payoff    == std::vector<std::vector<Payoff>>   {payoff,    payoff   } );
-	check( alwaysCooperate.partners  == std::vector<Identifier>            {partner,   partner  } );
+	const std::vector<MatchData> matchHistory = {
+		{ 5u, {Decision::cooperate, Decision::cooperate}, {Payoff::reward,     Payoff::reward} },
+		{ 4u, {Decision::defect   , Decision::cooperate}, {Payoff::temptation, Payoff::reward} },
+	};
+	alwaysCooperate.saveMatch(matchHistory.at(0));
+	alwaysCooperate.saveMatch(matchHistory.at(1));
+	check( alwaysCooperate.getHistory() == matchHistory );
 	return;
 }
 
@@ -40,16 +33,16 @@ TestCase("Player score", "[Player]")
 {
 	const Identifier partnerId = 5u;
 	Player alwaysCooperate(0u, AlwaysCooperate::creator());
-	alwaysCooperate.saveMatch(
+	alwaysCooperate.saveMatch({
+		partnerId,
 		{ Decision::cooperate, Decision::cooperate, Decision::cooperate },
-		{ Payoff::reward,      Payoff::suckers,     Payoff::reward },
-		partnerId
-	);
-	alwaysCooperate.saveMatch(
+		{ Payoff::reward,      Payoff::suckers,     Payoff::reward      }
+	});
+	alwaysCooperate.saveMatch({
+		partnerId,
 		{ Decision::cooperate, Decision::cooperate, Decision::cooperate },
-		{ Payoff::suckers,     Payoff::reward,      Payoff::suckers     },
-		partnerId
-	);
-	check(alwaysCooperate.score() == 12u );
+		{ Payoff::suckers,     Payoff::reward,      Payoff::suckers     }
+	});
+	check(alwaysCooperate.getScore() == 12u );
 	return;
 }

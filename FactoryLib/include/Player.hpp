@@ -11,26 +11,28 @@ namespace PrisonersDilemma
 
 	using Identifier = unsigned;
 
-	// It is necessary to implement an identifier
-	// for the player which is unique inside a
-	// championship.
+	struct MatchData
+	{
+		Identifier            partner;
+		std::vector<Decision> decisions;
+		std::vector<Payoff>   payoffs;
+	};
+
+	bool operator==(const MatchData & lhs, const MatchData & rhs);
+
 	class Player
 	{
 		public:
 			Player(const Identifier identifier, const StrategyCreator& strategyCreator);
-			Identifier getIdentifier(void) const;
-			StrategyPtr getStrategy(void) const;
-			unsigned score(void) const;
-			void saveMatch(
-				const std::vector<Decision> & decisions,
-				const std::vector<Payoff> &   payoff,
-				const Identifier              partner);
+			Identifier               getIdentifier(void) const;
+			StrategyPtr              getStrategy  (void) const;
+			std::vector<MatchData>   getHistory   (void) const;
+			unsigned                 getScore     (void) const;
+			void                     saveMatch    (const MatchData & matchData);
 		private:
-			const Identifier                               identifier;
-			StrategyCreator                                strategyCreator;
-			std::vector< std::vector<Decision> >           decisions;
-			std::vector< std::vector<Payoff> >             payoff;
-			std::vector<Identifier>                        partners;
+			const Identifier       identifier;
+			const StrategyCreator  strategyCreator;
+			std::vector<MatchData> matchHistory;
 	};
 
 }

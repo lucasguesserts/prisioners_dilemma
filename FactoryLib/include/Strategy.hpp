@@ -26,7 +26,7 @@ namespace PrisonersDilemma
 	};
 
 	using StrategyPtr     = std::unique_ptr<Strategy>;
-	using StrategyCreator = const std::function<StrategyPtr(void)>;
+	using StrategyCreator = std::function<StrategyPtr(void)>;
 
 
 }
