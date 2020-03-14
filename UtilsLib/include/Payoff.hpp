@@ -1,7 +1,9 @@
 #ifndef PAYOFF_HPP
 #define PAYOFF_HPP
 
+#include <iostream>
 #include <tuple>
+#include <vector>
 #include "Decision.hpp"
 
 namespace PrisonersDilemma
@@ -36,6 +38,8 @@ namespace PrisonersDilemma
 	unsigned operator+(const PrisonersDilemma::Payoff& lhs, const unsigned&                 rhs);
 	unsigned operator+(const unsigned&                 lhs, const PrisonersDilemma::Payoff& rhs);
 
+	std::ostream& operator<<(std::basic_ostream<char>& os, const Payoff& payoff);
+	std::ostream& operator<<(std::basic_ostream<char>& os, const std::vector<Payoff>& payoffs);
 }
 
 #endif

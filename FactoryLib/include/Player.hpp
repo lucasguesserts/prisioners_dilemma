@@ -2,6 +2,7 @@
 #define FACTORY_PLAYER_HPP
 
 #include <vector>
+#include <iostream>
 #include "Decision.hpp"
 #include "Payoff.hpp"
 #include "Strategy.hpp"
@@ -19,6 +20,7 @@ namespace PrisonersDilemma
 	};
 
 	bool operator==(const MatchData & lhs, const MatchData & rhs);
+	std::ostream& operator<<(std::ostream& os, const MatchData& matchData);
 
 	class Player
 	{

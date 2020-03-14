@@ -44,3 +44,34 @@ Payoff PayoffComputer::right(const Decision& leftDecision, const Decision& right
 {
 	return std::get<1>(PayoffComputer::compute(leftDecision, rightDecision));
 }
+
+std::ostream& PrisonersDilemma::operator<<(std::basic_ostream<char>& os, const Payoff& payoff)
+{
+	switch(payoff)
+	{
+		case Payoff::temptation :
+			 os << "T";
+			break;
+		case Payoff::reward :
+			 os << "R";
+			break;
+		case Payoff::punishment :
+			 os << "P";
+			break;
+		case Payoff::suckers :
+			 os << "S";
+			break;
+		default:
+			throw std::logic_error("Invalid payoff value given.");
+	}
+	return os;
+}
+
+std::ostream& PrisonersDilemma::operator<<(std::basic_ostream<char>& os, const std::vector<Payoff>& payoffs)
+{
+	for(const auto& val: payoffs)
+	{
+		os << val << ", ";
+	}
+	return os;
+}

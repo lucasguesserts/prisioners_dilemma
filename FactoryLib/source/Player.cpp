@@ -1,6 +1,7 @@
 #include <vector>
 #include <utility>
 #include <numeric>
+#include <iostream>
 #include "Decision.hpp"
 #include "Payoff.hpp"
 #include "Strategy.hpp"
@@ -12,6 +13,14 @@ bool PrisonersDilemma::operator==(const MatchData & lhs, const MatchData & rhs)
 	return ( lhs.partner   == rhs.partner   ) && \
 	       ( lhs.decisions == rhs.decisions ) && \
 		   ( lhs.payoffs   == rhs.payoffs   );
+}
+
+std::ostream& PrisonersDilemma::operator<<(std::ostream& os, const MatchData& matchData)
+{
+	os << "partner: "   << matchData.partner   << ", " << \
+	      "decisions: " << matchData.decisions << ", " << \
+	      "payoff: "    << matchData.payoffs    ;
+	return os;
 }
 
 Player::Player(const Identifier identifier, const StrategyCreator& strategyCreator)
