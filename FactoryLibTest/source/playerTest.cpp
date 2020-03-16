@@ -19,7 +19,7 @@ TestCase("Always cooperate player", "[Player]")
 TestCase("Save match", "[Player]")
 {
 	Player alwaysCooperate(0u, AlwaysCooperate::creator());
-	const std::vector<MatchData> matchHistory = {
+	const std::vector<PlayerData> matchHistory = {
 		{ 5u, {Decision::cooperate, Decision::cooperate}, {Payoff::reward,     Payoff::reward} },
 		{ 4u, {Decision::defect   , Decision::cooperate}, {Payoff::temptation, Payoff::reward} },
 	};

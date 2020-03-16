@@ -8,14 +8,14 @@
 #include "Player.hpp"
 using namespace PrisonersDilemma;
 
-bool PrisonersDilemma::operator==(const MatchData & lhs, const MatchData & rhs)
+bool PrisonersDilemma::operator==(const PlayerData & lhs, const PlayerData & rhs)
 {
 	return ( lhs.partner   == rhs.partner   ) && \
 	       ( lhs.decisions == rhs.decisions ) && \
 		   ( lhs.payoffs   == rhs.payoffs   );
 }
 
-std::ostream& PrisonersDilemma::operator<<(std::ostream& os, const MatchData& matchData)
+std::ostream& PrisonersDilemma::operator<<(std::ostream& os, const PlayerData& matchData)
 {
 	os << "partner: "   << matchData.partner   << ", " << \
 	      "decisions: " << matchData.decisions << ", " << \
@@ -37,23 +37,23 @@ StrategyPtr Player::getStrategy(void) const
 	return this->strategyCreator();
 }
 
-std::vector<MatchData> Player::getHistory(void) const
+std::vector<PlayerData> Player::getHistory(void) const
 {
 	return this->matchHistory;
 }
 
 unsigned Player::getScore(void) const
 {
-	auto sumPayoffFromMatch = [](const MatchData & matchData) -> unsigned { return std::accumulate(matchData.payoffs.cbegin(), matchData.payoffs.cend(), 0u); };
+	auto sumPayoffFromMatch = [](const PlayerData & matchData) -> unsigned { return std::accumulate(matchData.payoffs.cbegin(), matchData.payoffs.cend(), 0u); };
 	return std::accumulate(
 		this->matchHistory.cbegin(),
 		this->matchHistory.cend(),
 		0u,
-		[&sumPayoffFromMatch](const unsigned & init, const MatchData & matchData) -> unsigned { return init + sumPayoffFromMatch(matchData); }
+		[&sumPayoffFromMatch](const unsigned & init, const PlayerData & matchData) -> unsigned { return init + sumPayoffFromMatch(matchData); }
 		);
 }
 
-void Player::saveMatch(const MatchData & matchData)
+void Player::saveMatch(const PlayerData & matchData)
 {
 	this->matchHistory.push_back(matchData);
 	return;
