@@ -28,3 +28,6 @@ script:
           echo -e "\n\n$TEST\n----------------------------------------\n";
           valgrind --leak-check=yes --track-origins=yes --error-exitcode=1 ./$TEST;
       done
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
