@@ -64,7 +64,7 @@ endmacro()
 macro(add_to_coverage_exclude NAME)
 	# Use this macro in all projects which
 	# define a application executable
-	set(CODE_COVERAGE_EXCLUSION "${CODE_COVERAGE_EXCLUSION} ${NAME}" PARENT_SCOPE)
+	set(CODE_COVERAGE_EXCLUSION "${CODE_COVERAGE_EXCLUSION};${NAME}" PARENT_SCOPE)
 endmacro()
 
 # Libraries
@@ -83,7 +83,6 @@ add_subdirectory(PrisonersDilemmaFileLibTest)
 add_subdirectory(ChampionshipApp)
 
 # Code Coverage XML and HTML Targets
-string(STRIP ${CODE_COVERAGE_EXCLUSION} CODE_COVERAGE_EXCLUSION)
 set(GCOVR_ARGS 
 	EXECUTABLE ${CMAKE_CTEST_COMMAND}
 	DEPENDENCIES ${CODE_COVERAGE_DEPENDENCIES}
