@@ -21,5 +21,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	PrisonersDilemmaFileLib)
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
-
-add_to_coverage_exclude(${PROJECT_NAME})

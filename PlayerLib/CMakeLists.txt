@@ -14,3 +14,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	StrategyLib)
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
+
+add_coverage(${PROJECT_NAME})
