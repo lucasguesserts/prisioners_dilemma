@@ -54,8 +54,18 @@ enable_testing()
 
 # Code Coverage - gcov
 # Based on <https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake> 
-set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage") # TODO: improve how those compile flags are integrated to the project
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CodeCoverage.cmake)
+append_coverage_compiler_flags()
+macro(add_to_coverage_dependency NAME)
+	# Use this macro in all projects which
+	# define a test executable
+	set(CODE_COVERAGE_DEPENDENCIES "${CODE_COVERAGE_DEPENDENCIES};${NAME}" PARENT_SCOPE)
+endmacro()
+macro(add_to_coverage_exclude NAME)
+	# Use this macro in all projects which
+	# define a application executable
+	set(CODE_COVERAGE_EXCLUSION "${CODE_COVERAGE_EXCLUSION} ${NAME}" PARENT_SCOPE)
+endmacro()
 
 # Libraries
 add_subdirectory(UtilsLib)
@@ -70,7 +80,16 @@ add_subdirectory(PrisonersDilemmaFileLib)
 add_subdirectory(PrisonersDilemmaFileLibTest)
 
 # Apps
-add_subdirectory(Championship)
+add_subdirectory(ChampionshipApp)
+
+# Code Coverage XML and HTML Targets
+string(STRIP ${CODE_COVERAGE_EXCLUSION} CODE_COVERAGE_EXCLUSION)
+set(GCOVR_ARGS 
+	EXECUTABLE ${CMAKE_CTEST_COMMAND}
+	DEPENDENCIES ${CODE_COVERAGE_DEPENDENCIES}
+	EXCLUDE ${CODE_COVERAGE_EXCLUSION})
+setup_target_for_coverage_gcovr_html(NAME ${PROJECT_NAME}_coverage_html ${GCOVR_ARGS})
+setup_target_for_coverage_gcovr_xml (NAME ${PROJECT_NAME}_coverage_xml  ${GCOVR_ARGS})
 
 # Messages
 message("\n")
@@ -80,8 +99,9 @@ message("Description      = ${PROJECT_DESCRIPTION}")
 message("Homepage         = ${PROJECT_HOMEPAGE_URL}")
 message("C++ compiler	 = ${CMAKE_CXX_COMPILER}")
 message("Compiler flags	 = ${CMAKE_CXX_FLAGS}")
-message("Coverage flags   = ${CMAKE_CXX_FLAGS_COVERAGE}")
 message("Compiler version = ${CMAKE_CXX_COMPILER_VERSION}")
+message("Coverage dep.    = ${CODE_COVERAGE_DEPENDENCIES}")
+message("Coverage exc.    = ${CODE_COVERAGE_EXCLUSION}")
 if(Catch2_FOUND)
 	message("Catch2 version   = ${Catch2_VERSION}")
 else()
