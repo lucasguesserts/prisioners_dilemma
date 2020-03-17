@@ -52,6 +52,11 @@ find_package(HDF5 ${HDF5_VERSION} EXACT REQUIRED COMPONENTS CXX)
 # Testing
 enable_testing()
 
+# Code Coverage - gcov
+# Based on <https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake> 
+set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage") # TODO: improve how those compile flags are integrated to the project
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CodeCoverage.cmake)
+
 # Libraries
 add_subdirectory(UtilsLib)
 add_subdirectory(UtilsLibTest)
@@ -75,6 +80,7 @@ message("Description      = ${PROJECT_DESCRIPTION}")
 message("Homepage         = ${PROJECT_HOMEPAGE_URL}")
 message("C++ compiler	 = ${CMAKE_CXX_COMPILER}")
 message("Compiler flags	 = ${CMAKE_CXX_FLAGS}")
+message("Coverage flags   = ${CMAKE_CXX_FLAGS_COVERAGE}")
 message("Compiler version = ${CMAKE_CXX_COMPILER_VERSION}")
 if(Catch2_FOUND)
 	message("Catch2 version   = ${Catch2_VERSION}")
