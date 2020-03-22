@@ -1,5 +1,4 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
-cmake_policy(SET CMP0074 NEW)
 
 set(CMAKE_CXX_COMPILER "g++")
 
@@ -39,11 +38,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # External Packages
 ## Catch2
 set(CATCH2_VERSION "2.11.1")
-set(Catch2_DIR "$ENV{HOME}/libs/catch2-${CATCH2_VERSION}/lib/cmake/Catch2/")
+set(Catch2_ROOT "$ENV{HOME}/libs/catch2-${CATCH2_VERSION}/lib/cmake/Catch2/")
 find_package(Catch2 ${CATCH2_VERSION} REQUIRED)
-if(Catch2_FOUND)
-	message("-- Found Catch2: version ${Catch2_VERSION}")
-endif()
 ## HDF5
 set(HDF5_VERSION "1.10.3")
 set(HDF5_ROOT "$ENV{HOME}/libs/hdf5-${HDF5_VERSION}/")
