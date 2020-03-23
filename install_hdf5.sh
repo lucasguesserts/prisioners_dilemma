@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# Setup
 MAJOR_VERSION=1.10
 SPECIFIC_VERSION=$MAJOR_VERSION.3
 HDF5_DIR=CMake-hdf5-$SPECIFIC_VERSION
 COMPRESSED_FILE=$HDF5_DIR.tar.gz
 SUB_DIR=build_hdf5
 SOURCE_DIR=`pwd`
+INSTALL_PREFIX=$HOME/libs/hdf5-$SPECIFIC_VERSION
+HDF5_SYMLINK=$HOME/libs/hdf5
 
 # Subfolder
 mkdir $SUB_DIR
@@ -19,7 +22,7 @@ tar xf ${COMPRESSED_FILE}
 cd $HDF5_DIR/hdf5-$SPECIFIC_VERSION
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$HOME/libs/hdf5-$SPECIFIC_VERSION/ ..
+cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX ..
 
 # Build
 NUMBER_OF_PROCESSSORS=`nproc --all`
@@ -29,3 +32,6 @@ make install
 # Delete
 cd $SOURCE_DIR
 rm -rf $SUB_DIR
+
+# Symbolic link
+ln -sf $INSTALL_PREFIX $HDF5_SYMLINK
