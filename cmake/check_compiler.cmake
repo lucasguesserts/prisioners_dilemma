@@ -1,0 +1,8 @@
+set(GXX_MINIMUM_VERSION 7.4.0)
+set(REQUIRED_COMPILER "GNU")
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL ${REQUIRED_COMPILER})
+	message(FATAL_ERROR "The compiler required is ${REQUIRED_COMPILER}")
+endif()
+if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.4.0)
+	message(FATAL_ERROR "g++ version required to be at least 7.4.0")
+endif()

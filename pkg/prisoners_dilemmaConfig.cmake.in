@@ -1,0 +1,112 @@
+#[===================================================================[.markdown:
+# @CMAKE_PROJECT_NAME@ - find_package Config mode - @CMAKE_PROJECT_NAME@Config.cmake
+
+## Invoking
+
+Use this config file by invoking find_package with the form
+(as documented on the
+[cmake find_package documentation page](https://cmake.org/cmake/help/latest/command/find_package.html)):
+
+```
+find_package(
+	prisoners_dilemma     # Package name
+	[version] [EXACT]  # Minimum or EXACT version e.g. major[.minor[.patch[.tweak]]]
+	[REQUIRED]         # Fail with error if prisoners_dilemma is not found
+	[MODULE]           # If specified, disable the Cofig mode
+)
+```
+
+For debug messages, set the variable `prisoners_dilemma_DEBUG_MESSAGES` to `TRUE`.
+
+The command above has two modes by which it searches for packages:
+“Module” mode (preferred by CMake) and “Config” mode.
+
+### Module mode:
+
+CMake will look for this file (so please add its path to the
+CMake variable `CMAKE_MODULE_PATH`) and call it.
+
+Set the variable `prisoners_dilemma_ROOT` to the location where
+the package was installed.
+
+According to the CMake documentation, this is its preferred
+mode. If CMake fails to find this file, it will fallback to
+the Config mode. Disable the fallback by specifying `MODULE`
+in the `find_package` call.
+
+### Config mode:
+
+The CMake `find_package` command will look for a file named
+`prisoners_dilemmaConfig.cmake` or `prisoners_dilemma-config.cmake`.
+Once found, CMake will load it.
+If the library was not installed in a default directory
+(e.g. system directory) please set the CMake variable
+`prisoners_dilemma_ROOT` to the directory where it
+can find one of the above configuration files.
+
+The project prisoners_dilemma is configured to be used
+and installed using CMake. Therefore, once correctly installed,
+the config files above will be available in the top
+level installation directory (e.g. the path to
+which `CMAKE_INSTALL_PREFIX` was set when the project
+was installed).
+
+Set the CMake variable `CMAKE_FIND_PACKAGE_PREFER_CONFIG`
+to `TRUE` in order to use this as the preferred find method.
+Otherwise, CMake will fallback to Config mode only if the
+Module mode fails. That fallback behavior is disabled if one
+specifies `MODULE` in the `find_package` call.
+
+## Package Variables
+
+Once called, the following variable will be defined:
+
+	`prisoners_dilemma_FOUND`            - True if headers and libraries were found.
+	                                    If the files were not found, then the variables below
+	                                    below will not be set.
+	`prisoners_dilemma_INCLUDE_DIRS`     - prisoners_dilemma include directories.
+	`prisoners_dilemma_LIBRARIES`        - prisoners_dilemma component libraries to be linked.
+	`prisoners_dilemma_VERSION`          - prisoners_dilemma version number in x.y.z format.
+	`prisoners_dilemma_VERSION_MAJOR`    - prisoners_dilemma major version number (X in X.y.z).
+	`prisoners_dilemma_VERSION_MINOR`    - prisoners_dilemma minor version number (Y in x.Y.z).
+	`prisoners_dilemma_VERSION_PATCH`    - prisoners_dilemma subminor version number (Z in x.y.Z).
+
+#]===================================================================]
+
+@PACKAGE_INIT@
+
+set(@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS UtilsLib StrategyLib PrisonersDilemmaFileLib PlayerLib ChampionshipLib)
+
+foreach(LIBRARY ${@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS})
+	include(${PACKAGE_PREFIX_DIR}/share/cmake/@CMAKE_PROJECT_NAME@/${LIBRARY}.cmake)
+endforeach()
+
+set(@CMAKE_PROJECT_NAME@_INCLUDE_DIRS
+	${PACKAGE_PREFIX_DIR}/@PROJECT_INCLUDES_DESTINATION@
+	CACHE STRING "Package @CMAKE_PROJECT_NAME@ header files directory."
+)
+set(@CMAKE_PROJECT_NAME@_LIBRARIES
+	UtilsLib StrategyLib PrisonersDilemmaFileLib PlayerLib ChampionshipLib
+	CACHE STRING "@CMAKE_PROJECT_NAME@ libraries."
+)
+
+# External Dependencies
+include(CMakeFindDependencyMacro)
+## Catch2
+set(CATCH2_VERSION "2.11.1")
+set(Catch2_DIR "$ENV{HOME}/libs/catch2-${CATCH2_VERSION}/lib/cmake/Catch2/")
+find_dependency(Catch2 REQUIRED)
+
+# Debug messages
+if(prisoners_dilemma_DEBUG_MESSAGES)
+	message("")
+	message("Config mode selected for package '@CMAKE_PROJECT_NAME@'.")
+	message("@CMAKE_PROJECT_NAME@_ROOT = ${@CMAKE_PROJECT_NAME@_ROOT}")
+	message("@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS = ${@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS}")
+	message("@CMAKE_PROJECT_NAME@_VERSION = ${@CMAKE_PROJECT_NAME@_VERSION}")
+	message("@CMAKE_PROJECT_NAME@_INCLUDE_DIRS = ${@CMAKE_PROJECT_NAME@_INCLUDE_DIRS}")
+	message("@CMAKE_PROJECT_NAME@_LIBRARIES = ${@CMAKE_PROJECT_NAME@_LIBRARIES}")
+	message("")
+endif()
+
+check_required_components(@CMAKE_PROJECT_NAME@)

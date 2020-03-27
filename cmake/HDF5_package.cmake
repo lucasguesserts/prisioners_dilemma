@@ -1,0 +1,2 @@
+set(HDF5_ROOT "$ENV{HOME}/libs/hdf5/")
+find_package(HDF5 1.10.3 REQUIRED COMPONENTS CXX)
