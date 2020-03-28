@@ -1,9 +1,11 @@
 #[===================================================================[.markdown:
-# @CMAKE_PROJECT_NAME@ - find_package Config mode - @CMAKE_PROJECT_NAME@Config.cmake
+# @CMAKE_PROJECT_NAME@ - find_package Module mode - Findprisoners_dilemma
+
+Find prisoners_dilemma include dirs and libraries.
 
 ## Invoking
 
-Use this config file by invoking find_package with the form
+Use this module by invoking find_package with the form
 (as documented on the
 [cmake find_package documentation page](https://cmake.org/cmake/help/latest/command/find_package.html)):
 
@@ -73,48 +75,84 @@ Once called, the following variable will be defined:
 
 #]===================================================================]
 
-@PACKAGE_INIT@
+# TODO: define the search deppending on the version
+# in any quite smart way.
 
-set(@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS
+# Setup
+set(PACKAGE_NAME prisoners_dilemma)
+set(${PACKAGE_NAME}_LIBRARY_COMPONENTS
 	UtilsLib
 	StrategyLib
 	PlayerLib
 	ChampionshipLib
 	PrisonersDilemmaFileLib
 )
+set(${PACKAGE_NAME}_INCLUDE_FILE Strategy.hpp)
 
-foreach(LIBRARY ${@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS})
-	include(${PACKAGE_PREFIX_DIR}/share/cmake/@CMAKE_PROJECT_NAME@/${LIBRARY}.cmake)
+# Find libraries
+foreach(LIBRARY_NAME ${${PACKAGE_NAME}_LIBRARY_COMPONENTS})
+	find_library(
+		${PACKAGE_NAME}_${LIBRARY_NAME}
+		${LIBRARY_NAME}
+		HINTS ${prisoners_dilemma_ROOT}/lib
+		DOC "The file that corresponds to the library ${LIBRARY_NAME}."
+	)
+	mark_as_advanced(${PACKAGE_NAME}_${LIBRARY_NAME})
+	list(APPEND ${PACKAGE_NAME}_LIBRARIES ${${PACKAGE_NAME}_${LIBRARY_NAME}})
 endforeach()
+set(${PACKAGE_NAME}_LIBRARIES ${${PACKAGE_NAME}_LIBRARIES} CACHE STRING "${PACKAGE_NAME} libraries.")
 
-set(@CMAKE_PROJECT_NAME@_INCLUDE_DIRS
-	${PACKAGE_PREFIX_DIR}/@PROJECT_INCLUDES_DESTINATION@
-	CACHE STRING "Package @CMAKE_PROJECT_NAME@ header files directory."
-)
-set(@CMAKE_PROJECT_NAME@_LIBRARIES
-	UtilsLib StrategyLib PrisonersDilemmaFileLib PlayerLib ChampionshipLib
-	CACHE STRING "@CMAKE_PROJECT_NAME@ libraries."
+# Find include path
+find_path(
+	${PACKAGE_NAME}_INCLUDE_DIRS
+	${${PACKAGE_NAME}_INCLUDE_FILE}
+	HINTS include
+	DOC "The path to the directory that contains the package header file $${${PACKAGE_NAME}_INCLUDE_FILE}."
 )
 
 # External Dependencies
 include(CMakeFindDependencyMacro)
+## Filesystem
+list(APPEND ${PACKAGE_NAME}_LIBRARIES stdc++fs)
 ## Catch2
-set(Catch2_ROOT @Catch2_ROOT@)
-find_dependency(Catch2 @Catch2_VERSION@ REQUIRED)
+if(NOT DEFINED Catch2_ROOT)
+	set(Catch2_ROOT "$ENV{HOME}/libs/catch2/lib/cmake/Catch2/")
+endif()
+find_dependency(Catch2 2.11.1 REQUIRED)
+list(APPEND ${PACKAGE_NAME}_LIBRARIES Catch2::Catch2)
 ## HDF5
-set(HDF5_ROOT @HDF5_ROOT@)
-find_dependency(HDF5 @HDF5_VERSION@ REQUIRED COMPONENTS CXX)
+if(NOT DEFINED HDF5_ROOT)
+	set(HDF5_ROOT "$ENV{HOME}/libs/hdf5/")
+endif()
+find_dependency(HDF5 1.10.3 REQUIRED COMPONENTS CXX)
+list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${HDF5_INCLUDE_DIRS})
+list(APPEND ${PACKAGE_NAME}_LIBRARIES ${HDF5_LIBRARIES})
+
+# Version
+include(${prisoners_dilemma_ROOT}/share/cmake/${PACKAGE_NAME}/version.cmake)
 
 # Debug messages
 if(prisoners_dilemma_DEBUG_MESSAGES)
 	message("")
-	message("Config mode selected for package '@CMAKE_PROJECT_NAME@'.")
-	message("@CMAKE_PROJECT_NAME@_ROOT = ${@CMAKE_PROJECT_NAME@_ROOT}")
-	message("@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS = ${@CMAKE_PROJECT_NAME@_LIBRARY_COMPONENTS}")
-	message("@CMAKE_PROJECT_NAME@_VERSION = ${@CMAKE_PROJECT_NAME@_VERSION}")
-	message("@CMAKE_PROJECT_NAME@_INCLUDE_DIRS = ${@CMAKE_PROJECT_NAME@_INCLUDE_DIRS}")
-	message("@CMAKE_PROJECT_NAME@_LIBRARIES = ${@CMAKE_PROJECT_NAME@_LIBRARIES}")
+	message("Module mode selected for package '${PACKAGE_NAME}'.")
+	message("${PACKAGE_NAME}_ROOT = ${${PACKAGE_NAME}_ROOT}")
+	message("${PACKAGE_NAME}_LIBRARY_COMPONENTS = ${${PACKAGE_NAME}_LIBRARY_COMPONENTS}")
+	message("${PACKAGE_NAME}_INCLUDE_FILE = ${${PACKAGE_NAME}_INCLUDE_FILE}")
+	message("${PACKAGE_NAME}_VERSION = ${${PACKAGE_NAME}_VERSION}")
+	message("${PACKAGE_NAME}_INCLUDE_DIRS = ${${PACKAGE_NAME}_INCLUDE_DIRS}")
+	message("${PACKAGE_NAME}_LIBRARIES = ${${PACKAGE_NAME}_LIBRARIES}")
 	message("")
 endif()
 
-check_required_components(@CMAKE_PROJECT_NAME@)
+set(${PACKAGE_NAME}_LIBRARIES ${${PACKAGE_NAME}_LIBRARIES} CACHE STRING "${PACKAGE_NAME} libraries.")
+
+# Check if found
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(
+	${PACKAGE_NAME}
+	REQUIRED_VARS ${PACKAGE_NAME}_LIBRARIES ${PACKAGE_NAME}_INCLUDE_DIRS
+	VERSION_VAR ${PACKAGE_NAME}_VERSION
+)
+
+# Final
+unset(PACKAGE_NAME)
