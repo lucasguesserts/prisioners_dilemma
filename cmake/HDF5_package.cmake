@@ -1,2 +1,4 @@
-set(HDF5_ROOT "$ENV{HOME}/libs/hdf5/")
+if(NOT DEFINED HDF5_ROOT)
+	set(HDF5_ROOT "$ENV{HOME}/libs/hdf5/")
+endif()
 find_package(HDF5 1.10.3 REQUIRED COMPONENTS CXX)

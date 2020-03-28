@@ -17,7 +17,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	PlayerLib
 	ChampionshipLib)
 
-target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEVELOPER_COMPILE_WARNINGS})
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 

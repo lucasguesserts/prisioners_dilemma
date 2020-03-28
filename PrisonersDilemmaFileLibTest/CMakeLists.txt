@@ -22,7 +22,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ChampionshipLib
 	PrisonersDilemmaFileLib)
 
-target_compile_options(${PROJECT_NAME} PRIVATE ${DEFAULT_COMPILE_WARNINGS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${DEVELOPER_COMPILE_WARNINGS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PUBLIC_TEST_METHODS)
 
