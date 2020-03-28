@@ -1,4 +1,5 @@
 ![Logo of the project](./prisoners_dilemma_logo.svg)
+
 Logo made from the original images: <a href="https://www.vecteezy.com/free-vector/devil">Devil</a> and <a href="https://www.vecteezy.com/free-vector/angel-wings">Angel</a>.
 
 # Prisoner's Dilemma
