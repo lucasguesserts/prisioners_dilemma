@@ -1,9 +1,11 @@
+#define CATCH_CONFIG_MAIN
+#include <Test.hpp>
 #include <string>
 #include <iostream>
 #include <Championship.hpp>
 #include <PrisonersDilemmaFile.hpp>
 
-int main()
+TestCase("All strategies championship", "[test_install]")
 {
 	// Championship
 	const unsigned numberOfTurns = 50;
@@ -38,12 +40,16 @@ int main()
 			&PrisonersDilemma::mratft ,
 		}
 	);
+
 	championship.compete();
 	championship.rank();
+
 	std::cout << championship;
+
+	check( championship.players[0].strategy == &PrisonersDilemma::mratft );
 
 	//Save result in file
 	PrisonersDilemma::File file("all_strategies.prisonersdilemma", championship);
 	
-	return 0;
+	return;
 }

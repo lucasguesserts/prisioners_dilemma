@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${prisoners_dilemma_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${prisoners_dilemma_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${prisoners_dilemma_LIBRARIES})
 
