@@ -17,17 +17,40 @@ install:
     - ./install_hdf5.sh > /dev/null 2>&1
 
 script:
+      # Variables
+    - PROJECT_SOURCE_PATH=`pwd`
+    - PRISONERS_DILEMMA_INSTALL_PREFIX=`readlink -f ./install/`
+      # Build main project
     - mkdir build
     - cd build
-    - cmake ..
+    - cmake .. -DCMAKE_INSTALL_PREFIX=$PRISONERS_DILEMMA_INSTALL_PREFIX
     - make -j `nproc --all`
     - make test
-    - cd bin
+    - make install
+      # Valgrind test
+    - cd $PROJECT_SOURCE_PATH
+    - cd build/bin
     - for TEST in `ls`;
       do
           echo -e "\n\n$TEST\n----------------------------------------\n";
           valgrind --leak-check=yes --track-origins=yes --error-exitcode=1 ./$TEST;
       done
+      # Install check - Config mode
+    - cd $PROJECT_SOURCE_PATH
+    - cd test_install
+    - mkdir build_config_mode
+    - cd build_config_mode
+    - cmake .. -Dprisoners_dilemma_ROOT=$PRISONERS_DILEMMA_INSTALL_PREFIX -Dprisoners_dilemma_DEBUG_MESSAGES=TRUE -DUSE_MODULE=FALSE
+    - make -j `nproc --all`
+    - make test
+      # Install check - Module mode
+    - cd $PROJECT_SOURCE_PATH
+    - cd test_install
+    - mkdir build_module_mode
+    - cd build_module_mode
+    - cmake .. -Dprisoners_dilemma_ROOT=$PRISONERS_DILEMMA_INSTALL_PREFIX -Dprisoners_dilemma_DEBUG_MESSAGES=TRUE -DUSE_MODULE=TRUE
+    - make -j `nproc --all`
+    - make test
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
