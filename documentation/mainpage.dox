@@ -1,0 +1,22 @@
+/**
+@mainpage Prisoners Dilemma Library
+
+
+@section project_description Project Description
+
+The goal is to be able to study the behavior
+of several different strategies in the Iterated
+Prisoner's Dilemma.
+
+
+@section project_links Useful Links
+
+- [The Prisoner's Dilemma web page](http://www.prisoners-dilemma.com/).
+  Here you can find a brief description of the problem
+  and some resources.
+- [List of strategies](http://www.prisoners-dilemma.com/strategies.html).
+  Most (probably all) strategies implemented in this project
+  came from there.
+- [This is the best video](https://youtu.be/t9Lo2fgxWHw) 
+  explaining the problem that I saw.
+*/
