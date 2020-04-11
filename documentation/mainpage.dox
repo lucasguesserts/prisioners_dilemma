@@ -2,21 +2,104 @@
 @mainpage Prisoners Dilemma Library
 
 
-@section project_description Project Description
+<h2 id="project_description">Project Description</h2>
 
 The goal is to be able to study the behavior
 of several different strategies in the Iterated
 Prisoner's Dilemma.
 
 
-@section project_links Useful Links
+<h2 id="prisoners_dilemma_problem">The Prisoner's Dilemma Problem</h2>
 
-- [The Prisoner's Dilemma web page](http://www.prisoners-dilemma.com/).
-  Here you can find a brief description of the problem
-  and some resources.
-- [List of strategies](http://www.prisoners-dilemma.com/strategies.html).
-  Most (probably all) strategies implemented in this project
-  came from there.
-- [This is the best video](https://youtu.be/t9Lo2fgxWHw) 
-  explaining the problem that I saw.
+<p>
+	Check out one or more of the folowing resources for
+	a detailed description and explanation of the problem:
+	<ul>
+		<li>
+			<a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">Prisoner's Dilemma Wikipedia page</a>.
+			Its anecdote of the problem is quite good.
+		</li>
+		<li>
+			<a href="https://youtu.be/t9Lo2fgxWHw">This is the best video</a> 
+			explaining the problem that I have ever seen.
+		</li>
+		<!-- Those links became broken, someone took the website down. They are quite good though.
+		<li>
+			<a href="http://www.prisoners-dilemma.com/">The Prisoner's Dilemma web page</a>.
+			Here you can find a brief description of the problem and some other resources.
+		</li>
+		<li>
+			<a href="http://www.prisoners-dilemma.com/strategies.html">List of strategies</a>.
+			Most (probably all) strategies implemented in this project came from there.
+		</li>
+		-->
+	</ul>
+</p>
+
+
+<h2 id="concepts">Concepts</h2>
+
+<h3><em>Criminal</em> and <em>Partner</em></h3>
+<p>
+	<dfn id=concept_criminal>Criminal</dfn> will be the name used to refer
+	to the criminal making the decision.
+	<dfn id=concept_partner>Partner</dfn> will be the name used to refer to the second
+	criminal, the one with who the interactions happen.
+</p>
+
+<h3><em>Decision</em></h3>
+<p>
+	There are two possible <dfn id=concept_decision>Decision</dfn>s one can make:
+	<ul>
+		<li>to <dfn id=concept_cooperate>Cooperate</dfn>.</li>
+		<li>to <dfn id=concept_defect>Defect</dfn>.</li>
+	</ul>
+</p>
+
+<h3><em>Payoff</em></h3>
+<p>
+	<dfn id=concept_payoff>Payoff</dfn> is the penalty one suffers, i.e., the years in prision.
+	There are four possible <em>Payoff</em>s:
+	<ul>
+		<li><dfn id=concept_temptation>Temptation</dfn>: <em>Criminal</em> Defects. <em>Partner</em> Cooperates.</li>
+		<li><dfn id=concept_reward>Reward</dfn>: Both <em>Criminal</em> and <em>Partner</em> Cooperate.</li>
+		<li><dfn id=concept_punishment>Punishment</dfn>: Both <em>Criminal</em> and <em>Partner</em> Defect.</li>
+		<li><dfn id=concept_suckers>Suckers</dfn>: <em>Criminal</em> Cooperates. <em>Partner</em> Defects.</li>
+	</ul>
+</p>
+
+<h3><em>Strategy</em></h3>
+<p>
+	There is a basic level of decision making, which is to define the reasoning logic.
+	The <em>Criminal</em> has available the information about all
+	the previous decisions, both from him and his <em>Partner</em>.
+	The logic behind the <em>Criminal</em>'s reasoning
+	about the past experience and the decision making for the
+	next interaction is know as the <dfn id=concept_strategy>Strategy</dfn>.
+</p>
+
+<h3><em>Individual</em></h3>
+<p>
+	Of course, different people can use the same <em>Strategy</em>.
+	That doesn't make them equal, it just mean that they think
+	in a similar way.
+	Those who make the decisions and suffer the consequences
+	are know as <dfn id=concept_individual>Individual</dfn>s of the Iterated Prisoner's
+	Dillema game.
+	Besides that, an <em>Individual</em> has a record of its own decisions
+	when playing with different <em>Partners</em>.
+</p>
+
+<h3><em>Championship</em>, <em>Match</em>, <em>Turn</em></h3>
+<p>
+	Several <em>Individual</em>s are put together to compete agains
+	each other and in order to find out who has the best <em>Strategy</em>.
+	That competition is the <dfn id=concept_championship>Championship</dfn>.
+	It is what manages the <em>Individuals</em>, their <em>Payoffs</em>, and <em>Matches</em>.
+	Each encounter of two <em>Individuals</em> is a <dfn id=concept_match>Match</dfn>.
+	A <em>Match</em> is composed of several <dfn id=concept_turn>Turns</dfn>
+	A <em>Turn</em> is the moment when an <em>Individual</em>, considering the
+	past experience with the <em>Partner</em>, makes a <em>Decision</em>.
+</p>
+
 */
